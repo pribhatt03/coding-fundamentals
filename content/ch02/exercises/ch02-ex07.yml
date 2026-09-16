@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch02-ex07
+type: fix-the-llm
+title: Is this the MAP?
+topic: critical-appraisal
+difficulty: 2
+tags: [critical-appraisal, arithmetic]
+follows: ch02-ex06
+
+prompt: |
+  You asked for code to calculate the mean arterial pressure for a patient
+  at 120/80. You were handed this.
+
+  ```r
+  (120 + 80) / 2
+  ```
+
+  It runs and returns `100`. Is it right?
+
+hint: |
+  Don't check the R. Check the formula.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: fine
+      text: "Yes — it runs and 100 is a plausible pressure"
+      feedback: |
+        It runs, and 100 is plausible. Both true, and neither one makes it
+        correct. MAP isn't the average of systolic and diastolic — the
+        heart spends about twice as long in diastole, so diastolic carries
+        twice the weight: (SBP + 2 × DBP) / 3.
+    - id: formula
+      text: "No — that's the average of the two, not the MAP"
+      correct: true
+      feedback: |
+        Exactly. MAP is (SBP + 2 × DBP) / 3, which gives about 93 here, not
+        100. Nothing about the R is wrong. The code is clean, it runs, and
+        the answer looks reasonable. The only thing that catches this is
+        knowing what MAP is — which you already did, on your first day of
+        R.
+    - id: syntax
+      text: "No — there's a syntax error in the parentheses"
+      feedback: |
+        The parentheses are fine and the line runs. The error is in the
+        formula, not the code.
+    - id: cantell
+      text: "You can't tell without running it"
+      feedback: |
+        You can, and you just did. Running it tells you what number comes
+        out — it tells you nothing about whether that number is the MAP.
+        That judgement came from your clinical training, and it's the thing
+        this whole course is built around.

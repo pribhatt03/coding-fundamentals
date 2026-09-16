@@ -1,0 +1,71 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch04-ex01
+type: fill-blank
+title: Grouped mean with a missing reading
+topic: missing-values
+difficulty: 1
+tags: [dplyr, na]
+packages: [dplyr]
+
+prompt: |
+  `readings` holds three days of temperature for two sites. One reading
+  failed and came back missing. Fill the blank so each site gets its mean
+  temperature.
+
+setup: |
+  library(dplyr)
+  readings <- data.frame(
+    site = c("north", "north", "north", "south", "south", "south"),
+    day  = c(1, 2, 3, 1, 2, 3),
+    temp = c(18.2, 21.5, NA, 22.1, 23.4, 19.9)
+  )
+
+hint: |
+  `mean()` takes a second argument that decides what to do when an input
+  is missing.
+
+response:
+  kind: r-code
+  starter: |
+    readings %>%
+      group_by(site) %>%
+      summarise(avg_temp = ______)
+  solution:
+    code: |
+      readings %>%
+        group_by(site) %>%
+        summarise(avg_temp = mean(temp, na.rm = TRUE))
+    why: |
+      `mean()` propagates `NA` by default, so a group containing one
+      missing value returns `NA` for the whole group unless you drop it
+      explicitly.
+  checks:
+    - expr: as.numeric(round(.result$avg_temp, 2))
+      equals: [19.85, 21.8]
+      on_fail: |
+        The averages don't match. Check that north is averaging its two
+        real readings rather than all three.
+    - expr: colnames(.result)
+      equals: [site, avg_temp]
+      on_fail: |
+        The output columns should be `site` and `avg_temp`.
+  misconceptions:
+    - match:
+        on: result
+        expr: as.logical(is.na(.result$avg_temp))
+        equals: [true, false]
+      feedback: |
+        Your code ran without an error, and that's the problem. North came
+        back `NA` because one of its three readings is missing, and `mean()`
+        treats one unknown input as making the answer unknown. South is
+        fine, so half your output looks right — which is exactly how this
+        slips through review. Add `na.rm = TRUE`.
+    - match:
+        on: source
+        pattern: "drop_na\\(|filter\\(\\s*!is\\.na"
+      feedback: |
+        That gives the right numbers, but it discards north's day 3 row
+        entirely. If you later summarise a second column from the same
+        pipeline, that row is gone from it too. `na.rm = TRUE` scopes the
+        decision to this one calculation.

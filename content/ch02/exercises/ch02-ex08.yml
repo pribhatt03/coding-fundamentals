@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch02-ex08
+type: fix-the-llm
+title: Write the correct MAP
+topic: critical-appraisal
+difficulty: 2
+tags: [critical-appraisal, arithmetic]
+follows: ch02-ex07
+
+prompt: |
+  Write the line that actually calculates the mean arterial pressure for a
+  patient at 120/80.
+
+  MAP = (SBP + 2 × DBP) / 3
+
+hint: |
+  In R, `*` means multiply. Everything you need is arithmetic you already
+  know.
+
+response:
+  kind: r-code
+  starter: |
+    ______
+  solution:
+    code: |
+      (120 + 2 * 80) / 3
+    why: |
+      Diastolic is weighted twice because the heart spends roughly
+      two-thirds of the cardiac cycle in diastole. The parentheses make
+      sure the whole numerator is divided by 3.
+  checks:
+    - expr: as.numeric(round(.result, 2))
+      equals: [93.33]
+      on_fail: |
+        Not 93.33 yet. Check which of the two pressures gets doubled, and
+        check that the division applies to the whole numerator.
+  misconceptions:
+    - match:
+        on: result
+        expr: as.numeric(round(.result, 2))
+        equals: [100]
+      feedback: |
+        That's the simple average again — the formula from the previous
+        exercise, the one that runs fine and gives the wrong answer.
+    - match:
+        on: result
+        expr: as.numeric(round(.result, 2))
+        equals: [106.67]
+      feedback: |
+        You've doubled the systolic instead of the diastolic. The weighting
+        goes the other way: the heart spends about twice as long in
+        diastole, so it's the lower number that counts twice.
+    - match:
+        on: result
+        expr: as.numeric(round(.result, 2))
+        equals: [173.33]
+      feedback: |
+        The division is only reaching part of the numerator. Wrap the whole
+        of `120 + 2 * 80` in parentheses before dividing by 3.

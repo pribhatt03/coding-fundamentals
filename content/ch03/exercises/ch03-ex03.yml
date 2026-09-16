@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch03-ex03
+type: predict
+title: Reusing a name
+topic: variables
+difficulty: 1
+tags: [variables, assignment]
+follows: ch03-ex02
+
+prompt: |
+  What does this print?
+
+  ```r
+  dose_mg <- 500
+  dose_mg <- 250
+  dose_mg
+  ```
+
+hint: |
+  R runs the lines in order, top to bottom.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: last
+      text: "`250`"
+      correct: true
+      feedback: |
+        Right. The second line replaces the first. R keeps no history and
+        gives no warning — the 500 is simply gone. This is worth
+        remembering when you run parts of a script out of order, which is
+        how a name ends up holding something you didn't expect.
+    - id: first
+      text: "`500`"
+      feedback: |
+        The second assignment overwrites the first. R works through the
+        lines in order, so by the time it reaches the third line the name
+        holds 250.
+    - id: both
+      text: "`500` and `250`"
+      feedback: |
+        A name holds one value at a time. Storing something new replaces
+        what was there.
+    - id: err
+      text: "An error — the name is already taken"
+      feedback: |
+        R lets you reuse a name freely, without comment. Convenient, and
+        occasionally the reason a number is wrong.

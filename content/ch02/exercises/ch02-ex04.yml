@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch02-ex04
+type: fill-blank
+title: Fix the average
+topic: arithmetic
+difficulty: 1
+tags: [arithmetic, precedence]
+follows: ch02-ex03
+
+prompt: |
+  Rewrite the line so it returns the actual average of the three readings.
+
+hint: |
+  Put something around the part you want R to do first.
+
+response:
+  kind: r-code
+  starter: |
+    ______
+  solution:
+    code: |
+      (37.2 + 38.1 + 37.6) / 3
+    why: |
+      Parentheses tell R to finish the addition before dividing, so all
+      three readings go into the average.
+  checks:
+    - expr: as.numeric(round(.result, 2))
+      equals: [37.63]
+      on_fail: |
+        Not the average yet. All three readings need to be added together
+        before anything is divided.
+  misconceptions:
+    - match:
+        on: result
+        expr: as.numeric(round(.result, 2))
+        equals: [87.83]
+      feedback: |
+        That's the original line unchanged. R is still dividing only the
+        last reading. The parentheses have to go around all three numbers,
+        not around the division.
+    - match:
+        on: result
+        expr: as.numeric(round(.result, 2))
+        equals: [112.9]
+      feedback: |
+        You've added the three readings correctly, but nothing is being
+        divided now. An average needs both halves: add, then divide by how
+        many numbers you added.

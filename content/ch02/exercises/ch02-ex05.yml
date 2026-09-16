@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch02-ex05
+type: fill-blank
+title: Rounding a lab value
+topic: functions
+difficulty: 1
+tags: [functions, arguments]
+
+prompt: |
+  A creatinine has come back as `1.2857142857`. Report it to two decimal
+  places.
+
+hint: |
+  The function takes two arguments: the number, then how many places you
+  want.
+
+response:
+  kind: r-code
+  starter: |
+    ______(1.2857142857, 2)
+  solution:
+    code: |
+      round(1.2857142857, 2)
+    why: |
+      `round()` takes the value first and the number of decimal places
+      second.
+  checks:
+    - expr: as.numeric(.result)
+      equals: [1.29]
+      on_fail: |
+        Not quite two decimal places yet.
+  misconceptions:
+    - match:
+        on: source
+        pattern: "signif\\("
+      feedback: |
+        `signif()` counts significant figures, not decimal places. On this
+        number it happens to look similar; on a value like 0.0012857 the
+        two give very different answers.
+    - match:
+        on: result
+        expr: as.numeric(.result)
+        equals: [1]
+      feedback: |
+        Something rounded to a whole number. Check that the second argument
+        is reaching the function — `round()` needs both the value and the
+        number of places, separated by a comma.

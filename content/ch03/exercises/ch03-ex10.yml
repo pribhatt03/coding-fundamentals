@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch03-ex10
+type: fix-the-llm
+title: Fix the types
+topic: types
+difficulty: 2
+tags: [types, character]
+follows: ch03-ex09
+
+prompt: |
+  Fix the two assignments so the calculation runs and returns the mean
+  arterial pressure.
+
+hint: |
+  Nothing about the formula needs to change.
+
+response:
+  kind: r-code
+  starter: |
+    sbp <- "120"
+    dbp <- "80"
+    (sbp + 2 * dbp) / 3
+  solution:
+    code: |
+      sbp <- 120
+      dbp <- 80
+      (sbp + 2 * dbp) / 3
+    why: |
+      Dropping the quotes makes these numbers rather than text, and the
+      arithmetic works. When the values come from a spreadsheet rather than
+      your keyboard you can't just delete the quotes, and then `as.numeric()`
+      does the same job — but the check you run is the same either way.
+  checks:
+    - expr: as.numeric(round(.result, 2))
+      equals: [93.33]
+      on_fail: |
+        Not 93.33 yet. Both values need to be numbers before the formula
+        can use them.
+  misconceptions:
+    - match:
+        on: source
+        pattern: "\"120\"|'120'"
+      feedback: |
+        The systolic is still in quotes, so it's still text. R won't
+        convert it for you when the arithmetic reaches it.
+    - match:
+        on: source
+        pattern: "\"80\"|'80'"
+      feedback: |
+        The diastolic is still text. Both values have to be numbers, not
+        just one.

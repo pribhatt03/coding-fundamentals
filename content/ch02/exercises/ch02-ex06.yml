@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch02-ex06
+type: predict
+title: Arguments in the wrong order
+topic: functions
+difficulty: 2
+tags: [functions, arguments]
+follows: ch02-ex05
+
+prompt: |
+  Someone meant to round 3.7 to two decimal places, but typed the two
+  numbers the wrong way round.
+
+  ```r
+  round(2, 3.7)
+  ```
+
+  What happens?
+
+hint: |
+  R doesn't work out which number was meant to be which. It uses them in
+  the order they arrive.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: two
+      text: "It returns `2`"
+      correct: true
+      feedback: |
+        Yes. R reads this as: round the number 2, to a few decimal places.
+        2 is already a whole number, so the answer is 2. No error, no
+        warning, no sign that anything was mistyped.
+    - id: threeseven
+      text: "It returns `3.7`"
+      feedback: |
+        R doesn't work out which argument you probably meant. Whatever sits
+        first inside the parentheses is the number to be rounded.
+    - id: err
+      text: "An error, because the arguments are in the wrong order"
+      feedback: |
+        It runs. Both numbers are perfectly valid in the positions they
+        landed in, so R has no way to know they were swapped. This is the
+        pattern worth noticing early: a call can be wrong in a way that
+        produces a clean, confident, useless answer.
+    - id: warn
+      text: "A warning, but it still returns an answer"
+      feedback: |
+        Not even a warning. Nothing about this call looks suspicious to R.

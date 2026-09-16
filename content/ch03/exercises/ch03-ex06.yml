@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch03-ex06
+type: fill-blank
+title: Asking what something is
+topic: types
+difficulty: 1
+tags: [types, functions]
+follows: ch03-ex05
+
+prompt: |
+  R has a function that tells you what kind of thing a value is. Use it to
+  check `4.5`.
+
+hint: |
+  It's named after the idea of what *class* of thing something belongs to.
+
+response:
+  kind: r-code
+  starter: |
+    ______(4.5)
+  solution:
+    code: |
+      class(4.5)
+    why: |
+      `class()` reports what kind of value it was handed. It's the fastest
+      way to check whether something is a number, text, or something else
+      when arithmetic is failing and you can't see why.
+  checks:
+    - expr: as.character(.result)
+      equals: [numeric]
+      on_fail: |
+        That didn't return the word "numeric". Try the function named after
+        what class of thing a value belongs to.
+  misconceptions:
+    - match:
+        on: source
+        pattern: "typeof\\("
+      feedback: |
+        `typeof()` is a close relative and it does work, but it reports how
+        R stores the value internally rather than what kind of thing it is.
+        `class()` is the one you'll want day to day.

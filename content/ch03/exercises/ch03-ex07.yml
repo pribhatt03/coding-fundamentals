@@ -1,0 +1,44 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch03-ex07
+type: predict
+title: Comparisons make a third kind of value
+topic: types
+difficulty: 1
+tags: [types, logical]
+follows: ch03-ex06
+
+prompt: |
+  What does this return?
+
+  ```r
+  sbp <- 118
+  sbp > 140
+  ```
+
+hint: |
+  The answer isn't a number and it isn't text.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: is_false
+      text: "`FALSE`"
+      correct: true
+      feedback: |
+        Right. A comparison returns `TRUE` or `FALSE` — a third kind of
+        value, called logical. You'll rely on this constantly once you
+        start filtering data: the question "which rows have a systolic over
+        140" is answered as a long run of TRUEs and FALSEs.
+    - id: zero
+      text: "`0`"
+      feedback: |
+        Close in spirit — R will treat `FALSE` as 0 if you do arithmetic on
+        it — but what comes back is the word `FALSE`, not the number.
+    - id: err
+      text: "An error, because 118 is not greater than 140"
+      feedback: |
+        A comparison that turns out to be false isn't an error. R is
+        answering your question, and the answer is no.

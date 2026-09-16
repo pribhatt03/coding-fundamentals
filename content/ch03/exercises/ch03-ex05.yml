@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch03-ex05
+type: predict
+title: Numbers in quotes
+topic: types
+difficulty: 2
+tags: [types, character]
+follows: ch03-ex04
+
+prompt: |
+  What happens?
+
+  ```r
+  "5" + 1
+  ```
+
+hint: |
+  The quotes change what kind of thing the 5 is.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: err
+      text: "An error about a non-numeric argument"
+      correct: true
+      feedback: |
+        Right. Quotes make something *text*, even when what's inside looks
+        like a number. R won't do arithmetic on text, and it won't quietly
+        convert it for you either. The error mentions a non-numeric
+        argument, which is R's way of saying one of these two things isn't
+        a number.
+    - id: six
+      text: "`6` — R converts the text to a number"
+      feedback: |
+        Some languages do exactly that. R doesn't, and that's a mercy:
+        silent conversion is how a column of lab values turns into
+        nonsense without anyone noticing.
+    - id: fiveone
+      text: "`\"51\"` — the two get joined together"
+      feedback: |
+        That's what `+` does in some other languages. In R, `+` only ever
+        means arithmetic, so it refuses rather than improvising.

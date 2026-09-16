@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch03-ex02
+type: fill-blank
+title: Using what you stored
+topic: variables
+difficulty: 1
+tags: [variables, assignment]
+follows: ch03-ex01
+
+prompt: |
+  A patient weighs 70 kg and is 1.75 m tall. Two values are already stored
+  for you. Add a line that calculates their BMI.
+
+  BMI = weight in kg ÷ (height in m × height in m)
+
+setup: null
+
+hint: |
+  You can use a stored name anywhere you'd use the number itself.
+
+response:
+  kind: r-code
+  starter: |
+    weight_kg <- 70
+    height_m <- 1.75
+    ______
+  solution:
+    code: |
+      weight_kg <- 70
+      height_m <- 1.75
+      weight_kg / (height_m * height_m)
+    why: |
+      Once a value has a name, R substitutes the value wherever the name
+      appears. The parentheses matter for the same reason they did with the
+      three temperatures.
+  checks:
+    - expr: as.numeric(round(.result, 2))
+      equals: [22.86]
+      on_fail: |
+        Not 22.86 yet. Check that the height is squared before the division
+        happens.
+  misconceptions:
+    - match:
+        on: result
+        expr: as.numeric(round(.result, 2))
+        equals: [70]
+      feedback: |
+        Without parentheses R divides 70 by 1.75 and then multiplies the
+        result by 1.75 again, landing you straight back at the weight.
+        Wrap the whole denominator.
+    - match:
+        on: source
+        pattern: "70\\s*/|/\\s*1\\.75"
+      feedback: |
+        That gives the right answer, but you've typed the numbers in
+        directly. Use the names instead — that's the point of storing them.
+        If the patient's weight changes, you want to change it in one place.

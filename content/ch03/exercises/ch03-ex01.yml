@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch03-ex01
+type: predict
+title: Storing a value
+topic: variables
+difficulty: 1
+tags: [variables, assignment]
+
+prompt: |
+  You run this line and nothing appears in the output.
+
+  ```r
+  weight_kg <- 70
+  ```
+
+  What happened?
+
+hint: |
+  Silence isn't always failure.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: stored
+      text: "R stored the value and had nothing to report"
+      correct: true
+      feedback: |
+        Right. `<-` means *put this value in this name*. Storing something
+        isn't a question, so R has no answer to print. Type `weight_kg` on
+        its own line and you'll see the 70 come back.
+    - id: failed
+      text: "The line failed silently"
+      feedback: |
+        It worked. R only prints when you ask it a question — `70 + 5` is a
+        question, `weight_kg <- 70` is an instruction. Instructions don't
+        produce output.
+    - id: needprint
+      text: "You have to print it before R will store it"
+      feedback: |
+        The value is already stored. Printing and storing are separate
+        things: `<-` stores, and typing the name on its own line shows you
+        what's there.

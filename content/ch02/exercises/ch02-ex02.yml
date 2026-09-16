@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch02-ex02
+type: predict
+title: Three temperatures
+topic: arithmetic
+difficulty: 1
+tags: [arithmetic, precedence]
+follows: ch02-ex01
+
+prompt: |
+  A patient's temperature was taken three times: 37.2, 38.1 and 37.6 °C.
+  Someone wrote this to get the average.
+
+  ```r
+  37.2 + 38.1 + 37.6 / 3
+  ```
+
+  What does R return?
+
+hint: |
+  Which operation happens first?
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: right
+      text: "`37.63` — the average"
+      feedback: |
+        That's the average, but it isn't what this line computes. Nothing
+        here tells R to add the three numbers before dividing.
+    - id: absurd
+      text: "`87.83`"
+      correct: true
+      feedback: |
+        Yes. Division happens first, so R divides only 37.6 by 3 and then
+        adds the other two readings. Notice what you just did: you didn't
+        need to know any R to see that 87.8 °C is not a body temperature.
+        Your clinical sense caught it before your R did.
+    - id: err
+      text: "An error — the parentheses are missing"
+      feedback: |
+        R doesn't require parentheses here. The line is valid, it runs, and
+        it returns a number. It's simply not the number anyone wanted.

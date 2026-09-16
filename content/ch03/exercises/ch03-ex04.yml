@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch03-ex04
+type: predict
+title: A name that doesn't exist
+topic: variables
+difficulty: 1
+tags: [variables, errors]
+follows: ch03-ex03
+
+prompt: |
+  What happens here?
+
+  ```r
+  Weight <- 70
+  weight * 2
+  ```
+
+hint: |
+  Look carefully at both names.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: err
+      text: "An error saying `weight` wasn't found"
+      correct: true
+      feedback: |
+        Right. `Weight` and `weight` are two different names as far as R is
+        concerned — capital letters count. This is one of the few errors
+        that says exactly what's wrong, so it's worth learning to read now:
+        object not found means the name doesn't exist, usually because of a
+        typo or a line that never ran.
+    - id: onefourty
+      text: "`140` — R matches the name closely enough"
+      feedback: |
+        R never guesses at names. `Weight` and `weight` are as different to
+        R as `weight` and `height`.
+    - id: warn
+      text: "A warning, and then `140`"
+      feedback: |
+        This one does stop. R can't continue without knowing what `weight`
+        refers to, so it raises an error rather than a warning.

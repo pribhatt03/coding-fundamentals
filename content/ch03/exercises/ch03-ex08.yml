@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch03-ex08
+type: predict
+title: Adding up TRUEs
+topic: types
+difficulty: 2
+tags: [types, logical]
+follows: ch03-ex07
+
+prompt: |
+  What does this return?
+
+  ```r
+  TRUE + TRUE
+  ```
+
+hint: |
+  R is willing to do arithmetic here, which tells you something about how
+  it stores TRUE and FALSE.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: two
+      text: "`2`"
+      correct: true
+      feedback: |
+        Yes. When arithmetic is involved, R treats `TRUE` as 1 and `FALSE`
+        as 0. This looks like a curiosity and turns out to be useful: once
+        you can ask a question of every row at once, adding up the answers
+        counts how many rows said yes.
+    - id: err
+      text: "An error — you can't add words"
+      feedback: |
+        `TRUE` isn't a word, it's a logical value, and R is happy to
+        convert it to a number when the situation calls for one. Contrast
+        that with `\"5\" + 1`, which it refuses outright.
+    - id: truetrue
+      text: "`TRUE`"
+      feedback: |
+        That would make sense if `+` meant something like "and". It
+        doesn't — `+` is always arithmetic, so R converts both values to
+        numbers first.

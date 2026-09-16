@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch04-ex02
+type: predict
+title: What does the base-R subset return?
+topic: missing-values
+difficulty: 2
+tags: [base-r, na, subsetting]
+follows: ch04-ex01
+
+prompt: |
+  `readings` still has that missing temperature in north's day 3. How many
+  rows does this return?
+
+  ```r
+  readings[readings$temp > 20, ]
+  ```
+
+setup: |
+  readings <- data.frame(
+    site = c("north", "north", "north", "south", "south", "south"),
+    day  = c(1, 2, 3, 1, 2, 3),
+    temp = c(18.2, 21.5, NA, 22.1, 23.4, 19.9)
+  )
+
+hint: |
+  Work out what `readings$temp > 20` gives you element by element,
+  including the missing one. Then ask what `[` does with that value.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: three
+      text: "3"
+      feedback: |
+        This is the `filter()` answer. `dplyr::filter()` does drop the
+        missing row — `[` doesn't. The two are not interchangeable, and an
+        LLM that mixes them inside one script is worth reading closely.
+    - id: four
+      text: "4, and one of them is all `NA`"
+      correct: true
+      feedback: |
+        Right. `NA > 20` is `NA`, not `FALSE`, and `[` responds to an `NA`
+        index by returning a row of all `NA`s rather than skipping it. You
+        get a phantom row that came from nowhere in your data.
+    - id: four_real
+      text: "4, all with real values"
+      feedback: |
+        Four is right but the contents aren't. Only three rows actually
+        clear 20 — the fourth is the `NA` index, which produces a row of
+        `NA`s.
+    - id: err
+      text: "An error, because of the missing value"
+      feedback: |
+        Nothing here is invalid, and that's the difficulty. `NA` moves
+        through comparison and subsetting without complaint, so this fails
+        quietly instead of loudly.

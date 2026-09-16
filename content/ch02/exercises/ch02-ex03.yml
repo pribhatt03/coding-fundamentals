@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch02-ex03
+type: debug
+title: Which operation happens first
+topic: arithmetic
+difficulty: 1
+tags: [arithmetic, precedence, debugging]
+follows: ch02-ex02
+
+prompt: |
+  R doesn't work through this line from left to right. Click the operation
+  it performs first.
+
+hint: |
+  Not every operation has equal standing. Some go before others.
+
+response:
+  kind: span
+  language: r
+  code: |
+    37.2 <<a|+>> 38.1 <<b|+>> 37.6 <<c|/>> 3
+  options:
+    - id: a
+      feedback: |
+        This is what R would do first if it worked strictly left to right.
+        It doesn't. Division and multiplication are always settled before
+        any addition or subtraction happens.
+    - id: b
+      feedback: |
+        Not this one either. Both additions wait until every division and
+        multiplication in the line is finished.
+    - id: c
+      correct: true
+      feedback: |
+        Right. Division goes first, so R divides 37.6 by 3 on its own and
+        then adds the other two readings to that result. Parentheses are
+        how you tell R to do the additions first.

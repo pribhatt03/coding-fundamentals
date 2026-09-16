@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch03-ex09
+type: debug
+title: Why won't this run?
+topic: types
+difficulty: 2
+tags: [types, character, debugging]
+follows: ch03-ex08
+
+prompt: |
+  This was meant to calculate a mean arterial pressure, but it fails with
+  an error about a non-numeric argument. Click the part that causes it.
+
+hint: |
+  Everything here is spelled correctly and every parenthesis matches. The
+  problem is what kind of value one of these is.
+
+response:
+  kind: span
+  language: r
+  code: |
+    sbp <- <<a|"120">>
+    dbp <- <<b|80>>
+    <<c|(sbp + 2 * dbp) / 3>>
+  options:
+    - id: a
+      correct: true
+      feedback: |
+        Right. The quotes make this text rather than a number, so the
+        arithmetic on the third line has nothing to work with. Notice how
+        little there was to see — one pair of quotation marks, and nothing
+        else about the code looks wrong.
+    - id: b
+      feedback: |
+        This one is a proper number, no quotes. Compare it to the line
+        above and the difference should stand out.
+    - id: c
+      feedback: |
+        This is the line that *reports* the error, but it isn't the cause.
+        The formula is correct. It's being handed something it can't use,
+        and that came from further up.

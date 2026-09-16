@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch02-ex01
+type: predict
+title: Order of operations
+topic: arithmetic
+difficulty: 1
+tags: [arithmetic, precedence]
+
+prompt: |
+  What does R return?
+
+  ```r
+  2 + 3 * 4
+  ```
+
+hint: |
+  R follows the same order of operations you learned in school.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: fourteen
+      text: "`14`"
+      correct: true
+      feedback: |
+        Right. Multiplication happens before addition, so R computes
+        `3 * 4` first and then adds 2.
+    - id: twenty
+      text: "`20`"
+      feedback: |
+        That would be the answer if R worked strictly left to right, adding
+        2 and 3 before multiplying. It doesn't. Multiplication and division
+        always happen before addition and subtraction.
+    - id: err
+      text: "An error — the expression is ambiguous"
+      feedback: |
+        R never asks you to clarify. It applies its order of operations and
+        returns an answer, which is convenient right up until the rules
+        aren't the ones you had in mind.

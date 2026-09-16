@@ -1,0 +1,14 @@
+{
+  "name": "rcourse",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node build/validate.mjs --check",
+    "build": "node build/validate.mjs",
+    "dev": "node build/serve.mjs"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "js-yaml": "^4.1.0"
+  }
+}
