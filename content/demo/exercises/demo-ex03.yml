@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: demo-ex03
+type: debug
+title: Where does the NA enter?
+topic: missing-values
+difficulty: 2
+tags: [dplyr, na, debugging]
+packages: [dplyr]
+follows: demo-ex01
+
+prompt: |
+  This pipeline returns nothing for north. Click the part of the code
+  where the missing value first becomes a problem.
+
+hint: |
+  Something here inherits the `NA` rather than creating it. Find the line
+  that turns a missing *reading* into a missing *result*.
+
+response:
+  kind: span
+  language: r
+  code: |
+    readings %>%
+      group_by(site) %>%
+      summarise(avg = <<a|mean(temp)>>) %>%
+      arrange(<<b|desc(avg)>>) %>%
+      filter(avg <<c|>>> 20)
+  options:
+    - id: a
+      correct: true
+      feedback: |
+        Yes. North's group contains one `NA`, and `mean()` returns `NA`
+        whenever any input is `NA`. Everything downstream is working
+        correctly on a value that is already lost.
+    - id: b
+      feedback: |
+        `arrange()` does treat `NA` unusually — it sorts missing values
+        last regardless of direction — but it received the `NA`, it didn't
+        create it.
+    - id: c
+      feedback: |
+        The comparison is fine. It's being handed an `NA`, and `NA > 20` is
+        `NA`, so north drops out of the filter. That's the symptom you
+        noticed, not the cause.

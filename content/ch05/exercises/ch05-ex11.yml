@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch05-ex11
+type: fill-blank
+title: Just the high ones
+topic: vectors
+difficulty: 3
+tags: [vectors, indexing, logical]
+follows: ch05-ex10
+
+prompt: |
+  Using square brackets, get the actual readings that were over 140.
+
+hint: |
+  You already know how to ask which readings are over 140. Put that
+  question inside the brackets.
+
+setup: |
+  sbp <- c(118, 142, 131, 156)
+
+response:
+  kind: r-code
+  starter: |
+    sbp[______]
+  solution:
+    code: |
+      sbp[sbp > 140]
+    why: |
+      `sbp > 140` gives `FALSE TRUE FALSE TRUE`, and the brackets keep the
+      values lined up with each TRUE. That's filtering. When you later
+      filter a table of a thousand patients, this is what's happening
+      underneath.
+  checks:
+    - expr: as.numeric(.result)
+      equals: [142, 156]
+      on_fail: |
+        Not the two high readings yet. The question you're asking is:
+        *which of these readings are over 140?* Write that question in R,
+        and put it inside the brackets.
+  misconceptions:
+    - id: missing-bracket
+      match:
+        on: error
+        pattern: "unexpected"
+      feedback: |
+        Check the brackets. There are two pairs here — the square ones
+        around the question, and the question itself — and one hasn't been
+        closed.
+    - id: logical-not-values
+      match:
+        on: result
+        expr: as.character(.result)
+        equals: ["FALSE", "TRUE", "FALSE", "TRUE"]
+      feedback: |
+        That's the question's answer, not the readings. Put it *inside* the
+        brackets after `sbp` so R keeps only the matching values.
+    - id: counted-instead
+      match:
+        on: result
+        expr: as.numeric(.result)
+        equals: [2]
+      feedback: |
+        That counts how many were high — the previous exercise. Here you
+        want the readings themselves.

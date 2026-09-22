@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch04-ex09
+type: fill-blank
+title: Keeping what a function gives back
+topic: functions
+difficulty: 2
+tags: [functions, return-values, variables]
+follows: ch04-ex08
+
+prompt: |
+  A calculation has given you a dose of 3.7 tablets. A function hands
+  something back, and you can store it like any other value.
+
+  Round 3.7 to a whole number, store the result in `dose`, then double it.
+
+hint: |
+  The whole call can go on the right of the arrow.
+
+response:
+  kind: r-code
+  starter: |
+    dose <- ______
+    dose * 2
+  solution:
+    code: |
+      dose <- round(3.7)
+      dose * 2
+    why: |
+      What a function returns is an ordinary value. You can store it, do
+      arithmetic on it, or pass it into another function — which is how
+      longer pipelines get built.
+  checks:
+    - expr: as.numeric(dose)
+      equals: [4]
+      on_fail: |
+        `dose` should hold 3.7 rounded to a whole number.
+    - expr: as.numeric(.result)
+      equals: [8]
+      on_fail: |
+        The second line should double whatever is in `dose`.
+  misconceptions:
+    - id: rounded-by-hand
+      match:
+        on: source
+        pattern: "dose\\s*<-\\s*4\\s*$|dose\\s*<-\\s*4\\n"
+      feedback: |
+        That gets the right number, but you've done the rounding in your
+        head. Put the call itself on the right of the arrow — the point is
+        that a function's answer is a value you can keep.

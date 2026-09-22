@@ -1,0 +1,107 @@
+# Function reference — the course's own help page.
+#
+# One entry per function a student is shown. `introduced` is the chapter
+# where it first appears; the panel only lists functions up to the chapter
+# the student is reading, so nothing ahead gets spoiled.
+#
+# Write `does` in the words a beginner would search with. Someone looking
+# for sum() types "count" or "add up", not "summation".
+#
+# The build warns when an exercise solution uses a function missing from
+# here — that's the show-first rule, enforced.
+#
+# `note_from` hides a note until that chapter. Use it when the note would
+# spoil an exercise whose whole point is the surprise: log() defaulting to
+# base e, round(0.5) being 0. Don't gate lookups that are the intended path
+# — ch05-ex06 is *meant* to be solvable by finding sum() here.
+
+- name: round
+  usage: round(x, digits = 0)
+  does: Rounds a number to a given number of decimal places.
+  example: round(93.333, 1)
+  result: "[1] 93.3"
+  introduced: ch02
+  note: Halves round to the nearest even number, so `round(0.5)` is 0 and `round(1.5)` is 2.
+  note_from: ch05
+
+- name: class
+  usage: class(x)
+  does: Tells you what type of value something is — numeric, character, logical. The first thing to check when a function gives you something odd.
+  example: class("142")
+  result: '[1] "character"'
+  introduced: ch03
+
+- name: log
+  usage: log(x, base = exp(1))
+  does: Calculates a logarithm.
+  example: log(100, base = 10)
+  result: "[1] 2"
+  introduced: ch04
+  note: The default base is *e*, about 2.718 — not 10. `log(100)` is about 4.61.
+  note_from: ch05
+
+- name: paste
+  usage: paste(..., sep = " ")
+  does: Joins values together into one piece of text.
+  example: 'paste("MAP is", 93.33, sep = ": ")'
+  result: '[1] "MAP is: 93.33"'
+  introduced: ch04
+
+- name: c
+  usage: c(...)
+  does: Combines several values into one vector. Short for combine.
+  example: c(118, 142, 131, 156)
+  result: "[1] 118 142 131 156"
+  introduced: ch05
+  note: A vector holds one type only. If any value is text, every value becomes text.
+
+- name: length
+  usage: length(x)
+  does: Counts how many values there are.
+  example: length(c(118, 142, 131, 156))
+  result: "[1] 4"
+  introduced: ch05
+
+- name: sum
+  usage: sum(x)
+  does: Adds up numbers. On TRUE and FALSE, counts how many are TRUE.
+  example: sum(c(118, 142, 131, 156) > 140)
+  result: "[1] 2"
+  introduced: ch05
+
+- name: mean
+  usage: mean(x)
+  does: The average. On TRUE and FALSE, gives the fraction that are TRUE.
+  example: mean(c(118, 142, 131, 156))
+  result: "[1] 136.75"
+  introduced: ch05
+  note: Needs numbers. On text it warns and returns `NA`.
+
+- name: max
+  usage: max(x)
+  does: The largest value.
+  example: max(c(118, 142, 131, 156))
+  result: "[1] 156"
+  introduced: ch05
+
+- name: sort
+  usage: sort(x, decreasing = FALSE)
+  does: Puts values in order, lowest first unless told otherwise.
+  example: sort(c(142, 118, 156), decreasing = TRUE)
+  result: "[1] 156 142 118"
+  introduced: ch05
+
+- name: as.numeric
+  usage: as.numeric(x)
+  does: Converts text into numbers.
+  example: as.numeric("131")
+  result: "[1] 131"
+  introduced: ch05
+  note: Anything that can't be read as a number becomes `NA`, with a warning.
+
+- name: sqrt
+  usage: sqrt(x)
+  does: Square root.
+  example: sqrt(2)
+  result: "[1] 1.414214"
+  introduced: ch05

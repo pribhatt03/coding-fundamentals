@@ -41,5 +41,7 @@ response:
     - id: warn
       text: "A warning, and then `140`"
       feedback: |
-        This one does stop. R can't continue without knowing what `weight`
-        refers to, so it raises an error rather than a warning.
+        This one is an error, not a warning, and the difference matters: a
+        warning lets R carry on and hand you an answer, while an error
+        stops it in its tracks. R can't continue without knowing what
+        `weight` refers to, so nothing is returned at all.

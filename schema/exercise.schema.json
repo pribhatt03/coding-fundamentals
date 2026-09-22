@@ -4,108 +4,224 @@
   "title": "Course exercise",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "id", "type", "prompt", "response"],
+  "required": [
+    "schema_version",
+    "id",
+    "type",
+    "prompt",
+    "response"
+  ],
   "properties": {
-    "schema_version": { "const": 1 },
+    "schema_version": {
+      "const": 1
+    },
     "id": {
       "type": "string",
-      "pattern": "^ch[0-9]{2}-ex[0-9]{2}$",
-      "description": "Stable slug. Never renamed once published; appears in URLs and analytics."
+      "pattern": "^[a-z0-9]+-ex[0-9]{2}$",
+      "description": "Stable slug, prefixed by its chapter folder. Never renamed once published; appears in URLs and analytics."
     },
     "type": {
-      "enum": ["predict", "debug", "fix-the-llm", "fill-blank", "write-prompt"],
+      "enum": [
+        "predict",
+        "debug",
+        "fix-the-llm",
+        "fill-blank",
+        "write-prompt"
+      ],
       "description": "Pedagogical label. Drives UI copy and chapter mix, never the grader."
     },
-    "title": { "type": "string", "maxLength": 80 },
-    "topic": { "type": "string" },
-    "difficulty": { "type": "integer", "minimum": 1, "maximum": 3 },
-    "tags": { "type": "array", "items": { "type": "string" } },
+    "title": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "topic": {
+      "type": "string"
+    },
+    "difficulty": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "packages": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "description": "Must exist at repo.r-wasm.org. Checked by validate.mjs."
     },
     "follows": {
       "type": "string",
-      "pattern": "^ch[0-9]{2}-ex[0-9]{2}$",
+      "pattern": "^[a-z0-9]+-ex[0-9]{2}$",
       "description": "Sequencing only. Does not gate; the learner can skip."
     },
-    "prompt": { "type": "string", "description": "Markdown." },
+    "prompt": {
+      "type": "string",
+      "description": "Markdown."
+    },
     "setup": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "description": "R code run once when the chapter session warms. Never concatenated with learner code."
     },
-    "hint": { "type": "string", "description": "One nudge. Markdown." },
+    "hint": {
+      "type": "string",
+      "description": "One nudge. Markdown."
+    },
     "response": {
       "oneOf": [
-        { "$ref": "#/$defs/choice" },
-        { "$ref": "#/$defs/span" },
-        { "$ref": "#/$defs/prose" },
-        { "$ref": "#/$defs/rcode" }
+        {
+          "$ref": "#/$defs/choice"
+        },
+        {
+          "$ref": "#/$defs/span"
+        },
+        {
+          "$ref": "#/$defs/prose"
+        },
+        {
+          "$ref": "#/$defs/rcode"
+        }
       ]
     }
   },
-
   "$defs": {
     "option": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "feedback"],
+      "required": [
+        "id",
+        "feedback"
+      ],
       "properties": {
-        "id": { "type": "string", "pattern": "^[a-z0-9_-]+$" },
-        "text": { "type": "string", "description": "Markdown. Required for choice, absent for span." },
-        "correct": { "type": "boolean", "default": false },
-        "feedback": { "type": "string", "minLength": 1, "description": "Markdown. Required on every option, right or wrong." }
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_-]+$"
+        },
+        "text": {
+          "type": "string",
+          "description": "Markdown. Required for choice, absent for span."
+        },
+        "correct": {
+          "type": "boolean",
+          "default": false
+        },
+        "feedback": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Markdown. Required on every option, right or wrong."
+        }
       }
     },
-
     "choice": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind", "options"],
+      "required": [
+        "kind",
+        "options"
+      ],
       "properties": {
-        "kind": { "const": "choice" },
-        "select": { "enum": ["one", "many"], "default": "one" },
-        "shuffle": { "type": "boolean", "default": true },
+        "kind": {
+          "const": "choice"
+        },
+        "select": {
+          "enum": [
+            "one",
+            "many"
+          ],
+          "default": "one"
+        },
+        "shuffle": {
+          "type": "boolean",
+          "default": true
+        },
         "options": {
           "type": "array",
           "minItems": 2,
           "items": {
-            "allOf": [{ "$ref": "#/$defs/option" }],
-            "required": ["id", "text", "feedback"]
+            "allOf": [
+              {
+                "$ref": "#/$defs/option"
+              }
+            ],
+            "required": [
+              "id",
+              "text",
+              "feedback"
+            ]
           }
         }
       }
     },
-
     "span": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind", "code", "options"],
+      "required": [
+        "kind",
+        "code",
+        "options"
+      ],
       "properties": {
-        "kind": { "const": "span" },
+        "kind": {
+          "const": "span"
+        },
         "code": {
           "type": "string",
           "description": "R code with selectable regions marked <<id|text>>. Non-marked text is inert."
         },
-        "language": { "type": "string", "default": "r" },
+        "language": {
+          "type": "string",
+          "default": "r"
+        },
         "options": {
           "type": "array",
           "minItems": 2,
-          "items": { "$ref": "#/$defs/option" }
+          "items": {
+            "$ref": "#/$defs/option"
+          }
+        },
+        "runnable": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show a Run button so the learner can see what the code actually does before choosing."
         }
       }
     },
-
     "prose": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind", "exemplar", "rubric"],
+      "required": [
+        "kind",
+        "exemplar",
+        "rubric"
+      ],
       "properties": {
-        "kind": { "const": "prose" },
-        "exemplar": { "type": "string" },
+        "kind": {
+          "const": "prose"
+        },
+        "exemplar": {
+          "type": "string"
+        },
         "pass_threshold": {
-          "oneOf": [{ "enum": ["all", "any"] }, { "type": "integer", "minimum": 1 }],
+          "oneOf": [
+            {
+              "enum": [
+                "all",
+                "any"
+              ]
+            },
+            {
+              "type": "integer",
+              "minimum": 1
+            }
+          ],
           "default": "all"
         },
         "rubric": {
@@ -114,31 +230,60 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["id", "criterion", "on_fail"],
+            "required": [
+              "id",
+              "criterion",
+              "on_fail"
+            ],
             "properties": {
-              "id": { "type": "string", "pattern": "^[a-z0-9_-]+$" },
-              "criterion": { "type": "string", "description": "One yes/no question for the judge. Never a compound." },
-              "on_fail": { "type": "string", "minLength": 1 }
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9_-]+$"
+              },
+              "criterion": {
+                "type": "string",
+                "description": "One yes/no question for the judge. Never a compound."
+              },
+              "on_fail": {
+                "type": "string",
+                "minLength": 1
+              }
             }
           }
         }
       }
     },
-
     "rcode": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind", "starter", "solution", "checks"],
+      "required": [
+        "kind",
+        "starter",
+        "solution",
+        "checks"
+      ],
       "properties": {
-        "kind": { "const": "r-code" },
-        "starter": { "type": "string" },
+        "kind": {
+          "const": "r-code"
+        },
+        "starter": {
+          "type": "string"
+        },
         "solution": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["code", "why"],
+          "required": [
+            "code",
+            "why"
+          ],
           "properties": {
-            "code": { "type": "string" },
-            "why": { "type": "string", "minLength": 1 }
+            "code": {
+              "type": "string"
+            },
+            "why": {
+              "type": "string",
+              "minLength": 1
+            }
           }
         },
         "checks": {
@@ -147,11 +292,21 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["expr", "equals"],
+            "required": [
+              "expr",
+              "equals"
+            ],
             "properties": {
-              "expr": { "type": "string", "description": "R expression over .result and setup objects." },
-              "equals": { "description": "JSON literal compared to the evaluated expr." },
-              "on_fail": { "type": "string" }
+              "expr": {
+                "type": "string",
+                "description": "R expression over .result and setup objects."
+              },
+              "equals": {
+                "description": "JSON literal compared to the evaluated expr."
+              },
+              "on_fail": {
+                "type": "string"
+              }
             }
           }
         },
@@ -160,41 +315,77 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["match", "feedback"],
+            "required": [
+              "id",
+              "match",
+              "feedback"
+            ],
             "properties": {
               "match": {
                 "oneOf": [
                   {
                     "type": "object",
                     "additionalProperties": false,
-                    "required": ["on", "expr", "equals"],
+                    "required": [
+                      "on",
+                      "expr",
+                      "equals"
+                    ],
                     "properties": {
-                      "on": { "const": "result" },
-                      "expr": { "type": "string" },
+                      "on": {
+                        "const": "result"
+                      },
+                      "expr": {
+                        "type": "string"
+                      },
                       "equals": {}
                     }
                   },
                   {
                     "type": "object",
                     "additionalProperties": false,
-                    "required": ["on", "pattern"],
+                    "required": [
+                      "on",
+                      "pattern"
+                    ],
                     "properties": {
-                      "on": { "const": "source" },
-                      "pattern": { "type": "string", "description": "JS regex, tested against submitted code." }
+                      "on": {
+                        "const": "source"
+                      },
+                      "pattern": {
+                        "type": "string",
+                        "description": "JS regex, tested against submitted code."
+                      }
                     }
                   },
                   {
                     "type": "object",
                     "additionalProperties": false,
-                    "required": ["on", "pattern"],
+                    "required": [
+                      "on",
+                      "pattern"
+                    ],
                     "properties": {
-                      "on": { "const": "error" },
-                      "pattern": { "type": "string", "description": "JS regex, tested against the R error message." }
+                      "on": {
+                        "const": "error"
+                      },
+                      "pattern": {
+                        "type": "string",
+                        "description": "JS regex, tested against the R error message."
+                      }
                     }
                   }
                 ]
               },
-              "feedback": { "type": "string", "minLength": 1 }
+              "feedback": {
+                "type": "string",
+                "minLength": 1
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9_-]+$",
+                "description": "Names this misconception in analytics. Without it, events fall back to list position, which breaks if you reorder."
+              }
             }
           }
         }

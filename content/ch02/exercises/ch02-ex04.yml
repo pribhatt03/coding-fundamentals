@@ -31,7 +31,8 @@ response:
         Not the average yet. All three readings need to be added together
         before anything is divided.
   misconceptions:
-    - match:
+    - id: unchanged
+      match:
         on: result
         expr: as.numeric(round(.result, 2))
         equals: [87.83]
@@ -39,7 +40,8 @@ response:
         That's the original line unchanged. R is still dividing only the
         last reading. The parentheses have to go around all three numbers,
         not around the division.
-    - match:
+    - id: no-division
+      match:
         on: result
         expr: as.numeric(round(.result, 2))
         equals: [112.9]

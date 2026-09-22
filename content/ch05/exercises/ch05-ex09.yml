@@ -1,0 +1,67 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch05-ex09
+type: fix-the-llm
+title: Rescue the numbers
+topic: vectors
+difficulty: 2
+tags: [vectors, coercion, functions, types]
+follows: ch05-ex08
+
+prompt: |
+  `sbp` is still text, so `mean(sbp)` still gives `NA`. And you can't always
+  just delete the quotes — often the data came from somewhere else.
+
+  First, a new idea. You can put one function call *inside* another. R runs
+  the inside one first, then hands its result to the outside one:
+
+  ```r
+  round(sqrt(2), 1)
+  ```
+
+  `sqrt(2)` runs first and gives about 1.414. Then `round()` gets that and
+  gives 1.4.
+
+  Now the function you need: **`as.numeric()` converts text into
+  numbers.** Put it inside `mean()` to get the average of `sbp`.
+
+hint: |
+  Convert first, then average. `as.numeric(sbp)` goes where the blank is.
+
+setup: |
+  sbp <- c(118, 142, "131", 156)
+
+response:
+  kind: r-code
+  starter: |
+    mean(______)
+  solution:
+    code: |
+      mean(as.numeric(sbp))
+    why: |
+      `as.numeric(sbp)` returns a vector of four numbers, and that vector is
+      handed straight to `mean()`. A call inside a call runs from the inside
+      out. The original `sbp` is still text afterwards — nothing was stored.
+  checks:
+    - expr: as.numeric(round(.result, 2))
+      equals: [136.75]
+      on_fail: |
+        Not 136.75 yet. The values need converting to numbers before
+        they're averaged.
+  misconceptions:
+    - id: still-text
+      match:
+        on: result
+        expr: is.na(.result)
+        equals: [true]
+      feedback: |
+        The output of `mean()` is still `NA`, so it's still being handed
+        text. Put `as.numeric(sbp)` inside the brackets of `mean()`, so the
+        conversion happens first.
+    - id: wrong-direction
+      match:
+        on: source
+        pattern: "as\\.character\\("
+      feedback: |
+        `as.character()` converts the other way — into text, which is the
+        problem you already have. You want `as.numeric()`.

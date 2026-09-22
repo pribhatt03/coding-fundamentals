@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch05-ex04
+type: predict
+title: Did that change anything?
+topic: vectors
+difficulty: 2
+tags: [vectors, variables, return-values]
+follows: ch05-ex03
+
+prompt: |
+  You run these lines, in this order.
+
+  ```r
+  sbp <- c(118, 142, 131, 156)
+  sbp - 10
+  sbp
+  ```
+
+  What does the last line print?
+
+hint: |
+  Look for an arrow.
+
+setup: |
+  sbp <- c(118, 142, 131, 156)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: unchanged
+      text: "`118 142 131 156` — the original readings"
+      correct: true
+      feedback: |
+        Right. `sbp - 10` works out four corrected values and hands them
+        back, but nothing catches them — there's no arrow, so nothing is
+        stored. `sbp` is exactly what it was. To keep the correction you'd
+        write `sbp <- sbp - 10`, which replaces the old readings, silently,
+        the way reassignment always does.
+    - id: changed
+      text: "`108 132 121 146` — the corrected readings"
+      feedback: |
+        The subtraction happened, but its result was never stored. A
+        calculation returns a value; only `<-` stores one. Without an arrow,
+        `sbp` is untouched.
+    - id: err
+      text: "An error, because `sbp` was used up by the first line"
+      feedback: |
+        Using a variable doesn't consume it. You can read `sbp` as many
+        times as you like and it stays the same until something is assigned
+        to it.

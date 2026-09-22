@@ -2,58 +2,43 @@
 schema_version: 1
 id: ch04-ex02
 type: predict
-title: What does the base-R subset return?
-topic: missing-values
-difficulty: 2
-tags: [base-r, na, subsetting]
+title: One argument instead of two
+topic: functions
+difficulty: 1
+tags: [functions, defaults]
 follows: ch04-ex01
 
 prompt: |
-  `readings` still has that missing temperature in north's day 3. How many
-  rows does this return?
+  You've been giving `round()` two arguments. What happens with only one?
 
   ```r
-  readings[readings$temp > 20, ]
+  round(3.7)
   ```
 
-setup: |
-  readings <- data.frame(
-    site = c("north", "north", "north", "south", "south", "south"),
-    day  = c(1, 2, 3, 1, 2, 3),
-    temp = c(18.2, 21.5, NA, 22.1, 23.4, 19.9)
-  )
-
 hint: |
-  Work out what `readings$temp > 20` gives you element by element,
-  including the missing one. Then ask what `[` does with that value.
+  It doesn't fail, and it doesn't ask you to fill in the missing piece.
 
 response:
   kind: choice
   select: one
   shuffle: true
   options:
-    - id: three
-      text: "3"
-      feedback: |
-        This is the `filter()` answer. `dplyr::filter()` does drop the
-        missing row — `[` doesn't. The two are not interchangeable, and an
-        LLM that mixes them inside one script is worth reading closely.
     - id: four
-      text: "4, and one of them is all `NA`"
+      text: "`4`"
       correct: true
       feedback: |
-        Right. `NA > 20` is `NA`, not `FALSE`, and `[` responds to an `NA`
-        index by returning a row of all `NA`s rather than skipping it. You
-        get a phantom row that came from nowhere in your data.
-    - id: four_real
-      text: "4, all with real values"
-      feedback: |
-        Four is right but the contents aren't. Only three rows actually
-        clear 20 — the fourth is the `NA` index, which produces a row of
-        `NA`s.
+        Right. When you don't say how many decimal places you want,
+        `round()` uses zero. That value was always there, quietly doing its
+        job — you just never had to think about it. Most functions have
+        several of these, and some of them matter a great deal.
     - id: err
-      text: "An error, because of the missing value"
+      text: "An error about a missing argument"
       feedback: |
-        Nothing here is invalid, and that's the difficulty. `NA` moves
-        through comparison and subsetting without complaint, so this fails
-        quietly instead of loudly.
+        Some arguments are required and some aren't. The number of decimal
+        places has a fallback value that `round()` uses when you stay
+        silent.
+    - id: same
+      text: "`3.7` — with nothing to round to, it leaves the number alone"
+      feedback: |
+        It does round. The fallback isn't "do nothing", it's a specific
+        value: zero decimal places.

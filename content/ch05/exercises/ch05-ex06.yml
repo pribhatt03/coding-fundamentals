@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch05-ex06
+type: predict
+title: How many were high?
+topic: vectors
+difficulty: 2
+tags: [vectors, logical, functions]
+follows: ch05-ex05
+
+prompt: |
+  `sbp > 140` gives you `FALSE TRUE FALSE TRUE`. You want to know how many
+  readings were over 140.
+
+  ```r
+  sbp <- c(118, 142, 131, 156)
+  ______(sbp > 140)
+  ```
+
+  Which function goes in the blank?
+
+hint: |
+  Remember what `TRUE + TRUE` gave you in module 3.
+
+setup: |
+  sbp <- c(118, 142, 131, 156)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: sum
+      text: "`sum()`"
+      correct: true
+      feedback: |
+        Right. `TRUE` counts as 1 and `FALSE` as 0, so adding up the answers
+        gives you 2 — the number that were over 140. It looked like a
+        curiosity in module 3; this is what it's for.
+    - id: length
+      text: "`length()`"
+      feedback: |
+        `length()` gives you 4 — the number of answers, one per reading. It
+        counts how many values there are, not how many of them are TRUE.
+    - id: mean
+      text: "`mean()`"
+      feedback: |
+        `mean()` gives you 0.5. Not the count, but a genuinely useful answer
+        to a different question: what *fraction* of readings were over 140.
+        Half of them.
+    - id: max
+      text: "`max()`"
+      feedback: |
+        `max()` gives you 1, which tells you that *at least one* reading was
+        over 140. It can't tell you how many.

@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch05-ex03
+type: predict
+title: Arithmetic on the whole thing
+topic: vectors
+difficulty: 1
+tags: [vectors, arithmetic]
+follows: ch05-ex02
+
+prompt: |
+  The cuff was reading 10 mmHg higher than the patient's true pressure all
+  shift. What does the last line return?
+
+  ```r
+  sbp <- c(118, 142, 131, 156)
+  sbp - 10
+  ```
+
+hint: |
+  `sbp` holds four numbers. Nothing in this line picks just one of them.
+
+setup: |
+  sbp <- c(118, 142, 131, 156)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: all
+      text: "`108 132 121 146`"
+      correct: true
+      feedback: |
+        Yes. Arithmetic on a vector happens to every value at once. You
+        didn't have to say "for each reading, subtract 10" — R did it to
+        all four without being asked.
+    - id: first
+      text: "`108` — just the first one"
+      feedback: |
+        R applies it to every value, not only the first. There's no need to
+        say which ones; the whole vector is the default.
+    - id: err
+      text: "An error — you can't subtract a number from a vector"
+      feedback: |
+        You can, and it's one of the most useful things about R. The 10 is
+        taken from each value in turn.

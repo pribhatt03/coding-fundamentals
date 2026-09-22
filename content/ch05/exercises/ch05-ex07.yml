@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch05-ex07
+type: predict
+title: One value in quotes
+topic: vectors
+difficulty: 2
+tags: [vectors, types, character, coercion]
+follows: ch05-ex06
+
+prompt: |
+  One reading was typed in with quotes around it. What does the last line
+  return?
+
+  ```r
+  readings <- c(118, "142", 131)
+  class(readings)
+  ```
+
+hint: |
+  A vector can only hold one type of value. Something has to give.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: character
+      text: "`\"character\"`"
+      correct: true
+      feedback: |
+        Yes. A vector holds one type only, so when one value is text R turns
+        *all* of them into text to make them match. `118` is now `"118"`.
+
+        This is exactly how real data arrives, whether it's a lab export or
+        a large research database. One entry says `"<0.5"` or `"hemolysed"`
+        or `"not done"`, and the whole column comes in as text. Nothing
+        warns you at the time. It only shows up later, when arithmetic or
+        other functions don't give you what you expect — and it keeps
+        happening until the mismatch is dealt with.
+    - id: numeric
+      text: "`\"numeric\"`, because most of them are numbers"
+      feedback: |
+        R doesn't take a majority vote. One text value is enough to make the
+        whole vector text, because text can hold a number but a number
+        can't hold text.
+    - id: both
+      text: "`\"numeric\" \"character\" \"numeric\"` — one per value"
+      feedback: |
+        That would make sense if each value kept its own type. It can't: a
+        vector is one type throughout, so R converts them all to the type
+        that can hold everything.

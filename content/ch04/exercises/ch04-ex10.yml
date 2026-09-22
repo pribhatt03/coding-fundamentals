@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch04-ex10
+type: debug
+title: A function you've never seen
+topic: functions
+difficulty: 2
+tags: [functions, named-arguments, critical-appraisal]
+follows: ch04-ex09
+
+prompt: |
+  You've never met this function, and you don't need to. Click the named
+  argument.
+
+hint: |
+  You're looking for a name, an equals sign, and a value.
+
+response:
+  kind: span
+  language: r
+  code: |
+    <<a|paste>>(<<b|"MAP is">>, <<c|93.33>>, <<d|sep = ": ">>)
+  options:
+    - id: a
+      feedback: |
+        That's the function name. It sits outside the brackets, so it isn't
+        an argument at all.
+    - id: b
+      feedback: |
+        This is an argument, but it's passed by position — no name attached
+        to it.
+    - id: c
+      feedback: |
+        Also an argument, also unnamed. R works out what it's for from
+        where it sits.
+    - id: d
+      correct: true
+      feedback: |
+        Right. A name, an equals sign, a value. You still don't know what
+        `paste()` does, and you could already say: it takes some things,
+        and one of its arguments is called `sep`. That's usually enough to
+        ask a sharper question — or to notice that an argument you cared
+        about was never given a value at all.

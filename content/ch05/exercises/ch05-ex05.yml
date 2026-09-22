@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch05-ex05
+type: predict
+title: Asking every reading a question
+topic: vectors
+difficulty: 2
+tags: [vectors, logical, comparison]
+follows: ch05-ex04
+
+prompt: |
+  What does this return?
+
+  ```r
+  sbp > 140
+  ```
+
+hint: |
+  In module 3, `118 > 140` gave you one answer. How many values are in
+  `sbp`?
+
+setup: |
+  sbp <- c(118, 142, 131, 156)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: four
+      text: "`FALSE TRUE FALSE TRUE`"
+      correct: true
+      feedback: |
+        Yes — one answer per reading. The comparison was asked of every
+        value, just like the subtraction was. This is what module 3
+        promised: a thousand blood pressures and one question gives you a
+        thousand TRUEs and FALSEs — and you can use that list to pick out
+        the values you care about.
+    - id: one
+      text: "`TRUE` — because some of them are over 140"
+      feedback: |
+        R doesn't summarise the answer for you. It asks the question of each
+        value separately and gives you all four answers back.
+    - id: values
+      text: "`142 156` — the readings over 140"
+      feedback: |
+        That's where this is heading, but it's one step further. A
+        comparison gives you TRUE or FALSE for each value. Turning those into
+        the values themselves is the last exercise in this module.

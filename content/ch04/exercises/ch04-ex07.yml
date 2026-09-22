@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch04-ex07
+type: fill-blank
+title: Overriding the default
+topic: functions
+difficulty: 2
+tags: [functions, defaults]
+follows: ch04-ex06
+
+prompt: |
+  Make it a base-10 logarithm instead, so the answer comes back as 2.
+
+  The usage line for `log()` — which you'll also find in the **Functions**
+  panel — is `log(x, base = exp(1))`.
+
+hint: |
+  You already know how to name an argument.
+
+response:
+  kind: r-code
+  starter: |
+    log(100, ______)
+  solution:
+    code: |
+      log(100, base = 10)
+    why: |
+      Supplying the argument replaces its default. `log(100, 10)` works too
+      — the second position is `base` — but naming it means nobody has to
+      remember that.
+  checks:
+    - expr: as.numeric(.result)
+      equals: [2]
+      on_fail: |
+        The answer isn't 2. A base-10 logarithm asks: 10 raised to what
+        power gives 100? Check the number you passed as the base.
+  misconceptions:
+    - id: used-log10
+      match:
+        on: source
+        pattern: "log10\\("
+      feedback: |
+        `log10()` is a real function and it gives the right answer, so
+        that's a fine thing to reach for day to day. Here, though, the
+        exercise is about overriding a default — worth doing once with
+        `base =` so you can do it with any function, not just this one.
+    - id: base-unchanged
+      match:
+        on: result
+        expr: as.numeric(round(.result, 2))
+        equals: [4.61]
+      feedback: |
+        That's still the natural logarithm, so the base hasn't changed.
+        Check that a base is actually being passed in.
+    - id: base-two
+      match:
+        on: result
+        expr: as.numeric(round(.result, 2))
+        equals: [6.64]
+      feedback: |
+        You've named the argument correctly — the problem is the number.
+        `base = 2` asks how many times you'd double 1 to reach 100. For a
+        base-10 logarithm the base is 10.

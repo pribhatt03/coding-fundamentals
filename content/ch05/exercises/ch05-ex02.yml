@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch05-ex02
+type: predict
+title: Which one is second?
+topic: vectors
+difficulty: 1
+tags: [vectors, indexing]
+follows: ch05-ex01
+
+prompt: |
+  Square brackets pick a value out of a vector by its position.
+
+  ```r
+  sbp <- c(118, 142, 131, 156)
+  sbp[2]
+  ```
+
+  What does the second line return?
+
+hint: |
+  Count the way you'd count anything else.
+
+setup: |
+  sbp <- c(118, 142, 131, 156)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: second
+      text: "`142`"
+      correct: true
+      feedback: |
+        Right. R counts from 1, the way people do: the first value is
+        `sbp[1]`, the second is `sbp[2]`. That sounds too obvious to
+        mention, but almost every other programming language counts from 0 —
+        so if you ever read Python, `readings[2]` there means the *third*
+        value.
+    - id: third
+      text: "`131`"
+      feedback: |
+        That's what you'd get if R counted from 0, which Python and most
+        other languages do. R counts from 1, so position 2 is the second
+        value. Worth remembering: this is the single most common source of
+        confusion when people move between the two.
+    - id: whole
+      text: "All four readings"
+      feedback: |
+        The number inside the brackets picks one position. To get all four
+        you'd type `sbp` on its own, instead of `sbp[2]`.

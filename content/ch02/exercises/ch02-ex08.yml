@@ -36,14 +36,16 @@ response:
         Not 93.33 yet. Check which of the two pressures gets doubled, and
         check that the division applies to the whole numerator.
   misconceptions:
-    - match:
+    - id: simple-average
+      match:
         on: result
         expr: as.numeric(round(.result, 2))
         equals: [100]
       feedback: |
         That's the simple average again — the formula from the previous
         exercise, the one that runs fine and gives the wrong answer.
-    - match:
+    - id: swapped-weight
+      match:
         on: result
         expr: as.numeric(round(.result, 2))
         equals: [106.67]
@@ -51,7 +53,8 @@ response:
         You've doubled the systolic instead of the diastolic. The weighting
         goes the other way: the heart spends about twice as long in
         diastole, so it's the lower number that counts twice.
-    - match:
+    - id: missing-parens
+      match:
         on: result
         expr: as.numeric(round(.result, 2))
         equals: [173.33]

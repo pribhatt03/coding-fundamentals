@@ -1,71 +1,36 @@
 # yaml-language-server: $schema=../../../schema/exercise.schema.json
 schema_version: 1
 id: ch04-ex01
-type: fill-blank
-title: Grouped mean with a missing reading
-topic: missing-values
+type: debug
+title: The parts of a call
+topic: functions
 difficulty: 1
-tags: [dplyr, na]
-packages: [dplyr]
+tags: [functions, anatomy]
 
 prompt: |
-  `readings` holds three days of temperature for two sites. One reading
-  failed and came back missing. Fill the blank so each site gets its mean
-  temperature.
-
-setup: |
-  library(dplyr)
-  readings <- data.frame(
-    site = c("north", "north", "north", "south", "south", "south"),
-    day  = c(1, 2, 3, 1, 2, 3),
-    temp = c(18.2, 21.5, NA, 22.1, 23.4, 19.9)
-  )
+  Click the part that tells R *what to do*.
 
 hint: |
-  `mean()` takes a second argument that decides what to do when an input
-  is missing.
+  Everything inside the brackets is material being handed over. Something
+  outside them decides what happens to it.
 
 response:
-  kind: r-code
-  starter: |
-    readings %>%
-      group_by(site) %>%
-      summarise(avg_temp = ______)
-  solution:
-    code: |
-      readings %>%
-        group_by(site) %>%
-        summarise(avg_temp = mean(temp, na.rm = TRUE))
-    why: |
-      `mean()` propagates `NA` by default, so a group containing one
-      missing value returns `NA` for the whole group unless you drop it
-      explicitly.
-  checks:
-    - expr: as.numeric(round(.result$avg_temp, 2))
-      equals: [19.85, 21.8]
-      on_fail: |
-        The averages don't match. Check that north is averaging its two
-        real readings rather than all three.
-    - expr: colnames(.result)
-      equals: [site, avg_temp]
-      on_fail: |
-        The output columns should be `site` and `avg_temp`.
-  misconceptions:
-    - match:
-        on: result
-        expr: as.logical(is.na(.result$avg_temp))
-        equals: [true, false]
+  kind: span
+  language: r
+  code: |
+    <<a|round>>(<<b|3.14159>>, <<c|2>>)
+  options:
+    - id: a
+      correct: true
       feedback: |
-        Your code ran without an error, and that's the problem. North came
-        back `NA` because one of its three readings is missing, and `mean()`
-        treats one unknown input as making the answer unknown. South is
-        fine, so half your output looks right — which is exactly how this
-        slips through review. Add `na.rm = TRUE`.
-    - match:
-        on: source
-        pattern: "drop_na\\(|filter\\(\\s*!is\\.na"
+        Right. That's the function name — the job you're asking for.
+        Everything inside the brackets is material you're handing over for
+        it to work on.
+    - id: b
       feedback: |
-        That gives the right numbers, but it discards north's day 3 row
-        entirely. If you later summarise a second column from the same
-        pipeline, that row is gone from it too. `na.rm = TRUE` scopes the
-        decision to this one calculation.
+        This is the value being rounded, not the instruction. It's one of
+        the *arguments* — the things passed in to the function.
+    - id: c
+      feedback: |
+        This is the second argument, saying how many decimal places you
+        want. Useful, but it isn't the part that decides what happens.

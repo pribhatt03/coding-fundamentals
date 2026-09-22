@@ -1,45 +1,48 @@
 # yaml-language-server: $schema=../../../schema/exercise.schema.json
 schema_version: 1
 id: ch04-ex03
-type: debug
-title: Where does the NA enter?
-topic: missing-values
-difficulty: 2
-tags: [dplyr, na, debugging]
-packages: [dplyr]
-follows: ch04-ex01
+type: predict
+title: Reading the manual
+topic: functions
+difficulty: 1
+tags: [functions, defaults, documentation]
+follows: ch04-ex02
 
 prompt: |
-  This pipeline returns nothing for north. Click the part of the code
-  where the missing value first becomes a problem.
+  The help page for `round()` begins with this line, called *Usage*.
+
+  ```r
+  round(x, digits = 0)
+  ```
+
+  What is that line telling you?
 
 hint: |
-  Something here inherits the `NA` rather than creating it. Find the line
-  that turns a missing *reading* into a missing *result*.
+  One of the two arguments has something attached to it that the other
+  doesn't.
 
 response:
-  kind: span
-  language: r
-  code: |
-    readings %>%
-      group_by(site) %>%
-      summarise(avg = <<a|mean(temp)>>) %>%
-      arrange(<<b|desc(avg)>>) %>%
-      filter(avg <<c|>>> 20)
+  kind: choice
+  select: one
+  shuffle: true
   options:
-    - id: a
+    - id: default
+      text: "`x` must be supplied; `digits` will be 0 unless you say otherwise"
       correct: true
       feedback: |
-        Yes. North's group contains one `NA`, and `mean()` returns `NA`
-        whenever any input is `NA`. Everything downstream is working
-        correctly on a value that is already lost.
-    - id: b
+        Exactly. An argument written with `= something` in the help page
+        has a fallback value, called a *default*. An argument written bare,
+        like `x`, has none — you have to supply it. This one line tells you
+        the name of every argument, the order they go in, and which ones
+        you can leave out.
+    - id: mustzero
+      text: "`digits` must always be set to 0"
       feedback: |
-        `arrange()` does treat `NA` unusually — it sorts missing values
-        last regardless of direction — but it received the `NA`, it didn't
-        create it.
-    - id: c
+        The 0 is a starting point, not a rule. You've already overridden it
+        by writing `round(3.14159, 2)`.
+    - id: example
+      text: "It's an example of how someone might call the function"
       feedback: |
-        The comparison is fine. It's being handed an `NA`, and `NA > 20` is
-        `NA`, so north drops out of the filter. That's the symptom you
-        noticed, not the cause.
+        It looks like an example, but it's a specification. The names are
+        the real argument names, in the real order, and the `= 0` shows
+        what happens if you say nothing.

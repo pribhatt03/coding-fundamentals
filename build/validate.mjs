@@ -5,13 +5,15 @@
 //   node build/validate.mjs            # validate + build
 //   node build/validate.mjs --check    # validate only, no output (use in CI)
 
-import { readFile, readdir, mkdir, writeFile } from "node:fs/promises";
+import { readFile, readdir, mkdir, writeFile, copyFile } from "node:fs/promises";
 import { basename, join } from "node:path";
+import { createHash } from "node:crypto";
 import Ajv from "ajv/dist/2020.js"; // draft 2020-12; the default ajv export is draft-07
 import yaml from "js-yaml";
 
 const CONTENT = "content";
 const OUT = "web/exercises";
+const PROSE_OUT = "web/chapters";
 const CHECK_ONLY = process.argv.includes("--check");
 
 // Selectable region in a span exercise: <<id|text>>
@@ -110,6 +112,19 @@ function customRules(ex, file) {
   }
 }
 
+/** Stable hash of an exercise's content.
+ *  Recorded with every analytics event so that editing an exercise after
+ *  students have seen it doesn't silently merge two different versions under
+ *  one id. Keys are sorted so formatting changes don't alter the hash. */
+function contentHash(ex) {
+  const canon = (v) =>
+    Array.isArray(v) ? v.map(canon)
+    : v && typeof v === "object"
+      ? Object.fromEntries(Object.keys(v).sort().filter((k) => k !== "hash").map((k) => [k, canon(v[k])]))
+      : v;
+  return createHash("sha256").update(JSON.stringify(canon(ex))).digest("hex").slice(0, 10);
+}
+
 /** Split marked code into inert text and selectable spans, so the runtime never parses. */
 function compileSpans(code) {
   const parts = [];
@@ -129,6 +144,7 @@ const chapters = (await readdir(CONTENT, { withFileTypes: true }))
 
 let total = 0;
 const bundles = new Map();
+const prose = new Set();
 
 for (const ch of chapters) {
   const dir = join(CONTENT, ch, "exercises");
@@ -158,6 +174,7 @@ for (const ch of chapters) {
     customRules(ex, f);
 
     const out = { ...ex };
+    out.hash = contentHash(ex);
     if (out.response.kind === "span") {
       out.response = { ...out.response, parts: compileSpans(out.response.code) };
       delete out.response.code;
@@ -176,12 +193,75 @@ for (const ch of chapters) {
     await mkdir(OUT, { recursive: true });
     await writeFile(join(OUT, `${ch}.json`), JSON.stringify(bundle));
     bundles.set(ch, bundle.length);
+    // Chapter prose, if it exists, gets copied alongside for the preview page.
+    try {
+      await mkdir(PROSE_OUT, { recursive: true });
+      await copyFile(join(CONTENT, ch, `${ch}.md`), join(PROSE_OUT, `${ch}.md`));
+      prose.add(ch);
+    } catch { /* no prose written yet */ }
   }
 }
 
 if (!CHECK_ONLY && !errors.length) {
   const built = chapters.filter((c) => bundles.has(c)).sort();
   await writeFile(join(OUT, "index.json"), JSON.stringify(built));
+}
+
+/* ------------------------------------------------------------ reference --- */
+// The function reference doubles as a check on the show-first rule: every
+// function a solution relies on should be in the reference, introduced no
+// later than the chapter that uses it.
+
+const NOT_FUNCTIONS = new Set(["if", "for", "while", "function", "return", "repeat"]);
+let reference = [];
+try {
+  reference = yaml.load(await readFile(join(CONTENT, "reference.yml"), "utf8")) ?? [];
+} catch (e) {
+  warnings.push(`reference.yml: ${e.code === "ENOENT" ? "missing" : e.message}`);
+}
+
+const chapterOrder = [...bundles.keys()].filter((c) => /^ch\d+$/.test(c)).sort();
+const refByName = new Map();
+for (const [i, f] of reference.entries()) {
+  const where = `reference.yml entry ${i + 1}${f?.name ? ` (${f.name})` : ""}`;
+  for (const k of ["name", "usage", "does", "example", "introduced"]) {
+    if (!f?.[k]) fail(where, `missing "${k}"`);
+  }
+  if (f?.name && refByName.has(f.name)) fail(where, `duplicate function "${f.name}"`);
+  if (f?.introduced && !chapterOrder.includes(f.introduced)) {
+    warn(where, `introduced in "${f.introduced}", which has no exercises`);
+  }
+  if (f?.note_from && !chapterOrder.includes(f.note_from)) {
+    warn(where, `note_from "${f.note_from}" is not a chapter with exercises`);
+  }
+  if (f?.name) refByName.set(f.name, f);
+}
+
+const calls = (code = "") =>
+  [...code.matchAll(/(?<![\w.])([A-Za-z.][A-Za-z0-9._]*)\s*\(/g)]
+    .map((m) => m[1]).filter((n) => !NOT_FUNCTIONS.has(n));
+
+for (const ch of chapterOrder) {
+  const exs = JSON.parse(await readFile(join(OUT, `${ch}.json`), "utf8"));
+  for (const ex of exs) {
+    const r = ex.response;
+    const used = new Set([
+      ...calls(r.solution?.code),
+      ...(r.options ?? []).filter((o) => o.correct).flatMap((o) => calls(o.text)),
+    ]);
+    for (const name of used) {
+      const f = refByName.get(name);
+      if (!f) {
+        warn(ex.id, `solution uses ${name}() — not in reference.yml`);
+      } else if (chapterOrder.indexOf(f.introduced) > chapterOrder.indexOf(ch)) {
+        warn(ex.id, `solution uses ${name}(), which the reference introduces later in ${f.introduced}`);
+      }
+    }
+  }
+}
+
+if (!CHECK_ONLY && !errors.length) {
+  await writeFile(join("web", "reference.json"), JSON.stringify(reference));
 }
 
 for (const w of warnings) console.warn(`  warn  ${w}`);
@@ -192,3 +272,8 @@ if (errors.length) {
   process.exit(1);
 }
 console.log(`\n${total} exercise(s) valid${CHECK_ONLY ? "" : `, written to ${OUT}/`}.`);
+if (!CHECK_ONLY) {
+  const without = [...bundles.keys()].filter((c) => !prose.has(c)).sort();
+  if (prose.size) console.log(`prose: ${[...prose].sort().join(", ")}`);
+  if (without.length) console.log(`no prose yet: ${without.join(", ")}`);
+}

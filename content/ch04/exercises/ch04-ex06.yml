@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch04-ex06
+type: predict
+title: A default you didn't know about
+topic: functions
+difficulty: 2
+tags: [functions, defaults, critical-appraisal]
+follows: ch04-ex05
+
+prompt: |
+  `log()` calculates a logarithm. What does this return?
+
+  ```r
+  log(100)
+  ```
+
+hint: |
+  The usage line for `log()` is `log(x, base = exp(1))`. That `exp(1)` is a
+  number
+  just under 2.72 — so whatever the default base is, it isn't 10.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: natural
+      text: "About `4.61`"
+      correct: true
+      feedback: |
+        Right, and this is the one to remember. `log()` defaults to the
+        natural logarithm — base *e*, about 2.718 — not base 10. If you
+        wanted base 10 and didn't say so, you get an answer that is
+        perfectly correct, plausibly sized, and not the one you asked for.
+    - id: ten
+      text: "`2`, because 10² is 100"
+      feedback: |
+        That's `log10(100)`. It's a reasonable assumption, and it's wrong:
+        R's `log()` uses base *e* unless told otherwise. The number that
+        comes back, 4.61, is close enough to plausible that you might not
+        question it.
+    - id: err
+      text: "An error, because no base was given"
+      feedback: |
+        The base has a default, so the call runs. That's exactly what makes
+        it worth knowing about.

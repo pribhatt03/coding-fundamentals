@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: demo-ex04
+type: write-prompt
+title: Ask for the summarise call
+topic: prompting
+difficulty: 2
+tags: [prompting, dplyr]
+follows: demo-ex01
+
+prompt: |
+  You want an LLM to write the grouped mean from the first exercise, but
+  you can't paste the data. Write the prompt you'd send.
+
+hint: |
+  The model can't see your data frame. Everything it needs to know about
+  the shape of your data has to be in the words you send.
+
+response:
+  kind: prose
+  pass_threshold: all
+  exemplar: |
+    I have an R data frame called `readings` with columns site (character),
+    day (numeric) and temp (numeric). Some temp values are NA. Using dplyr,
+    give me one row per site with the mean temperature, ignoring the
+    missing values. Call the output column avg_temp.
+  rubric:
+    - id: columns
+      criterion: Does the response name the columns it operates on?
+      on_fail: |
+        A prompt like "summarise my temperature data" gets you working code
+        built on invented column names — `temperature`, `location`,
+        `value`. It looks right, runs against nothing, and reconciling it
+        takes longer than writing the call yourself.
+    - id: missing
+      criterion: Does the response state that missing values are present in the data?
+      on_fail: |
+        Without this, the model has no reason to reach for `na.rm`. You get
+        code that runs clean and returns `NA` for one group — the exact
+        failure from the first exercise, now with a second author.
+    - id: dialect
+      criterion: Does the response specify dplyr, or otherwise pin the style of R to use?
+      on_fail: |
+        Left open, the model picks for you, and it often picks `aggregate()`
+        or `tapply()`. Not wrong, but it won't match the rest of your
+        script, and mixed dialects are where subsetting bugs hide.
+    - id: shape
+      criterion: Does the response describe the shape of the desired output, such as one row per site?
+      on_fail: |
+        Say what you want back. "Summarise by site" can mean one row per
+        site or a new column added to all six rows, and those are very
+        different objects.

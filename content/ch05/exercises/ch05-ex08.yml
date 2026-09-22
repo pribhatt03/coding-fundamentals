@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch05-ex08
+type: fix-the-llm
+title: Why is the mean NA?
+topic: vectors
+difficulty: 2
+tags: [vectors, coercion, debugging, critical-appraisal]
+follows: ch05-ex07
+
+prompt: |
+  You were handed this to get the average systolic. Press **Run it** to see
+  what happens.
+
+  The warning comes from `mean()` — but `mean()` isn't what's wrong. Click
+  the part of the code that *caused* the problem.
+
+hint: |
+  The help page for `mean()` says it needs a numeric or logical vector —
+  the **Functions** panel says the same. What kind of vector is `sbp`?
+
+response:
+  kind: span
+  language: r
+  runnable: true
+  code: |
+    sbp <- c(<<a|118>>, 142, <<b|"131">>, 156)
+    <<c|mean(sbp)>>
+  options:
+    - id: a
+      feedback: |
+        This one is a plain number. It's the value two places along that's
+        different.
+    - id: b
+      correct: true
+      feedback: |
+        Right. One quoted value turned the whole vector into text, and
+        `mean()` only works on numbers — its help page says so, and so does
+        the Functions panel. This is why
+        types matter at all: most functions only accept certain kinds of
+        value, and when they're handed the wrong kind, they either stop or
+        quietly give you something useless.
+
+        Notice how this one failed: not an error that stopped everything, but
+        a warning and an `NA` that's easy to scroll past. Nobody checks
+        `class()` before they start — the skill is what you just did, working
+        backwards from a strange result to what caused it. When a function
+        gives you something odd, `class()` is a good first question to ask.
+    - id: c
+      feedback: |
+        This is where the warning comes from, but `mean()` is doing exactly
+        its job. It was handed four pieces of text instead of four numbers,
+        and its warning says so. The problem was made one line earlier.

@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch05-ex10
+type: fill-blank
+title: Highest first
+topic: vectors
+difficulty: 2
+tags: [vectors, functions, defaults, documentation]
+follows: ch05-ex09
+
+prompt: |
+  `sort()` puts values in order. By default it goes lowest first, which
+  isn't what you want — you want the highest reading at the top.
+
+  Its usage line — from the help page, and in the **Functions** panel —
+  is:
+
+  ```r
+  sort(x, decreasing = FALSE, ...)
+  ```
+
+hint: |
+  You've overridden a default before, in `log(100, base = 10)`.
+
+setup: |
+  sbp <- c(118, 142, 131, 156)
+
+response:
+  kind: r-code
+  starter: |
+    sort(sbp, ______)
+  solution:
+    code: |
+      sort(sbp, decreasing = TRUE)
+    why: |
+      The default is written right there in the usage line. `TRUE` here is
+      the same logical value from module 3 — arguments can take TRUE and
+      FALSE as settings, and many do.
+  checks:
+    - expr: as.numeric(.result)
+      equals: [156, 142, 131, 118]
+      on_fail: |
+        Not highest-first yet. Check the name of the argument in the usage
+        line, and what it needs to be set to.
+  misconceptions:
+    - id: default-unchanged
+      match:
+        on: result
+        expr: as.numeric(.result)
+        equals: [118, 131, 142, 156]
+      feedback: |
+        That's still lowest-first, which is the default. The argument that
+        controls it is `decreasing`, and it's currently `FALSE`.

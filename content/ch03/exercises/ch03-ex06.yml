@@ -9,11 +9,11 @@ tags: [types, functions]
 follows: ch03-ex05
 
 prompt: |
-  R has a function that tells you what kind of thing a value is. Use it to
-  check `4.5`.
+  R has a function called `class()` that tells you what kind of thing a
+  value is. Use it to check `4.5`.
 
 hint: |
-  It's named after the idea of what *class* of thing something belongs to.
+  The function name goes directly before the opening bracket.
 
 response:
   kind: r-code
@@ -33,7 +33,8 @@ response:
         That didn't return the word "numeric". Try the function named after
         what class of thing a value belongs to.
   misconceptions:
-    - match:
+    - id: used-typeof
+      match:
         on: source
         pattern: "typeof\\("
       feedback: |

@@ -1,0 +1,454 @@
+/* ---------------------------------------------------------------- themes --- */
+/* Every theme sets the same variables. Nothing elsewhere in this file refers
+   to a literal colour, so adding a fifth theme means adding one block here. */
+
+:root, :root[data-theme="paper"] {
+  --paper:       #FFFFFF;
+  --paper-sunk:  #F2F3F5;
+  --ink:         #16181D;
+  --ink-soft:    #61656E;
+  --rule:        #DCDEE3;
+  --rule-strong: #B4B8C1;
+
+  --term:        #F4F5F8;   /* code sits on a tint, not a dark slab */
+  --term-edge:   #DCDEE3;
+  --term-ink:    #1B1E24;
+  --term-dim:    #7A7F8A;
+  --term-gutter: #EAECF0;
+
+  --ok:          #157347;
+  --wait:        #9A5B00;
+  --err:         #B42318;
+
+  --syn-comment: #6E7480;
+  --syn-string:  #9A5B00;
+  --syn-number:  #0B62C4;
+  --syn-call:    #7A2E9E;
+  --syn-keyword: #B42318;
+}
+
+/* Their first sight of a code editor. Bright on near-black is the thing that
+   made most of us want to keep going. */
+:root[data-theme="night"] {
+  --paper:       #10131C;
+  --paper-sunk:  #171B27;
+  --ink:         #E6E9F2;
+  --ink-soft:    #9AA1B4;
+  --rule:        #2A3043;
+  --rule-strong: #465070;
+
+  --term:        #161B29;   /* one surface: code and prose share the dark */
+  --term-edge:   #2A3043;
+  --term-ink:    #E6E9F2;
+  --term-dim:    #7C8497;
+  --term-gutter: #1B2132;
+
+  --ok:          #6EE7A8;
+  --wait:        #FFC46B;
+  --err:         #FF8A8A;
+
+  --syn-comment: #6B7490;
+  --syn-string:  #FFC46B;
+  --syn-number:  #6BC9F5;
+  --syn-call:    #6EE7A8;
+  --syn-keyword: #FF7BC8;
+}
+
+:root[data-theme="sepia"] {
+  --paper:       #FBF5E9;
+  --paper-sunk:  #F2E9D8;
+  --ink:         #2E2519;
+  --ink-soft:    #6E6252;
+  --rule:        #E0D3BC;
+  --rule-strong: #BFAE92;
+
+  --term:        #F4EBDA;
+  --term-edge:   #E0D3BC;
+  --term-ink:    #2E2519;
+  --term-dim:    #857A68;
+  --term-gutter: #EDE2CE;
+
+  --ok:          #2F6B3D;
+  --wait:        #96601A;
+  --err:         #A33A25;
+
+  --syn-comment: #8A7F6C;
+  --syn-string:  #96601A;
+  --syn-number:  #1F5F8B;
+  --syn-call:    #6B3E8E;
+  --syn-keyword: #A33A25;
+}
+
+/* Okabe-Ito palette: chosen to stay distinguishable under deuteranopia,
+   protanopia and tritanopia. Contrast pushed to maximum throughout. */
+:root[data-theme="access"] {
+  --paper:       #FFFFFF;
+  --paper-sunk:  #EFEFEF;
+  --ink:         #000000;
+  --ink-soft:    #3D3D3D;
+  --rule:        #9A9A9A;
+  --rule-strong: #000000;
+
+  --term:        #F2F2F2;
+  --term-edge:   #6B6B6B;
+  --term-ink:    #000000;
+  --term-dim:    #4A4A4A;
+  --term-gutter: #E2E2E2;
+
+  --ok:          #006E4F;   /* bluish green */
+  --wait:        #935200;   /* orange */
+  --err:         #9B2C00;   /* vermillion */
+
+  --syn-comment: #4A4A4A;
+  --syn-string:  #935200;
+  --syn-number:  #005587;   /* blue */
+  --syn-call:    #7A3B6B;   /* reddish purple */
+  --syn-keyword: #9B2C00;
+}
+
+:root {
+  --measure: 42rem;
+  --breakout: 2.25rem;
+}
+
+* { box-sizing: border-box; }
+html, body { background: var(--paper); }
+
+body.reading {
+  font-family: Literata, Georgia, "Times New Roman", serif;
+  font-size: 18px;
+  line-height: 1.72;
+  color: var(--ink);
+  margin: 0;
+  padding: 0 1.5rem 8rem;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Prose holds a readable measure; code and exercises break out wider, so the
+   page fills more of the screen without long lines of running text. */
+main { max-width: calc(var(--measure) + var(--breakout) * 2); margin: 0 auto; }
+main > div > p,
+main > div > ul,
+main > div > h1,
+main > div > h2,
+main > div > h3 { max-width: var(--measure); margin-left: var(--breakout); }
+
+/* ------------------------------------------------------------- reading --- */
+
+h1 { font-size: 2.1rem; line-height: 1.15; font-weight: 600; letter-spacing: -.015em; margin: 3rem 0 1.5rem; }
+h2 { font-size: 1.25rem; line-height: 1.3; font-weight: 600; margin: 3.25rem 0 .9rem; }
+h3 { font-size: 1.05rem; font-weight: 600; margin: 2.25rem 0 .5rem; }
+p  { margin: 0 0 1.25rem; }
+ul { margin: 0 0 1.25rem 1.3rem; padding: 0; }
+li { margin-bottom: .35rem; }
+
+p code, li code, .prompt code, .rev code, .verdictbox code, .revealbox code {
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-size: .84em;
+  background: var(--paper-sunk);
+  padding: .1em .35em;
+  border-radius: 3px;
+}
+
+/* -------------------------------------------------------- the terminal --- */
+
+pre {
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  background: var(--term);
+  color: var(--term-ink);
+  border: 1px solid var(--term-edge);
+  font-size: .8rem;
+  line-height: 1.7;
+  padding: 1rem 1.15rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin: 0 0 1.4rem;
+}
+pre code { background: none; padding: 0; font-size: inherit; color: inherit; }
+
+/* --------------------------------------------------------------- chrome --- */
+
+.bar {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; gap: 1.1rem; align-items: center; flex-wrap: wrap;
+  padding: .75rem 0 .7rem;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: .78rem;
+  color: var(--ink-soft);
+}
+.bar select {
+  font: inherit; color: inherit; padding: .2rem .3rem;
+  background: transparent; border: 1px solid var(--rule); border-radius: 3px;
+}
+.bar a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--rule); }
+.bar a:hover { color: var(--ink); }
+#fnslot { margin-left: auto; }
+#fnbtn { font-weight: 600; color: var(--ink); }
+#warn { color: var(--err); }
+
+.bar-track {
+  position: sticky; top: 2.6rem; z-index: 4;
+  height: 2px; background: var(--rule); margin: -1px 0 3rem;
+}
+#bar-fill { height: 100%; width: 0; background: var(--ok); transition: width .4s ease; }
+
+button.linky {
+  font: inherit; background: none; border: 0; padding: 0; color: inherit;
+  border-bottom: 1px solid var(--rule); cursor: pointer;
+}
+button.linky:hover { color: var(--ink); }
+
+/* ----------------------------------------------------------- exercises --- */
+/* Marked by a rule on the left and a shift to the sans face. That change of
+   voice is the signal that the activity has changed from reading to doing —
+   not a card, not a shadow. */
+
+.exercise {
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: .95rem;
+  line-height: 1.6;
+  margin: 3rem 0;
+  padding: .2rem 0 .2rem 1.5rem;
+  border-left: 4px solid var(--rule);
+  transition: border-color .3s ease;
+}
+.exercise.done { border-left-color: var(--ok); }
+
+.exhead {
+  display: flex; align-items: baseline; gap: .5rem;
+  font-size: .8rem; color: var(--ink-soft); margin-bottom: .85rem;
+}
+.extitle { font-weight: 500; }
+.exid { font-family: "IBM Plex Mono", monospace; font-size: .72rem; opacity: .45; }
+.exdone { display: none; margin-left: auto; color: var(--ok); font-weight: 600; }
+.exercise.done .exdone { display: inline; }
+.exdone::before { content: "\2713  "; }
+
+.exercise .prompt p { margin-bottom: .8rem; }
+.exercise .prompt > *:last-child { margin-bottom: 1rem; }
+
+label.opt {
+  display: block; border: 1px solid var(--rule); border-radius: 4px;
+  padding: .6rem .8rem; margin-bottom: .4rem; cursor: pointer;
+  transition: border-color .12s ease, background .12s ease;
+}
+label.opt:hover { border-color: var(--ink-soft); }
+label.opt:has(input:checked) { border-color: var(--ink); background: var(--paper-sunk); }
+label.opt input { margin-right: .6rem; accent-color: var(--ok); }
+label.opt code { background: var(--paper-sunk); color: var(--ink); }
+
+.spancode {
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  background: var(--term); color: var(--term-ink);
+  border: 1px solid var(--term-edge);
+  padding: 1rem 1.15rem; border-radius: 4px;
+  white-space: pre-wrap; font-size: .82rem; line-height: 2.4;
+}
+.spancode .sel {
+  background: color-mix(in srgb, var(--term-ink) 12%, transparent);
+  border-radius: 3px; padding: .25em .4em;
+  cursor: pointer; transition: background .12s ease;
+}
+.spancode .sel:hover { background: color-mix(in srgb, var(--term-ink) 25%, transparent); }
+.spancode .sel.picked { background: transparent; box-shadow: inset 0 0 0 1px var(--syn-call); }
+
+.row { display: flex; gap: .55rem; align-items: center; margin: .8rem 0 0; }
+button.act {
+  font: inherit; font-size: .85rem; padding: .38rem 1.05rem;
+  border: 1px solid var(--rule); border-radius: 4px;
+  background: transparent; color: var(--ink); cursor: pointer;
+  transition: border-color .12s ease, background .12s ease;
+}
+button.act:hover:not(:disabled) { border-color: var(--ink); background: var(--paper-sunk); }
+button.act:disabled { opacity: .35; cursor: default; }
+button.act.run { border-color: var(--ok); color: var(--ok); }
+button.act.run:hover:not(:disabled) { background: color-mix(in srgb, var(--ok) 12%, transparent); }
+
+.stat { font-size: .78rem; color: var(--ink-soft); }
+
+.out {
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  background: var(--term); color: var(--term-ink);
+  border: 1px solid var(--term-edge);
+  font-size: .78rem; line-height: 1.7;
+  padding: .75rem 1.15rem; border-radius: 4px;
+  margin: .7rem 0 0; white-space: pre-wrap;
+}
+.out:empty { display: none; }
+.out.err { color: var(--err); }
+
+textarea {
+  width: 100%; min-height: 5rem; padding: .8rem 1rem;
+  background: var(--term); color: var(--term-ink);
+  border: 1px solid var(--term-edge); border-radius: 4px;
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-size: .82rem; line-height: 1.65;
+}
+textarea::placeholder { color: var(--term-dim); }
+
+/* -------------------------------------------------------------- verdict --- */
+
+.verdictbox, .revealbox {
+  margin-top: 1.1rem; padding: .9rem 1.1rem;
+  background: var(--paper-sunk); border-radius: 4px;
+  border-left: 2px solid var(--rule);
+  animation: rise .18s ease-out;
+}
+@keyframes rise { from { opacity: 0; transform: translateY(3px); } }
+@media (prefers-reduced-motion: reduce) {
+  .verdictbox, .revealbox { animation: none; }
+  #bar-fill { transition: none; }
+}
+.verdictbox.pass { border-left-color: var(--ok); }
+.verdictbox.fail { border-left-color: var(--wait); }
+.verdict { font-weight: 600; font-size: .82rem; margin-bottom: .4rem; }
+.verdictbox.pass .verdict { color: var(--ok); }
+.verdictbox.fail .verdict { color: var(--wait); }
+.verdictbox p, .revealbox p { margin: .45rem 0; }
+.verdictbox pre, .revealbox pre { margin: .7rem 0; font-size: .76rem; }
+.detail {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: .72rem; color: var(--ink-soft);
+  background: none; padding: .55rem 0 0; margin: .7rem 0 0; white-space: pre-wrap;
+}
+
+.rev { padding: 0 0 0 .85rem; margin: 1rem 0; border-left: 2px solid var(--rule); }
+.rev.correct { border-left-color: var(--ok); }
+.rev.you { background: var(--paper-sunk); border-radius: 0 4px 4px 0; padding-right: .7rem; }
+.revhead { font-size: .7rem; color: var(--ink-soft); margin-bottom: .2rem; }
+.rev.incorrect > p:first-of-type { color: var(--ink-soft); }
+
+/* ----------------------------------------------------------------- misc --- */
+
+.exfoot {
+  display: flex; align-items: center; gap: 1.2rem; margin-top: 1.1rem;
+  font-size: .82rem; color: var(--ink-soft);
+}
+.exfoot details.hint { margin: 0; }
+.exfoot details.hint summary { cursor: pointer; }
+.exfoot .reveal { margin-left: auto; }
+
+.nophi { font-size: .75rem; color: var(--ink-soft); margin: 0 0 .5rem; }
+.nophi::before { content: "\1F512"; margin-right: .35rem; opacity: .6; }
+
+.needlaptop {
+  font-size: .85rem; color: var(--ink-soft);
+  border: 1px dashed var(--rule); border-radius: 4px; padding: .85rem 1rem; margin: 0;
+}
+
+.scratch { margin: 0 0 1.5rem; }
+
+.chapnav {
+  display: flex; justify-content: space-between;
+  margin: 5rem 0 0; padding-top: 1.4rem; border-top: 1px solid var(--rule);
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: .85rem;
+}
+.chapnav a { color: var(--ink-soft); text-decoration: none; }
+.chapnav a:hover { color: var(--ink); }
+
+.missing {
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: .85rem; color: var(--err);
+  border: 1px dashed var(--err); padding: .85rem 1rem; border-radius: 4px;
+}
+
+:focus-visible { outline: 2px solid var(--ok); outline-offset: 2px; border-radius: 2px; }
+
+/* --------------------------------------------------------------- editor --- */
+
+.CodeMirror {
+  height: auto;
+  background: var(--term);
+  color: var(--term-ink);
+  border: 1px solid var(--term-edge);
+  border-radius: 4px;
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-size: .82rem;
+  line-height: 1.7;
+  padding: 0;
+  overflow: hidden;       /* keeps the gutter inside the rounded corners */
+}
+.CodeMirror-lines { padding: .8rem 0; }
+.CodeMirror-gutters { background: var(--term-gutter); border-right: 0; }
+.CodeMirror-linenumber { color: var(--term-dim); font-size: .72rem; }
+.CodeMirror-cursor { border-left: 1.5px solid var(--syn-call); }
+.CodeMirror-selected { background: color-mix(in srgb, var(--term-ink) 20%, transparent) !important; }
+.CodeMirror-focused { border-color: var(--syn-call); }
+.CodeMirror-matchingbracket {
+  color: var(--term-ink) !important;
+  box-shadow: inset 0 0 0 1px var(--syn-call);
+  border-radius: 2px;
+}
+
+.cm-s-default .cm-comment    { color: var(--syn-comment); font-style: italic; }
+.cm-s-default .cm-string     { color: var(--syn-string); }
+.cm-s-default .cm-number     { color: var(--syn-number); }
+.cm-s-default .cm-keyword,
+.cm-s-default .cm-atom       { color: var(--syn-keyword); }
+.cm-s-default .cm-builtin,
+.cm-s-default .cm-variable-2 { color: var(--syn-number); }
+.cm-s-default .cm-operator   { color: var(--term-dim); }
+.cm-s-default .cm-variable   { color: var(--term-ink); }
+.cm-callname,
+.fncall                      { color: var(--syn-call); }
+
+/* --------------------------------------------------------------- mobile --- */
+
+@media (max-width: 700px) {
+  body.reading { font-size: 17px; padding: 0 1.1rem 5rem; }
+  main { max-width: none; }
+  h1 { font-size: 1.7rem; margin-top: 2rem; }
+  .bar { font-size: .72rem; gap: .7rem; }
+  .bar a { display: none; }
+  .exercise { margin: 2rem 0; padding-left: 1rem; border-left-width: 3px; }
+  main > div > p, main > div > ul,
+  main > div > h1, main > div > h2, main > div > h3 { margin-left: 0; max-width: none; }
+  .spancode { font-size: .78rem; line-height: 2.6; }
+  .spancode .sel { padding: .3em .45em; }
+  label.opt { padding: .75rem .85rem; }
+  .exfoot { flex-wrap: wrap; gap: .7rem; }
+  .exfoot .reveal { margin-left: 0; }
+  .scratch { display: none; }
+}
+
+
+/* ------------------------------------------------------ function panel --- */
+
+#fnpanel {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 20;
+  width: min(26rem, 100vw);
+  background: var(--paper);
+  border-left: 1px solid var(--rule);
+  box-shadow: -12px 0 32px color-mix(in srgb, var(--ink) 10%, transparent);
+  padding: 1.1rem 1.3rem 3rem;
+  overflow-y: auto;
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: .9rem; line-height: 1.55; color: var(--ink);
+  transform: translateX(100%);
+  transition: transform .18s ease;
+}
+#fnpanel.open { transform: none; }
+@media (prefers-reduced-motion: reduce) { #fnpanel { transition: none; } }
+
+#fnpanel header { display: flex; align-items: baseline; justify-content: space-between; }
+#fnpanel h2 { font-size: 1.05rem; margin: 0; }
+#fnpanel input {
+  width: 100%; margin: .9rem 0 .35rem; padding: .5rem .7rem;
+  font: inherit; color: var(--ink); background: var(--paper-sunk);
+  border: 1px solid var(--rule); border-radius: 4px;
+}
+.fncount { font-size: .75rem; color: var(--ink-soft); margin: 0 0 1rem; }
+
+.fn { padding: 1rem 0; border-top: 1px solid var(--rule); }
+.fn h3 { display: flex; align-items: baseline; gap: .6rem; margin: 0 0 .35rem; font-size: 1rem; }
+.fn h3 code { font-family: "IBM Plex Mono", monospace; color: var(--syn-call); font-weight: 500; }
+.fnfrom { margin-left: auto; font-size: .72rem; font-weight: 400; color: var(--ink-soft); }
+.fn p { margin: 0 0 .6rem; }
+.fn pre { font-size: .76rem; margin: 0 0 .5rem; padding: .6rem .8rem; }
+.fnusage { color: var(--ink-soft); }
+.fnres { color: var(--term-dim); }
+.fnnote { font-size: .8rem; color: var(--ink-soft); }
+.fnnone { color: var(--ink-soft); font-size: .85rem; }

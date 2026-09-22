@@ -1,0 +1,44 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch05-ex01
+type: fill-blank
+title: Four readings in one place
+topic: vectors
+difficulty: 1
+tags: [vectors, functions, variables]
+
+prompt: |
+  A patient's systolic pressure was taken four times over a shift: 118,
+  142, 131 and 156.
+
+  R's function for putting several values together is `c()`, short for
+  *combine*. Use it to store all four in one variable called `sbp`.
+
+hint: |
+  The function name goes directly before the opening bracket.
+
+response:
+  kind: r-code
+  starter: |
+    sbp <- ______(118, 142, 131, 156)
+  solution:
+    code: |
+      sbp <- c(118, 142, 131, 156)
+    why: |
+      `c()` combines values into a *vector* — one name holding several
+      values in order. Almost everything you do with data in R is done to
+      vectors.
+  checks:
+    - expr: as.numeric(sbp)
+      equals: [118, 142, 131, 156]
+      on_fail: |
+        `sbp` should hold all four readings, in the order they were taken.
+  misconceptions:
+    - id: used-list
+      match:
+        on: source
+        pattern: "list\\("
+      feedback: |
+        `list()` does exist and does hold several things, but it's a
+        different, looser container — you'll meet it in module 10. For
+        values that are all the same kind, you want `c()`.

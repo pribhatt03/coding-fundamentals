@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch04-ex08
+type: fix-the-llm
+title: Rounding a half
+topic: functions
+difficulty: 3
+tags: [functions, defaults, critical-appraisal]
+follows: ch04-ex07
+
+prompt: |
+  You're rounding tablet counts to whole numbers. What does R return here?
+
+  ```r
+  round(0.5)
+  ```
+
+hint: |
+  Try predicting `round(1.5)` as well. The pair together is more revealing
+  than either alone.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: zero
+      text: "`0`"
+      correct: true
+      feedback: |
+        Yes, and most people find this surprising. R rounds a half to the
+        nearest *even* number, so `round(0.5)` is 0 while `round(1.5)` is
+        2. It's a deliberate choice — over many values it avoids the upward
+        drift you'd get from always rounding up — and it's written in the
+        help page. But nobody reads the help page for `round()`, because
+        everybody already knows what rounding is. That's the shape of the
+        problem: the functions you'd never think to check are the ones
+        whose behaviour you're most likely to have assumed.
+
+        Worth knowing that this isn't R being odd. Python rounds halves the
+        same way; JavaScript rounds them up; Excel rounds them away from
+        zero. Four tools, three answers, all of them defensible.
+    - id: one
+      text: "`1`"
+      feedback: |
+        That's the rule you were taught — halves go up. R doesn't do that.
+        It rounds to the nearest even number, so 0.5 becomes 0 and 1.5
+        becomes 2. Worth knowing before you round a dose.
+    - id: err
+      text: "An error — 0.5 is ambiguous"
+      feedback: |
+        R has a rule for it and applies the rule silently. The rule just
+        isn't the one most people expect.

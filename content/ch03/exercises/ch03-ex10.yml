@@ -9,11 +9,15 @@ tags: [types, character]
 follows: ch03-ex09
 
 prompt: |
-  Fix the two assignments so the calculation runs and returns the mean
+  Press **Run** first and read what R tells you. It's one of the messages
+  you'll see most often, and it's worth recognising on sight.
+
+  Then fix the two assignments so the calculation runs and returns the mean
   arterial pressure.
 
 hint: |
-  Nothing about the formula needs to change.
+  Nothing about the formula needs to change. `binary operator` in the error
+  message means an operator with something on each side — here, the `+`.
 
 response:
   kind: r-code
@@ -38,13 +42,15 @@ response:
         Not 93.33 yet. Both values need to be numbers before the formula
         can use them.
   misconceptions:
-    - match:
+    - id: sbp-still-text
+      match:
         on: source
         pattern: "\"120\"|'120'"
       feedback: |
         The systolic is still in quotes, so it's still text. R won't
         convert it for you when the arithmetic reaches it.
-    - match:
+    - id: dbp-still-text
+      match:
         on: source
         pattern: "\"80\"|'80'"
       feedback: |

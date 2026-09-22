@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch04-ex05
+type: predict
+title: Does the order still matter?
+topic: functions
+difficulty: 2
+tags: [functions, named-arguments]
+follows: ch04-ex04
+
+prompt: |
+  What does this return?
+
+  ```r
+  round(digits = 2, x = 3.14159)
+  ```
+
+hint: |
+  Compare this with `round(2, 3.14159)` from the last module.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: pi
+      text: "`3.14`"
+      correct: true
+      feedback: |
+        Right. Once arguments are named, their position stops mattering —
+        R matches them by name instead. This is why you'll see named
+        arguments so often in generated code: the order becomes
+        unimportant, and anyone reading it can see what each value is for.
+    - id: two
+      text: "`2`"
+      feedback: |
+        That would happen if R went by position, as it did in
+        `round(2, 3.7)`. The names override position entirely.
+    - id: err
+      text: "An error — arguments have to be in the right order"
+      feedback: |
+        Position only matters for arguments you haven't named. Name them
+        and you can write them in any order you like.

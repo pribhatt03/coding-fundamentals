@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch02-ex09
+type: predict
+title: A bracket you forgot to close
+topic: errors
+difficulty: 1
+tags: [errors, syntax]
+
+prompt: |
+  You meant to round a number to two places, but missed a bracket.
+
+  ```r
+  round(3.14159, 2
+  ```
+
+  What happens?
+
+hint: |
+  Count the brackets that open and the brackets that close.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: err
+      text: "An error about an unexpected end of input"
+      correct: true
+      feedback: |
+        Right. R read to the end of the line still waiting for the bracket
+        that closes the call, and gave up. You'll meet this one a lot, and
+        it's the friendliest kind of error there is: nothing ran, nothing
+        was stored, nothing was damaged. Add the bracket and run it again.
+    - id: fine
+      text: "It rounds the number anyway"
+      feedback: |
+        R won't guess where you meant the call to end. An unclosed bracket
+        means it can't tell whether you'd finished typing.
+    - id: autoclose
+      text: "R closes the bracket for you"
+      feedback: |
+        Some editors add the closing bracket as you type, which is a
+        convenience of the editor rather than something R does. R itself
+        reads exactly what you gave it.
+    - id: wrong_value
+      text: "It returns 3.14159, ignoring the 2"
+      feedback: |
+        Nothing runs at all. This error happens before R starts doing any
+        work — it couldn't even finish reading your instruction, let alone
+        carry it out.
