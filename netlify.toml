@@ -2,6 +2,11 @@
   command = "npm run build"
   publish = "web"
 
+# Named explicitly so the prose judge never depends on Netlify auto-detecting
+# the folder, or on a setting in the Netlify dashboard.
+[functions]
+  directory = "netlify/functions"
+
 [[headers]]
   for = "/*"
   [headers.values]

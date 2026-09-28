@@ -140,11 +140,10 @@ between several so each wrong answer teaches what that function does.
 | `if` is not `ifelse()` | ch11 prose | ch11-ex07 | 2 | — |
 | Each `print()` shows its own line, starting `[1]` | ch11-ex02 | — | 1 | ch13 |
 
-**Unkept promise: `[1]`.** Module 2 says "ignore the `[1]` for now… it'll
-make sense in a few modules", and as far as I can tell it never does. The
-natural place is module 5, the first time a vector prints: `[1]` is the
-position of the first value on that line, which only shows its purpose when
-a long vector wraps and the next line starts `[26]`. `print(1:30)` shows it.
+**`[1]` is now explained in module 5**, keeping module 2's promise. It sits
+in "Picking out one value", since `[1]` is a position, and uses `1:30` so
+the second line visibly starts with a new position. That also previews `:`,
+which module 11 then uses in `1:length(sbp)`.
 
 **Module 11 was reordered** so `if` is introduced before any exercise uses
 it. On screen: ex01, 02, 03, 06, 07, 08, 04, 05, 09.

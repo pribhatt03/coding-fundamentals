@@ -393,6 +393,16 @@ See `CONCEPTS.md` for what's thin.
   its own `<pre>`, so a bare `pre { margin }` rule spreads code apart line by
   line. And a bare `h2` rule reaches the side panels' titles. Anything about
   the module's spacing belongs under `main`.
+- **Unzipping over the folder lost the grading function.** Early archives
+  didn't contain `netlify/functions/`, so replacing the folder deleted
+  `judge.mjs`, before git history was restarted. It was missing for weeks
+  without anything failing loudly, because no module has used a prose
+  exercise since. Restored from the original code. Safer habit: commit
+  before extracting anything, then `git status` shows exactly what changed.
+- **PyYAML accepts duplicate keys; the build's js-yaml rejects them.** A
+  script of mine added a second `follows:` line to three files, and my
+  Python check passed them. Check YAML with js-yaml — the same parser the
+  build uses — or better, run the real build.
 - **`captureConditions: false` swallows R errors.** webR's own code, with
   that setting, catches the error itself, prints "Error: ..." to stderr and
   reports success. So in Check, every error was treated as "it ran", grading
