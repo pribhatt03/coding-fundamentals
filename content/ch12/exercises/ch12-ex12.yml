@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch12-ex12
+type: predict
+title: Reading a pipeline
+topic: tidyverse
+difficulty: 3
+tags: [tidyverse, pipe, reading-code, na]
+follows: ch12-ex11
+
+prompt: |
+  This is the shape most generated tidyverse code takes. `select()` keeps
+  only the columns you name.
+
+  ```r
+  patients |>
+    filter(!is.na(sbp)) |>
+    mutate(map = (sbp + 2 * dbp) / 3) |>
+    select(age, map)
+  ```
+
+  What comes out?
+
+hint: |
+  Read it top to bottom, saying *and then* at each pipe.
+
+packages: [dplyr]
+
+setup: |
+  library(dplyr)
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE),
+    dbp        = c(88, 76, 82, 84, 94)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: right
+      text: "4 rows, with columns `age` and `map`"
+      correct: true
+      feedback: |
+        Right. Take `patients`, *and then* keep the rows where `sbp` isn't
+        missing — four — *and then* add MAP, *and then* keep only `age` and
+        `map`. Each line is one step, read in the order it's written.
+
+        And because nothing is stored, `patients` itself is exactly as it was.
+    - id: five
+      text: "5 rows, with columns `age` and `map`"
+      feedback: |
+        The first step drops the patient whose systolic is missing, so four
+        rows are left by the time `select()` runs.
+    - id: allcols
+      text: "4 rows, with every column plus `map`"
+      feedback: |
+        The last step, `select(age, map)`, keeps only those two columns.
+    - id: onecol
+      text: "Just the `map` column"
+      feedback: |
+        `select()` keeps every column you name, and it names two: `age` and
+        `map`.

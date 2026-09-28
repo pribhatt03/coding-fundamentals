@@ -182,6 +182,55 @@
   result: "[1] 108 132"
   introduced: ch11
 
+- name: install.packages
+  usage: install.packages("name")
+  does: Downloads a package onto your computer. Needed once per computer, not every session. The name goes in quotes.
+  example: install.packages("dplyr")
+  result: (downloads and installs dplyr)
+  introduced: ch12
+  nocheck: true
+  note: Without quotes it fails with "object not found", because R looks for a variable of that name.
+
+- name: library
+  usage: library(name)
+  does: Loads an installed package so you can use its functions. Needed at the start of every session — that's why generated code begins with library() lines.
+  example: library(dplyr)
+  result: (loads dplyr; may print a message about masked functions)
+  introduced: ch12
+  nocheck: true
+  note: '"there is no package called ..." means it isn''t installed, or the name is misspelled. "could not find function ..." usually means you forgot library().'
+
+- name: filter
+  usage: filter(data, condition)
+  does: Keeps the rows of a data frame where the condition is TRUE. From dplyr. Inside it, column names are written on their own.
+  example: dplyr::filter(data.frame(age = c(67, 54, 71), sbp = c(142, 118, NA)), sbp > 140)
+  result: |2-
+      age sbp
+    1  67 142
+  introduced: ch12
+  note: Rows where the condition is `NA` are dropped silently — unlike square brackets, which add a row of `NA`s. Without library(dplyr), base R's own filter() runs and gives a misleading error.
+
+- name: mutate
+  usage: mutate(data, new_column = calculation)
+  does: Adds a column, or changes one, and hands back a new data frame. From dplyr.
+  example: dplyr::mutate(data.frame(sbp = c(142, 118), dbp = c(88, 76)), map = (sbp + 2 * dbp) / 3)
+  result: |2-
+      sbp dbp map
+    1 142  88 106
+    2 118  76  90
+  introduced: ch12
+  note: Doesn't change the data frame you gave it. Store the result to keep it — `patients <- mutate(patients, ...)`.
+
+- name: select
+  usage: select(data, columns)
+  does: Keeps only the columns you name. From dplyr.
+  example: dplyr::select(data.frame(age = c(67, 54), sbp = c(142, 118), dbp = c(88, 76)), age, sbp)
+  result: |2-
+      age sbp
+    1  67 142
+    2  54 118
+  introduced: ch12
+
 - name: sqrt
   usage: sqrt(x)
   does: Square root.

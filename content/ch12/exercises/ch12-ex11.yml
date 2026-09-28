@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch12-ex11
+type: predict
+title: A column that wasn't kept
+topic: tidyverse
+difficulty: 2
+tags: [tidyverse, columns, variables]
+follows: ch12-ex10
+
+prompt: |
+  `mutate()` is dplyr's way to add a column. You run:
+
+  ```r
+  mutate(patients, map = (sbp + 2 * dbp) / 3)
+  ```
+
+  Afterwards, does `patients` have a `map` column?
+
+hint: |
+  Is anything being stored with `<-`?
+
+packages: [dplyr]
+
+setup: |
+  library(dplyr)
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE),
+    dbp        = c(88, 76, 82, 84, 94)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: no
+      text: "No — `mutate()` hands back a new data frame, and nothing stored it"
+      correct: true
+      feedback: |
+        Right. dplyr's functions never change the data frame you give them;
+        they hand back a new one. To keep it, you store it:
+        `patients <- mutate(patients, map = (sbp + 2 * dbp) / 3)`.
+
+        That's why generated tidyverse code so often starts with
+        `patients <- patients |> …`. It's the same idea as module 8: filtering
+        never changed the original either.
+    - id: yes
+      text: "Yes — `mutate()` changes `patients` directly"
+      feedback: |
+        That's how `patients$map <- …` behaved in module 9. `mutate()` works
+        differently: it hands back a new data frame, and unless you store it,
+        it's printed and gone.
+    - id: session
+      text: "Yes, but only until the session ends"
+      feedback: |
+        It isn't there at all afterwards. `mutate()` handed back a new data
+        frame, and nothing stored it.

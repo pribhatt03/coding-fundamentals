@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch12-ex04
+type: predict
+title: The message that looks like a problem
+topic: packages
+difficulty: 1
+tags: [packages, critical-appraisal]
+follows: ch12-ex03
+
+prompt: |
+  Running `library(dplyr)` prints this:
+
+  ```
+  Attaching package: 'dplyr'
+
+  The following objects are masked from 'package:stats':
+
+      filter, lag
+
+  The following objects are masked from 'package:base':
+
+      intersect, setdiff, setequal, union
+  ```
+
+  Did something go wrong?
+
+hint: |
+  It doesn't say "Error" anywhere. What might "masked" mean if two packages
+  both have a function called `filter`?
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: fine
+      text: "No — dplyr has its own versions of those functions, and they now take priority"
+      correct: true
+      feedback: |
+        Right. It's a message, not an error. Base R already has a function
+        called `filter()`, and so does dplyr. When two loaded packages share a
+        name, the one loaded last wins — so from now on, `filter()` means
+        dplyr's. The old one is "masked": still there, but hidden behind it.
+
+        It's worth reading rather than scrolling past, as the next exercise
+        shows.
+    - id: broken
+      text: "Yes — dplyr didn't load properly"
+      feedback: |
+        It loaded fine. Nothing here says "Error". It's a message telling you
+        which existing functions dplyr's own versions now replace.
+    - id: data
+      text: "Yes — some of your data has been hidden"
+      feedback: |
+        "Masked" refers to functions, not data. Your data frames are
+        untouched. Where two packages have a function with the same name,
+        dplyr's version now takes priority.

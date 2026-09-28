@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch12-ex01
+type: predict
+title: Installed isn't the same as loaded
+topic: packages
+difficulty: 1
+tags: [packages, errors]
+
+prompt: |
+  A *package* is a bundle of extra functions someone else has written. The
+  `dplyr` package adds `filter()`, `mutate()` and others that generated code
+  uses constantly.
+
+  Yesterday you ran:
+
+  ```
+  install.packages("dplyr")
+  library(dplyr)
+  ```
+
+  Today, in a fresh R session, you run `mutate()` and get:
+
+  ```
+  Error in mutate(patients, map = (sbp + 2 * dbp)/3) :
+    could not find function "mutate"
+  ```
+
+  What's missing?
+
+hint: |
+  Of yesterday's two lines, which one has a lasting effect, and which lasts
+  only until R closes?
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: library
+      text: "`library(dplyr)` — it has to be run again in every new session"
+      correct: true
+      feedback: |
+        Right. `install.packages()` downloads the package onto your computer,
+        once. `library()` opens it for this session, and closing R puts it
+        away again. It's the difference between installing an app and opening
+        it.
+
+        That's why generated code usually starts with a few `library()` lines,
+        and why this is the error you get when they're missing.
+    - id: install
+      text: '`install.packages("dplyr")` — it needs installing again'
+      feedback: |
+        It's still installed — that lasts. What resets with every new session
+        is whether it's *loaded*, and loading is `library(dplyr)`.
+    - id: typo
+      text: "Nothing's missing — `mutate` must be misspelled"
+      feedback: |
+        It's spelled correctly. "Could not find function" here means R hasn't
+        been told where to look: the package that contains `mutate()` isn't
+        loaded yet.

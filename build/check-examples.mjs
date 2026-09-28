@@ -20,7 +20,11 @@ catch { console.error("Rscript not found — install R to run this check."); pro
 const ref = yaml.load(await readFile("content/reference.yml", "utf8"));
 let checked = 0, bad = 0;
 
+let skipped = 0;
 for (const f of ref) {
+  // Some examples can't be run safely or print where Rscript can't see them
+  // (install.packages, library). Those are marked nocheck.
+  if (f.nocheck) { skipped++; continue; }
   for (const ex of [{ example: f.example, result: f.result }, ...(f.also ?? [])]) {
     checked++;
     // str() and print() show their own output; everything else is wrapped in
@@ -35,5 +39,6 @@ for (const f of ref) {
     }
   }
 }
-console.log(`${checked} examples checked, ${bad} mismatch${bad === 1 ? "" : "es"}.`);
+console.log(`${checked} examples checked, ${bad} mismatch${bad === 1 ? "" : "es"}` +
+            (skipped ? `, ${skipped} not checkable (marked nocheck).` : "."));
 process.exit(bad ? 1 : 0);

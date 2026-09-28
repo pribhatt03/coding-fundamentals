@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch12-ex05
+type: fix-the-llm
+title: An error that points the wrong way
+topic: packages
+difficulty: 3
+tags: [packages, errors, critical-appraisal]
+follows: ch12-ex04
+
+prompt: |
+  In a fresh session, someone forgot `library(dplyr)` and ran:
+
+  ```
+  filter(patients, sbp > 140)
+  ```
+
+  ```
+  Error: object 'sbp' not found
+  ```
+
+  `sbp` is spelled correctly, and it's a column in `patients`. What actually
+  went wrong?
+
+hint: |
+  Think back to the last exercise. Without dplyr loaded, whose `filter()`
+  runs?
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: basefilter
+      text: "Without `library(dplyr)`, R ran base R's own `filter()`, which doesn't look inside data frames"
+      correct: true
+      feedback: |
+        Right — and it's one of the most misleading errors you'll meet. Base R
+        has its own `filter()`, the one from the "masked" message, built for
+        something else entirely. It doesn't know `sbp` is a column, so it goes
+        looking for a variable called `sbp` and doesn't find one.
+
+        The error points at `sbp`, but the real problem is a missing
+        `library()` line. When an error doesn't make sense, check that the
+        packages are loaded before you check your spelling.
+    - id: typo
+      text: "`sbp` is misspelled"
+      feedback: |
+        It's spelled correctly — which is exactly what makes this confusing.
+        The error points at `sbp`, but the cause is that dplyr isn't loaded,
+        so a different `filter()` ran.
+    - id: nodata
+      text: "`patients` doesn't exist"
+      feedback: |
+        If `patients` were missing, the error would name `patients`. It names
+        `sbp` because the wrong `filter()` ran — base R's, which dplyr would
+        normally mask.
+    - id: notinstalled
+      text: "dplyr isn't installed"
+      feedback: |
+        If it weren't installed, `library(dplyr)` would say "there is no
+        package called 'dplyr'". Here the package was simply never loaded.

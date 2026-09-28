@@ -1,0 +1,67 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch12-ex10
+type: fill-blank
+title: And then
+topic: tidyverse
+difficulty: 2
+tags: [tidyverse, pipe, reading-code]
+follows: ch12-ex09
+
+prompt: |
+  `|>` is the *pipe*. It takes what's on its left and hands it to the
+  function on its right, as that function's first argument. Read it as
+  *and then*:
+
+  ```r
+  patients |> filter(discharged)
+  ```
+
+  *Take `patients`, and then keep the discharged ones.* It's the same as
+  `filter(patients, discharged)`. You'll also see `%>%`, an older pipe that
+  does the same job.
+
+  Write the last exercise as a pipe.
+
+hint: |
+  The pipe hands `patients` to `filter()` for you. Inside the brackets, you
+  only need the condition.
+
+packages: [dplyr]
+
+setup: |
+  library(dplyr)
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE),
+    dbp        = c(88, 76, 82, 84, 94)
+  )
+
+response:
+  kind: r-code
+  starter: |
+    patients |> ______
+  solution:
+    code: |
+      patients |> filter(discharged)
+    why: |
+      With one step, the pipe doesn't save much. Its value shows when steps
+      stack up — *take this, and then filter it, and then add a column, and
+      then keep two columns* — each on its own line, read top to bottom.
+      That's how most generated tidyverse code is written.
+  checks:
+    - expr: as.numeric(.result$age)
+      equals: [67, 48, 62]
+      on_fail: |
+        Not the three discharged patients yet.
+  misconceptions:
+    - id: twice
+      match:
+        on: error
+        pattern: "argument:\\W+patients"
+      feedback: |
+        The pipe already hands `patients` to `filter()` as its first argument,
+        so writing it again inside the brackets gives it twice. Inside, write
+        only the condition: `filter(discharged)`.

@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch12-ex03
+type: predict
+title: Quotes, or no quotes?
+topic: packages
+difficulty: 2
+tags: [packages, character, errors]
+follows: ch12-ex02
+
+prompt: |
+  Which of these four lines fails?
+
+  ```
+  install.packages("dplyr")
+  install.packages(dplyr)
+  library(dplyr)
+  library("dplyr")
+  ```
+
+hint: |
+  Without quotes, R treats a word as the name of a variable.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: bareinstall
+      text: "`install.packages(dplyr)`"
+      correct: true
+      feedback: |
+        Right: *object 'dplyr' not found*. Without quotes, R looks for a
+        variable called `dplyr`, and there isn't one. `install.packages()`
+        needs the name as text, in quotes.
+
+        `library()` is the odd one out: it accepts the name with or without
+        quotes. You'll see both in generated code, which is part of why this
+        catches people.
+    - id: quotedinstall
+      text: '`install.packages("dplyr")`'
+      feedback: |
+        This is the correct way to write it — the package name as text, in
+        quotes.
+    - id: barelib
+      text: "`library(dplyr)`"
+      feedback: |
+        This works. `library()` is unusual in accepting a package name without
+        quotes.
+    - id: quotedlib
+      text: '`library("dplyr")`'
+      feedback: |
+        This works too — `library()` accepts the name with or without quotes.

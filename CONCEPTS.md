@@ -121,6 +121,46 @@ function name they've never been shown. Nobody can derive `c()` or `sum()`.
 Name the function in the prompt or the preceding prose, or make it a choice
 between several so each wrong answer teaches what that function does.
 
+### Introduced in module 12
+
+| Concept | Intro | Returns in | n | Needs to return by |
+|---|---|---|---|---|
+| Install once; `library()` every session | ch12-ex01 | ch12-ex02, ex05 | 3 | ch18 |
+| "No package called" vs "could not find function" | ch12-ex02 | — | **1** | **ch13** |
+| `install.packages()` needs quotes; `library()` doesn't | ch12-ex03 | — | 1 | ch18 |
+| "Masked" is a message, not an error | ch12-ex04 | ch12-ex05 | 2 | ch13 |
+| A forgotten `library()` can give a misleading error | ch12-ex05 | — | **1** | **ch13** |
+| `package::function` | ch12-ex06 | — | 1 | ch14 |
+| Bare column names inside dplyr functions | ch12-ex07 | ch12-ex08/09/10/11/12 | 6 | — |
+| `filter()` drops `NA` rows; `[` adds one | ch12-ex08 | — | **1** | **ch13** |
+| The pipe, `|>` and `%>%`, read as "and then" | ch12-ex10 | ch12-ex12 | 2 | ch15 |
+| dplyr functions never change the original | ch12-ex11 | ch12-ex12 | 2 | ch14 |
+| `select()` keeps named columns | ch12-ex12 | — | 1 | ch14 |
+
+### What module 12 brought back
+
+- Quotes make text; a bare word is a variable (ch03, ch07) → ch12-ex03, ex09
+- Errors that stop, and reading their messages (ch02, ch03) → ch12-ex01/02/05
+- Two functions with one name — the defaults-are-decisions theme, now as
+  "which function ran?" (ch04, ch10) → ch12-ex04, ex05
+- Column names need `patients$` (ch07) → ch12-ex07, which says plainly where
+  that rule does and doesn't apply
+- The phantom row from square brackets (ch08-ex08) → ch12-ex08, as contrast
+- Missing values dropped silently (ch10-ex08) → ch12-ex08
+- Filtering on a logical column (ch08-ex06) → ch12-ex09, ex10
+- MAP (ch02, ch09) → ch12-ex11, ex12
+- Filtering never changes the original; returned vs stored (ch05, ch08,
+  ch09) → ch12-ex11
+- `!is.na()` (ch06) → ch12-ex12
+
+**The tidyverse breaks two rules students have learned** — bare column names
+and what happens to `NA` in a filter. Both are named explicitly in the
+exercises rather than left as contradictions for students to trip over.
+
+**`library()` loads a package for the whole page in webR.** Once one exercise
+loads dplyr, a forgotten-`library()` error can't be reproduced live, so
+ch12-ex01 and ex05 show their code as plain text, not runnable boxes.
+
 ### Introduced in module 11
 
 | Concept | Intro | Returns in | n | Needs to return by |

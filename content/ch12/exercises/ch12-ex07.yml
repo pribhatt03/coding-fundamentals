@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch12-ex07
+type: predict
+title: Column names without $
+topic: tidyverse
+difficulty: 2
+tags: [tidyverse, data-frames, reading-code]
+follows: ch12-ex06
+
+prompt: |
+  Since module 7 you've written `patients$sbp`, because `sbp` on its own
+  doesn't exist. But generated code writes this, and it works:
+
+  ```r
+  filter(patients, sbp > 140)
+  ```
+
+  Why?
+
+hint: |
+  Look at what `filter()` is given first.
+
+packages: [dplyr]
+
+setup: |
+  library(dplyr)
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE),
+    dbp        = c(88, 76, 82, 84, 94)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: datafirst
+      text: "`filter()` is given `patients` first, so it looks for `sbp` among that data frame's columns"
+      correct: true
+      feedback: |
+        Right. dplyr's functions take the data frame first, and inside them
+        you can write column names on their own. `filter()` knows to look for
+        `sbp` in `patients`.
+
+        The module 7 rule still holds everywhere else. Outside these
+        functions, `sbp` on its own is still "object not found" — which is
+        exactly what went wrong two exercises ago, when base R's `filter()`
+        ran instead of dplyr's.
+    - id: wrong
+      text: "The module 7 rule was wrong"
+      feedback: |
+        It still holds everywhere outside functions like this one. `sbp` on
+        its own, in ordinary code, is still "object not found". dplyr's
+        functions are an exception because they're handed the data frame
+        first.
+    - id: creates
+      text: "dplyr creates a variable called `sbp`"
+      feedback: |
+        No new variable is created. `filter()` looks up `sbp` among the
+        columns of the data frame it was given.

@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch12-ex08
+type: predict
+title: The same filter, a different answer
+topic: tidyverse
+difficulty: 3
+tags: [tidyverse, filtering, na, critical-appraisal]
+follows: ch12-ex07
+
+prompt: |
+  Patient 3's systolic is missing. In module 8, the square-bracket version
+  of this filter gave three rows, one of them an invented patient.
+
+  ```r
+  filter(patients, sbp > 140)
+  ```
+
+  How many rows does dplyr's `filter()` give?
+
+hint: |
+  `sbp > 140` is still `TRUE FALSE NA FALSE TRUE`. The question is what
+  `filter()` does with the `NA`.
+
+packages: [dplyr]
+
+setup: |
+  library(dplyr)
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE),
+    dbp        = c(88, 76, 82, 84, 94)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: two
+      text: "2 — the patients at 142 and 156"
+      correct: true
+      feedback: |
+        Right. `filter()` keeps only the rows where the answer is TRUE, and
+        drops the rest — including any where it's `NA`. No phantom patient.
+
+        That's safer, but notice it's also silent: the 71-year-old disappears
+        without a word, the way `t.test()` dropped a missing value in module
+        10. Same data, same question, two tools, two different answers —
+        square brackets give three rows, `filter()` gives two. Knowing which
+        tool the code used tells you which to expect.
+    - id: phantom
+      text: "3 — the two high readings, plus a row that's entirely `NA`"
+      feedback: |
+        That's what square brackets gave in module 8. dplyr's `filter()`
+        handles the `NA` differently: it drops that row rather than inventing
+        one.
+    - id: kept
+      text: "3 — including the 71-year-old, with a blank blood pressure"
+      feedback: |
+        `filter()` keeps only the rows where the answer is TRUE. For the
+        71-year-old the answer is `NA`, so that row is dropped.

@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch12-ex02
+type: predict
+title: Which error needs installing?
+topic: packages
+difficulty: 1
+tags: [packages, errors]
+follows: ch12-ex01
+
+prompt: |
+  Which of these errors is fixed by running `install.packages()`?
+
+hint: |
+  One of them says R couldn't find the package at all. The other says it
+  couldn't find a function.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: nopkg
+      text: "`there is no package called 'dplyr'`"
+      correct: true
+      feedback: |
+        Right. R looked for `dplyr` on this computer and found nothing — so
+        either it was never installed, or the name is misspelled. It's worth
+        checking the spelling before installing anything: `dplyrr` gives this
+        same message.
+    - id: nofun
+      text: '`could not find function "mutate"`'
+      feedback: |
+        That one usually means the package is installed but not loaded, so the
+        fix is `library(dplyr)`, not installing it again.
+    - id: neither
+      text: "Neither — both are fixed by `library()`"
+      feedback: |
+        `library()` can only open a package that's already on your computer.
+        "There is no package called…" means it isn't there to open.

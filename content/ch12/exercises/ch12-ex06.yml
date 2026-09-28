@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch12-ex06
+type: predict
+title: Two colons
+topic: packages
+difficulty: 1
+tags: [packages, reading-code]
+follows: ch12-ex05
+
+prompt: |
+  Generated code often writes things like this:
+
+  ```r
+  dplyr::filter(patients, discharged)
+  ```
+
+  What does `dplyr::` mean?
+
+hint: |
+  Read it left to right: a package's name, then a function's name.
+
+packages: [dplyr]
+
+setup: |
+  library(dplyr)
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE),
+    dbp        = c(88, 76, 82, 84, 94)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: which
+      text: "Use the `filter()` from the dplyr package, specifically"
+      correct: true
+      feedback: |
+        Right. `package::function` names exactly which function you mean. It
+        removes any doubt about which `filter()` runs, and it works even
+        without `library(dplyr)`, as long as dplyr is installed.
+
+        That's why careful generated code uses it: the problem from the last
+        exercise can't happen.
+    - id: two
+      text: "Run `dplyr()` first, then `filter()`"
+      feedback: |
+        There's no function called `dplyr()`. The part before `::` is a
+        package's name, saying where to find the function that comes after.
+    - id: install
+      text: "Install dplyr, then run `filter()`"
+      feedback: |
+        `::` never installs anything. It only says which package's `filter()`
+        you mean — and the package has to be installed already.

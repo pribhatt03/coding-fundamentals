@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch12-ex09
+type: fill-blank
+title: Filtering with filter()
+topic: tidyverse
+difficulty: 1
+tags: [tidyverse, filtering]
+follows: ch12-ex08
+
+prompt: |
+  Using `filter()`, keep only the patients who have been discharged.
+
+hint: |
+  The `discharged` column is already TRUE for exactly the rows you want.
+  Inside `filter()`, you can write the column's name on its own.
+
+packages: [dplyr]
+
+setup: |
+  library(dplyr)
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE),
+    dbp        = c(88, 76, 82, 84, 94)
+  )
+
+response:
+  kind: r-code
+  starter: |
+    filter(patients, ______)
+  solution:
+    code: |
+      filter(patients, discharged)
+    why: |
+      The same result as `patients[patients$discharged, ]` from module 8 —
+      shorter, and without needing `patients$` inside. Both are correct; the
+      difference is mostly how they read.
+  checks:
+    - expr: as.numeric(.result$age)
+      equals: [67, 48, 62]
+      on_fail: |
+        Not the three discharged patients yet.
+  misconceptions:
+    - id: quoted
+      match:
+        on: error
+        pattern: "not the string"
+      feedback: |
+        In quotes, `"discharged"` is just a piece of text, not the column.
+        Inside `filter()`, write the column's name without quotes:
+        `discharged`.
