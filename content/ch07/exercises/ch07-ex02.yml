@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch07-ex02
+type: predict
+title: Spot the missing value
+topic: data-frames
+difficulty: 1
+tags: [data-frames, na]
+follows: ch07-ex01
+
+prompt: |
+  One blood pressure was never taken. Click the missing value.
+
+hint: |
+  R shows a missing value the same way in a table as it did in a vector.
+
+response:
+  kind: table
+  select: cell
+  columns: [age, blood_type, sbp, discharged]
+  rows:
+    - [67, "A+", 142, true]
+    - [54, "O-", 118, false]
+    - [71, "B+", null, false]
+    - [48, "O+", 131, true]
+    - [62, "A-", 156, true]
+  other: |
+    That one's a real value. Look for the missing value — R shows it as `NA`.
+  options:
+    - id: r3-sbp
+      correct: true
+      feedback: |
+        Right — row 3, the 71-year-old. Reading across a row tells you
+        everything about one patient: 71, B+, blood pressure unknown, still
+        in hospital. Reading down a column tells you one thing about
+        everybody.

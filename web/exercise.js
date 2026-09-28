@@ -5,6 +5,7 @@
 import { WebR } from "https://webr.r-wasm.org/latest/webr.mjs";
 import * as progress from "./progress.js";
 import * as events from "./events.js";
+import * as reference from "./reference.js";
 
 /* ------------------------------------------------------------ markdown --- */
 
@@ -23,7 +24,7 @@ const colourCalls = (html) =>
 export function md(src = "") {
   const blocks = [];
   const langs = [];
-  let s = esc(src).replace(/```(r)?\n([\s\S]*?)```/g, (_, lang, c) => {
+  let s = esc(src).replace(/```(rtry|r)?\n([\s\S]*?)```/g, (_, lang, c) => {
     blocks.push(c.replace(/\n$/, ""));
     langs.push(lang || "");
     return `\u0000${blocks.length - 1}\u0000`;
@@ -40,14 +41,23 @@ export function md(src = "") {
     if (/^### /.test(p)) return `<h3>${p.slice(4)}</h3>`;
     if (/^## /.test(p)) return `<h2>${p.slice(3)}</h2>`;
     if (/^# /.test(p)) return `<h1>${p.slice(2)}</h1>`;
-    if (/^[-*] /m.test(p) && p.split("\n").every((l) => /^[-*] /.test(l.trim()))) {
-      return `<ul>${p.split("\n").map((l) => `<li>${l.trim().slice(2)}</li>`).join("")}</ul>`;
+    // A list: every line starts a bullet or continues the one above it. An
+    // indented line is a continuation, so a long bullet can wrap.
+    const lines = p.split("\n");
+    if (/^[-*] /.test(lines[0].trim()) &&
+        lines.every((l) => /^[-*] /.test(l.trim()) || /^\s+\S/.test(l))) {
+      const items = [];
+      for (const l of lines) {
+        if (/^[-*] /.test(l.trim())) items.push(l.trim().slice(2));
+        else items[items.length - 1] += " " + l.trim();
+      }
+      return `<ul>${items.map((i) => `<li>${i}</li>`).join("")}</ul>`;
     }
     return `<p>${p.replace(/\n/g, " ")}</p>`;
   }).join("");
 
   return html.replace(/\u0000(\d+)\u0000/g, (_, i) =>
-    `<pre${langs[i] === "r" ? ' class="runnable"' : ""}><code>${langs[i] === "r" ? colourCalls(blocks[i]) : blocks[i]}</code></pre>`);
+    `<pre${langs[i] === "rtry" ? ' class="runnable try"' : langs[i] === "r" ? ' class="runnable"' : ""}><code>${langs[i] ? colourCalls(blocks[i]) : blocks[i]}</code></pre>`);
 }
 
 const inline = (s) => md(s).replace(/^<p>|<\/p>$/g, "");
@@ -68,6 +78,23 @@ const envName = (id) => `.setup_${id.replace(/-/g, "_")}`;
 // expression hid the output of every line but the final one, which taught a
 // false picture of how R behaves. Grading still evaluates as one expression,
 // because it needs the last value as .result.
+// Run gets its own workspace, sitting on top of the exercise's data. Anything
+// a student creates while experimenting lives there — it persists between
+// Runs the way the RStudio console does — but Check never sees it, and always
+// grades from the original data. Before this, a variable made with Run could
+// quietly change what Check found.
+async function runEnvFor(w, id) {
+  const name = `.run_${id.replace(/-/g, "_")}`;
+  await w.evalRVoid(`if (!exists("${name}", envir = globalenv(), inherits = FALSE))
+    assign("${name}", new.env(parent = ${envName(id)}), envir = globalenv())`);
+  return name;
+}
+
+// Run prints R's output as the console would. With captureConditions off,
+// webR writes errors to stderr as "Error: ..." rather than throwing, so that's
+// how Run recognises one. Warnings also go to stderr but aren't errors.
+const hadError = (cap) => cap.output.some((o) => o.type === "stderr" && /^Error/.test(o.data));
+
 const consoleEval = (env) =>
   `invisible(withAutoprint(parse(text = .submitted), evaluated = TRUE, local = ${env}, echo = FALSE))`;
 
@@ -112,6 +139,12 @@ const deepEq = (a, b) =>
 
 let uid = 0;
 
+// The grader's working (which checks passed, what each returned) is for you
+// while writing exercises, not for learners. Shown in the harness, or with
+// ?dev in the address. R's own error messages are always shown.
+const DEV = new URLSearchParams(location.search).has("dev") ||
+            location.pathname.endsWith("test.html");
+
 // CodeMirror's R mode only knows a short list of language builtins, so
 // round(), log() and anything from a package stay uncoloured. This overlay
 // colours any name directly followed by "(" — which is what a call looks
@@ -152,9 +185,12 @@ export function makeEditor(ta, onRun) {
 /** Turn a prose code block into something the reader can run and edit.
  *  No checking, no feedback — it's a scratchpad, which is what the prose
  *  promises when it says "below is a box you can type in". */
-export function makeScratch(pre, chapter) {
+export function makeScratch(pre, chapter, owner = null) {
   const code = pre.textContent.replace(/\n$/, "");
-  const ex = { id: `scratch_${chapter}`, setup: "", packages: [] };
+  // Code in an exercise's prompt runs against that exercise's data, in its own
+  // Run workspace, so `patients` exists there. Prose code runs in a shared
+  // scratch space for the chapter.
+  const ex = owner ?? { id: `scratch_${chapter}`, setup: "", packages: [] };
   const host = document.createElement("div");
   host.className = "scratch";
   host.innerHTML = `<textarea spellcheck="false">${esc(code)}</textarea>
@@ -173,10 +209,10 @@ export function makeScratch(pre, chapter) {
     const shelter = await new w.Shelter();
     try {
       await w.objs.globalEnv.bind(".submitted", getCode());
-      const cap = await shelter.captureR(consoleEval(envName(ex.id)),
+      const cap = await shelter.captureR(consoleEval(owner ? await runEnvFor(w, ex.id) : envName(ex.id)),
         { withAutoprint: false, captureStreams: true, captureConditions: false });
       out.textContent = cap.output.map((o) => o.data).join("\n") || "(no output)";
-      out.classList.remove("err");
+      out.classList.toggle("err", hadError(cap));
     } catch (e) {
       out.textContent = String(e.message ?? e);
       out.classList.add("err");
@@ -217,9 +253,20 @@ export function renderExercise(ex, host, position) {
   const revBox = host.querySelector(`#r${n}`);
 
   const show = (pass, html, detail) => {
+    // Two wrong code answers in a row usually means a missing piece of
+    // knowledge rather than a slip, so point at where to find it.
+    const nudge = !pass && r.kind === "r-code" && state.fails >= 2 && reference.isMounted();
+    // A wrong prediction is the best moment to check with R itself — if the
+    // prompt has code that runs, say so.
+    const tryIt = !pass && r.kind === "choice" && host.querySelector(".prompt .scratch");
     fbox.innerHTML = `<div class="verdictbox ${pass ? "pass" : "fail"}">
       <div class="verdict">${pass ? "Correct" : "Not yet"}</div>${html}
+      ${nudge ? `<p class="nudge">Stuck? The <button class="linky opennfn">Functions</button>
+        panel has the usage line and an example for every function you've met.</p>` : ""}
+      ${tryIt ? `<p class="nudge">Not sure? The code above runs. Add a line, press Run, and
+        see what R actually does.</p>` : ""}
       ${detail ? `<pre class="detail">${esc(detail)}</pre>` : ""}</div>`;
+    fbox.querySelector(".opennfn")?.addEventListener("click", () => reference.openWith(""));
   };
 
   // Asking for the answer is always allowed — locking it just makes people
@@ -234,7 +281,7 @@ export function renderExercise(ex, host, position) {
   };
   host.querySelector(".reveal").onclick = reveal;
 
-  const state = { attempts: 0, seen: false };
+  const state = { attempts: 0, fails: 0, seen: false };
 
   // Time from first sight to first attempt is one of the better signals for
   // "this one is confusing", so record when it comes into view.
@@ -251,6 +298,7 @@ export function renderExercise(ex, host, position) {
     io.observe(host);
   }
   const done = (passed) => {
+    state.fails = passed ? 0 : state.fails + 1;
     progress.record(ex.id, {
       passed: passed || progress.get(ex.id).passed,
       attempts: state.attempts,
@@ -258,7 +306,7 @@ export function renderExercise(ex, host, position) {
     if (passed) host.classList.add("done");
   };
 
-  ({ choice: doChoice, span: doSpan, prose: doProse, "r-code": doCode }[r.kind])(
+  ({ choice: doChoice, span: doSpan, table: doTable, prose: doProse, "r-code": doCode }[r.kind])(
     ex, body, show, state, done
   );
 }
@@ -280,6 +328,9 @@ function revealHtml(ex) {
     ).join("");
     return `<div class="spancode">${code}</div>` + md(correct.feedback);
   }
+  if (r.kind === "table") {
+    return `<p>${tableLabel(r, correct.id)}</p>` + md(correct.feedback);
+  }
   if (r.kind === "r-code") {
     return `<pre><code>${esc(r.solution.code.replace(/\n$/, ""))}</code></pre>${md(r.solution.why)}`;
   }
@@ -293,7 +344,7 @@ function review(opts, chosen) {
     const mine = o.id === chosen.id;
     return `<div class="rev ${tag}${mine ? " you" : ""}">
       <div class="revhead">${tag}${mine ? " — your answer" : ""}</div>
-      ${o.text ? inline(o.text) : ""}${md(o.feedback)}</div>`;
+      ${o.text ? (o.text.startsWith("the <code>") || o.text.startsWith("row ") ? `<p>${o.text}</p>` : inline(o.text)) : ""}${md(o.feedback)}</div>`;
   }).join("");
 }
 
@@ -345,10 +396,10 @@ function doSpan(ex, body, show, state, done) {
       const shelter = await new w.Shelter();
       try {
         await w.objs.globalEnv.bind(".submitted", code);
-        const cap = await shelter.captureR(consoleEval(envName(ex.id)),
+        const cap = await shelter.captureR(consoleEval(await runEnvFor(w, ex.id)),
           { withAutoprint: false, captureStreams: true, captureConditions: false });
         out.textContent = cap.output.map((o) => o.data).join("\n") || "(no output)";
-        out.classList.toggle("err", cap.output.some((o) => o.type === "stderr"));
+        out.classList.toggle("err", hadError(cap));
       } catch (e) {
         out.textContent = String(e.message ?? e); out.classList.add("err");
       } finally { await shelter.purge(); stat.textContent = ""; }
@@ -372,6 +423,75 @@ function doSpan(ex, body, show, state, done) {
     body.querySelectorAll(".sel").forEach((x) => (x.style.pointerEvents = "none"));
     done(true);
     show(true, review(ex.response.options, chosen));
+  };
+}
+
+/* --------------------------------------------------------------- table --- */
+// A data frame the learner can click, laid out like RStudio's View(): row
+// numbers down the side, NA in italics, numbers right-aligned, no types
+// shown. That last part matters — the grid hides exactly what str() reveals.
+
+function tableLabel(r, id) {
+  if (r.select === "column") return `the <code>${esc(id)}</code> column`;
+  if (r.select === "row") return `row ${esc(id.slice(1))}`;
+  const [row, ...col] = id.split("-");
+  return `row ${esc(row.slice(1))}, <code>${esc(col.join("-"))}</code>`;
+}
+
+function doTable(ex, body, show, state, done) {
+  const r = ex.response;
+  const attr = { column: "col", row: "row", cell: "cell" }[r.select];
+  const cellText = (v) =>
+    v === null ? `<span class="tna">NA</span>`
+    : v === true ? "TRUE" : v === false ? "FALSE" : esc(String(v));
+
+  body.innerHTML = `
+    <div class="dfwrap"><table class="df df-${r.select}">
+      <thead><tr><th class="rn"></th>${r.columns.map((c) =>
+        `<th data-col="${esc(c)}">${esc(c)}</th>`).join("")}</tr></thead>
+      <tbody>${r.rows.map((row, i) => `
+        <tr><th class="rn" data-row="r${i + 1}">${i + 1}</th>${row.map((v, j) =>
+          `<td class="${typeof v === "number" ? "num" : ""}" data-col="${esc(r.columns[j])}"
+               data-row="r${i + 1}" data-cell="r${i + 1}-${esc(r.columns[j])}">${cellText(v)}</td>`
+        ).join("")}</tr>`).join("")}
+      </tbody>
+    </table></div>
+    <div class="row"><button class="act check" disabled>Check</button></div>`;
+
+  const table = body.querySelector("table");
+  const btn = body.querySelector(".check");
+  let picked = null;
+  const matching = (id) => table.querySelectorAll(`[data-${attr}="${CSS.escape(id)}"]`);
+  const targetOf = (el) => el?.closest(`[data-${attr}]`)?.dataset[attr];
+
+  table.addEventListener("mouseover", (e) => {
+    table.querySelectorAll(".hot").forEach((x) => x.classList.remove("hot"));
+    const id = targetOf(e.target);
+    if (id) matching(id).forEach((x) => x.classList.add("hot"));
+  });
+  table.addEventListener("mouseleave", () =>
+    table.querySelectorAll(".hot").forEach((x) => x.classList.remove("hot")));
+  table.addEventListener("click", (e) => {
+    if (btn.dataset.locked) return;
+    const id = targetOf(e.target);
+    if (!id) return;
+    table.querySelectorAll(".picked").forEach((x) => x.classList.remove("picked"));
+    matching(id).forEach((x) => x.classList.add("picked"));
+    picked = id;
+    btn.disabled = false;
+  });
+
+  btn.onclick = () => {
+    state.attempts++;
+    const chosen = r.options.find((o) => o.id === picked);
+    events.log("attempt", { ex: ex.id, hash: ex.hash, n: state.attempts,
+                            ok: !!chosen?.correct, choice: picked });
+    if (!chosen) { done(false); return show(false, md(r.other)); }
+    if (!chosen.correct) { done(false); return show(false, md(chosen.feedback)); }
+    btn.disabled = true;
+    btn.dataset.locked = "1";
+    done(true);
+    show(true, review(r.options.map((o) => ({ ...o, text: tableLabel(r, o.id) })), chosen));
   };
 }
 
@@ -445,10 +565,10 @@ async function doCode(ex, body, show, state, done) {
     const shelter = await new w.Shelter();
     try {
       await w.objs.globalEnv.bind(".submitted", getCode());
-      const cap = await shelter.captureR(consoleEval(env),
+      const cap = await shelter.captureR(consoleEval(await runEnvFor(w, ex.id)),
         { withAutoprint: false, captureStreams: true, captureConditions: false });
       out.textContent = cap.output.map((o) => o.data).join("\n") || "(no output)";
-      out.classList.remove("err");
+      out.classList.toggle("err", hadError(cap));
     } catch (e) {
       out.textContent = String(e.message ?? e);
       out.classList.add("err");
@@ -468,7 +588,11 @@ async function doCode(ex, body, show, state, done) {
         await shelter.captureR(
           `.attempt <- new.env(parent = ${env})
            assign(".result", eval(parse(text = .submitted), envir = .attempt), envir = .attempt)`,
-          { withAutoprint: false, captureStreams: true, captureConditions: false });
+          // captureConditions MUST be true here. With it off, webR catches the
+          // R error itself, prints it, and reports success — so every error
+          // misconception silently never fired, and grading carried on against
+          // the unchanged data. With it on, webR throws the error to us.
+          { withAutoprint: false, captureStreams: true, captureConditions: true, captureGraphics: false });
       } catch (e) {
         const msg = String(e.message ?? e);
         const mi = (r.misconceptions ?? []).findIndex((x) => x.match.on === "error" && new RegExp(x.match.pattern).test(msg));
@@ -515,7 +639,8 @@ async function doCode(ex, body, show, state, done) {
       }
       events.log("attempt", { ex: ex.id, hash: ex.hash, n: state.attempts, ok: pass, matched: null });
       done(pass);
-      show(pass, pass ? md(r.solution.why) : md(firstFail?.on_fail ?? "That isn't right yet."), log.join("\n"));
+      show(pass, pass ? md(r.solution.why) : md(firstFail?.on_fail ?? "That isn't right yet."),
+           DEV ? log.join("\n") : "");
     } finally { await shelter.purge(); stat.textContent = ""; }
   }
 

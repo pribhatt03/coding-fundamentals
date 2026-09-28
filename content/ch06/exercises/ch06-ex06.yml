@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch06-ex06
+type: fill-blank
+title: The function that does work
+topic: missing-values
+difficulty: 1
+tags: [na, logical, functions]
+follows: ch06-ex05
+
+prompt: |
+  R has a function for this: `is.na()`. It asks each value whether it's
+  missing, and gives you `TRUE` or `FALSE` for each one.
+
+  Use it on `sbp`.
+
+hint: |
+  It takes the vector, the same way `class()` did.
+
+setup: |
+  sbp <- c(118, NA, 131, 156)
+
+response:
+  kind: r-code
+  starter: |
+    ______(sbp)
+  solution:
+    code: |
+      is.na(sbp)
+    why: |
+      `is.na()` is the only reliable way to find missing values. It gives one
+      answer per value, like every other question you've asked a vector —
+      and unlike `==`, its answers are never `NA` themselves.
+  checks:
+    - expr: as.logical(.result)
+      equals: [false, true, false, false]
+      on_fail: |
+        That didn't give one TRUE or FALSE per reading, with the TRUE in
+        second place.
+  misconceptions:
+    - id: used-equals
+      match:
+        on: result
+        expr: as.character(.result)
+        equals: ["NA", "NA", "NA", "NA"]
+      feedback: |
+        That's `sbp == NA` again. Comparison can't answer this; you need the
+        function built for it.

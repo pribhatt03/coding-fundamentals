@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch09-ex06
+type: fill-blank
+title: Changing a column in place
+topic: columns
+difficulty: 2
+tags: [data-frames, columns, functions, variables]
+follows: ch09-ex05
+
+prompt: |
+  Round the MAPs to one decimal place, storing the result back into the
+  same column.
+
+hint: |
+  `round()` takes the value first, then the number of decimal places.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+  patients$dbp <- c(88, 76, 82, 84, 94)
+  patients$map <- (patients$sbp + 2 * patients$dbp) / 3
+
+response:
+  kind: r-code
+  starter: |
+    patients$map <- ______
+  solution:
+    code: |
+      patients$map <- round(patients$map, 1)
+    why: |
+      Storing into a column that already exists replaces it — the unrounded
+      values are gone, with no warning, the way reassignment always works.
+      That's fine here. Just be sure it's what you meant, because nothing
+      will stop you overwriting a column you needed.
+  checks:
+    - expr: as.numeric(patients$map[-3])
+      equals: [106, 90, 99.7, 114.7]
+      on_fail: |
+        The MAP column isn't rounded to one decimal place yet.
+  misconceptions:
+    - id: swapped-args
+      match:
+        on: result
+        expr: patients$map[1]
+        equals: [1]
+      feedback: |
+        The arguments are the wrong way round. `round(1, patients$map)` asks
+        to round the number 1 to a very large number of decimal places —
+        which is still 1. Value first, then places, or name them:
+        `round(patients$map, digits = 1)`.

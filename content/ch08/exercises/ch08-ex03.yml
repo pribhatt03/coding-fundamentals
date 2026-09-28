@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch08-ex03
+type: predict
+title: Two ways to get a column
+topic: indexing
+difficulty: 2
+tags: [data-frames, indexing, critical-appraisal]
+follows: ch08-ex02
+
+prompt: |
+  Which of these gives you the same thing as `patients$age`?
+
+hint: |
+  To get a column, the name has to be on the column side of the comma.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: col
+      text: '`patients[, "age"]`'
+      correct: true
+      feedback: |
+        Right. Blank before the comma means every row; `"age"` after it picks
+        the column. You get the same vector as `patients$age`. You'll see
+        both in generated code, so it's worth recognising them as the same
+        thing.
+    - id: rowname
+      text: '`patients["age", ]`'
+      feedback: |
+        This is the dangerous one. It puts `"age"` on the *row* side, and
+        asks for a row called "age". There isn't one — so instead of an
+        error, R gives you back a single row full of `NA`s. A misplaced comma
+        that fails silently.
+    - id: bare
+      text: '`patients[age]`'
+      feedback: |
+        Without quotes, R looks for a variable called `age`, and there isn't
+        one — `age` only exists as a column inside `patients`. Same lesson as
+        `labs$crp` in the last module.
+    - id: firstrow
+      text: '`patients[1, ]`'
+      feedback: |
+        That's the first *row* — one patient. The age column is every
+        patient's age.

@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch08-ex04
+type: fill-blank
+title: More than one row
+topic: indexing
+difficulty: 1
+tags: [data-frames, indexing, vectors]
+follows: ch08-ex03
+
+prompt: |
+  Get rows 1 and 5 — every column for both patients.
+
+hint: |
+  You need two numbers on the row side. You already know the function that
+  combines values.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: r-code
+  starter: |
+    patients[______, ]
+  solution:
+    code: |
+      patients[c(1, 5), ]
+    why: |
+      `c(1, 5)` makes a vector of two positions, and the brackets keep both
+      rows. Anything you can make a vector of, you can put on either side of
+      the comma.
+  checks:
+    - expr: as.numeric(.result$age)
+      equals: [67, 62]
+      on_fail: |
+        Not rows 1 and 5 yet. Put both positions together with `c()`, before
+        the comma.
+  misconceptions:
+    - id: two-positions
+      match:
+        on: error
+        pattern: "undefined columns|unused argument|incorrect number of dimensions"
+      feedback: |
+        Writing `1, 5` on its own makes R read the 5 as the *column*. To give
+        the row side two numbers, combine them first: `c(1, 5)`.

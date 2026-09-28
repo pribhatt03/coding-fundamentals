@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch08-ex08
+type: fix-the-llm
+title: A patient who doesn't exist
+topic: filtering
+difficulty: 3
+tags: [data-frames, filtering, na, critical-appraisal]
+follows: ch08-ex07
+
+prompt: |
+  You were handed this to find the patients with a systolic over 140.
+
+  ```r
+  patients[patients$sbp > 140, ]
+  ```
+
+  Remember that the 71-year-old's blood pressure is missing. How many rows
+  come back?
+
+hint: |
+  `patients$sbp > 140` gives `TRUE FALSE NA FALSE TRUE`. You saw what square
+  brackets do with an `NA` in module 6.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: phantom
+      text: "3 — the two high readings, plus a row that's entirely `NA`"
+      correct: true
+      feedback: |
+        Right, and this is the one to remember from this module. The `NA` in
+        the question can't be kept or dropped, so R hands back a row of `NA`s
+        — no age, no blood type, nothing. It isn't the 71-year-old. It's a
+        patient who doesn't exist.
+
+        Count the rows and you'd report three patients over 140. There were
+        two.
+    - id: two
+      text: "2 — the patients at 142 and 156"
+      feedback: |
+        That's the right answer to the question, but not what these brackets
+        give you. The missing reading produces an extra row of `NA`s, just as
+        it produced an extra `NA` in module 6.
+    - id: withpatient
+      text: "3 — including the 71-year-old, with a blank blood pressure"
+      feedback: |
+        Close, but worse than that. The extra row isn't the 71-year-old — it's
+        a row where *everything* is `NA`, including the age and blood type.
+        The patient has been replaced by nothing at all.
+    - id: err
+      text: "An error about the missing value"
+      feedback: |
+        No error. It returns something that looks exactly like a result, which
+        is what makes it dangerous.

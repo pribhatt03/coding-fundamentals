@@ -1,0 +1,57 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch06-ex12
+type: predict
+title: Check the question first
+topic: missing-values
+difficulty: 2
+tags: [na, logical]
+follows: ch06-ex08
+
+prompt: |
+  To get rid of that phantom `NA`, you'll want to keep only the readings
+  that *aren't* missing. Before you put a question inside square brackets,
+  it's worth checking what it gives back.
+
+  `!` means *not*. What does the last line return?
+
+  ```r
+  sbp <- c(118, NA, 131, 156)
+  !is.na(sbp)
+  ```
+
+hint: |
+  `is.na(sbp)` gives `FALSE TRUE FALSE FALSE`. What does "not" do to each of
+  those?
+
+setup: |
+  sbp <- c(118, NA, 131, 156)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: flipped
+      text: "`TRUE FALSE TRUE TRUE`"
+      correct: true
+      feedback: |
+        Right. `is.na(sbp)` asks *which values are missing?* Putting `!` in
+        front turns the question around: *which values are **not**
+        missing?* Every TRUE becomes FALSE and every FALSE becomes TRUE.
+
+        That's exactly the pattern you want inside the brackets — TRUE for
+        the three readings to keep, FALSE for the missing one. And you know it's
+        right because you checked before using it.
+    - id: unflipped
+      text: "`FALSE TRUE FALSE FALSE`"
+      feedback: |
+        That's `is.na(sbp)` on its own. The `!` in front turns every answer
+        around, so TRUE becomes FALSE and FALSE becomes TRUE.
+    - id: values
+      text: "`118 131 156`"
+      feedback: |
+        That's where this is heading, but it's one step further on. On its
+        own, `!is.na(sbp)` gives you TRUEs and FALSEs — the question's
+        answers. Getting the readings themselves means putting it inside
+        square brackets, which is the next exercise.

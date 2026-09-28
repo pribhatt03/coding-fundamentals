@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch10-ex06
+type: fill-blank
+title: One end of the interval
+topic: lists
+difficulty: 2
+tags: [lists, indexing, vectors]
+follows: ch10-ex05
+
+prompt: |
+  The pieces of a list don't have to be the same size. The p-value is one
+  number; the confidence interval is two — a lower end and an upper end.
+
+  Get just the lower end of the confidence interval.
+
+hint: |
+  `result$conf.int` gives you both numbers, as a vector. You picked one value
+  out of a vector by position in module 5.
+
+setup: |
+  drug    <- c(128, 134, 121, 139, 125, 131, 127, 136)
+  placebo <- c(142, 138, 149, 135, 144, 151, 140, 146)
+  result  <- t.test(drug, placebo)
+
+response:
+  kind: r-code
+  starter: |
+    ______
+  solution:
+    code: |
+      result$conf.int[1]
+    why: |
+      `$` takes the interval out of the list, and `[1]` takes the first number
+      out of the interval — one step, then another, read left to right.
+
+      If you print `result$conf.int` on its own, you'll also see a line
+      starting `attr(,"conf.level")`. That's a label attached to the numbers,
+      recording that this is a 95% interval. It isn't a third value, and you
+      can ignore it.
+  checks:
+    - expr: round(.result[[1]], 3)
+      equals: [-19.164]
+      on_fail: |
+        That isn't the lower end of the interval yet.
+  misconceptions:
+    - id: both-ends
+      match:
+        on: result
+        expr: length(.result)
+        equals: [2]
+      feedback: |
+        That's both ends of the interval. Pick out the first one by position,
+        the way you picked values out of a vector.

@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch08-ex12
+type: fix-the-llm
+title: The average of the older patients
+topic: filtering
+difficulty: 3
+tags: [data-frames, filtering, na, functions, critical-appraisal]
+follows: ch08-ex11
+
+prompt: |
+  One more — nothing new, just things you already know turning up together.
+  Read this call from the inside out. What does it return?
+
+  ```r
+  mean(patients[patients$age > 60, "sbp"])
+  ```
+
+hint: |
+  First: which patients does the filter keep? Then: what are their blood
+  pressures?
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: na
+      text: "`NA`"
+      correct: true
+      feedback: |
+        Right. Inside out: `patients$age > 60` keeps the patients aged 67, 71
+        and 62, and `"sbp"` after the comma takes their blood pressures —
+        `142 NA 156`. The 71-year-old's is missing, so `mean()` gives `NA`.
+
+        Nothing about the age filter was wrong — it kept exactly the right
+        patients. But a missing value came along with one of them, and when
+        you ask for an average that's missing a value, R says that average is
+        unknown unless you say `na.rm = TRUE`.
+    - id: narm
+      text: "`149` — the average of 142 and 156"
+      feedback: |
+        That's what you'd get with `na.rm = TRUE`. Without it, the missing
+        reading from the 71-year-old makes the whole average `NA`.
+    - id: allfive
+      text: "About `136.75` — the average of every recorded reading"
+      feedback: |
+        That's every patient's average. The filter keeps only the three over
+        60, so the 48- and 54-year-olds' readings aren't included.
+    - id: err
+      text: "An error"
+      feedback: |
+        It runs cleanly. That's the quiet kind of failure — it looks like a
+        number until you read it.

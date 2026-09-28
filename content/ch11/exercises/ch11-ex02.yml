@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch11-ex02
+type: predict
+title: What the loop prints
+topic: loops
+difficulty: 1
+tags: [loops, vectors]
+follows: ch11-ex01
+
+prompt: |
+  What does this print?
+
+  ```r
+  sbp <- c(118, 142, 131, 156)
+  for (reading in sbp) {
+    print(reading - 10)
+  }
+  ```
+
+hint: |
+  The body runs once for each reading, and `print()` shows something each
+  time it runs.
+
+setup: |
+  sbp <- c(118, 142, 131, 156)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: four
+      text: "Four lines — 108, then 132, then 121, then 146"
+      correct: true
+      feedback: |
+        Right — `print()` runs four separate times, and each run shows its own
+        line. Each line starts with `[1]` because each is a single value.
+
+        And look at the numbers: they're exactly what `sbp - 10` gave you in
+        module 5, in one line, with no loop. The loop took four steps to do
+        what R does to a whole vector at once.
+    - id: oneline
+      text: "One line — `108 132 121 146`"
+      feedback: |
+        That's what `sbp - 10` would print: one vector, shown on one line.
+        Here `print()` runs four separate times, and each run starts a new
+        line.
+    - id: last
+      text: "Just `146` — the last one"
+      feedback: |
+        `print()` runs every time round, not only at the end, so every value
+        is shown.

@@ -40,24 +40,24 @@ different lessons.
 | Parentheses to control order | ch02-ex04 | ch02-ex08, ch03-ex02 | 3 | — |
 | Function call: name + parentheses | ch02-ex05 | ch03-ex06, ch04-ex01, all of ch04 | 8+ | — |
 | Arguments, by position | ch02-ex05 | ch02-ex06, ch04-ex01, ch04-ex05 | 4 | — |
-| Argument order matters | ch02-ex06 | ch04-ex05 | 2 | ch07 |
-| Syntax: brackets must close | ch02-ex09 | ch05-ex11 (misconception) | 2 | ch07 |
+| Argument order matters | ch02-ex06 | ch04-ex05, ch06-ex04, ch09-ex06, ch09-ex10 | 5 | — |
+| Syntax: brackets must close | ch02-ex09 | ch05-ex11, ch08-ex06 (misconceptions) | 3 | — |
 | Variables and `<-` | ch03-ex01 | ch03-ex02/03/04, ch04-ex09, ch05-ex01, ch05-ex04 | 7 | — |
-| Assignment prints nothing | ch03-ex01 | ch04 prose | 2 | ch06 |
-| Reassignment overwrites silently | ch03-ex03 | ch05-ex04 | 2 | ch07 |
-| Names are exact and case-sensitive | ch03-ex04 | — | **1** | **ch06** |
+| Assignment prints nothing | ch03-ex01 | ch04 prose, ch06-ex11 | 3 | — |
+| Reassignment overwrites silently | ch03-ex03 | ch05-ex04, ch07-ex09, ch09-ex06 | 4 | — |
+| Names are exact and case-sensitive | ch03-ex04 | ch06-ex11, ch07-ex04, ch09-ex01 | 4 | — |
 | Multi-line, read top to bottom | ch03 prose, ch03-ex02 | ch03-ex03, ch04-ex09 | 3 | — |
 | Type: numeric | ch03 prose | ch03-ex06, ch05-ex07, ch05-ex09 | 4 | — |
 | Type: character, and quotes | ch03-ex05 | ch03-ex09, ch03-ex10, ch05-ex07, ch05-ex08, ch05-ex09 | 6 | — |
 | Type: logical | ch03-ex07 | ch03-ex08, ch05-ex05, ch05-ex10, ch05-ex11 | 5 | — |
-| `TRUE` behaves as 1 in arithmetic | ch03-ex08 | ch05-ex06 | 2 | ch08 |
-| `class()` | ch03-ex06 | ch05-ex07, ch05-ex08 (hint) | 3 | ch07 |
+| `TRUE` behaves as 1 in arithmetic | ch03-ex08 | ch05-ex06, ch06-ex07 | 3 | — |
+| `class()` | ch03-ex06 | ch05-ex07, ch05-ex08 (hint), ch07-ex09 | 4 | — |
 | Function vs call (the words) | ch04 prose, ch04-ex01 | — | 1 | **ch07** |
 | Defaults exist and are invisible | ch04-ex02 | ch04-ex03/06/07/08, ch05-ex10 | 6 | — |
 | Help page, `?function` | ch04-ex03 | ch05-ex10 | 2 | ch07 |
 | Named arguments with `=` | ch04-ex04 | ch04-ex05, ch04-ex07, ch04-ex10, ch05-ex10 | 5 | — |
-| `=` in a call is not `<-` | ch04 prose | — | **1** | **ch06** |
-| Naming lets you reorder | ch04-ex05 | — | **1** | ch06 |
+| `=` in a call is not `<-` | ch04 prose | ch06-ex04, ch09-ex11 | 3 | — |
+| Naming lets you reorder | ch04-ex05 | ch06-ex04, ch09-ex11 | 3 | — |
 | Return values are ordinary values | ch04-ex09 | ch05-ex04, ch05-ex09 | 3 | — |
 | Decoding an unfamiliar call | ch04-ex10 | ch05-ex10 (`sort`) | 2 | ch07 |
 
@@ -67,20 +67,50 @@ different lessons.
 |---|---|---|---|---|
 | `c()` makes a vector | ch05-ex01 | ch05-ex03/04/07/08 | 5 | — |
 | A vector holds one type only | ch05 prose, ch05-ex07 | ch05-ex08 | 2 | **ch07** |
-| Indexing by position, from 1 | ch05-ex02 | ch05-ex11 | 2 | ch07 |
-| Arithmetic applies to every value | ch05-ex03 | ch05-ex04 | 2 | **ch06** |
-| Returned vs stored | ch05-ex04 | ch05-ex09 | 2 | ch07 |
-| Comparison gives a logical vector | ch05-ex05 | ch05-ex06, ch05-ex11 | 3 | ch08 |
-| `sum()` of logicals counts TRUEs | ch05-ex06 (choice) | — | **1** | **ch08** |
+| Indexing by position, from 1 | ch05-ex02 | ch05-ex11, ch08-ex01/02/04 | 5 | — |
+| Arithmetic applies to every value | ch05-ex03 | ch05-ex04, ch06-ex02 | 3 | — |
+| Returned vs stored | ch05-ex04 | ch05-ex09, ch08-ex11 | 3 | — |
+| Comparison gives a logical vector | ch05-ex05 | ch05-ex06, ch05-ex11, ch08-ex07, ch08-ex09 | 5 | — |
+| `sum()` of logicals counts TRUEs | ch05-ex06 (choice) | ch06-ex07 | 2 | ch08 |
 | `length()`, `mean()`, `max()` on logicals | ch05-ex06 (as distractors) | — | 1 | ch07 |
-| Coercion: one text value turns all to text | ch05-ex07 | ch05-ex08, ch05-ex09 | 3 | **ch07** |
-| `as.numeric()` | ch03-ex10 (mentioned), ch05-ex09 | — | 1 | **ch07** |
-| Nested calls run inside out | ch05-ex09 (explained in prompt) | — | **1** | **ch07** |
-| Filtering with a logical vector | ch05-ex11 | — | **1** | **ch08** |
+| Coercion: one text value turns all to text | ch05-ex07 | ch05-ex08, ch05-ex09, ch07-ex08 | 4 | — |
+| `as.numeric()` | ch03-ex10 (mentioned), ch05-ex09 | ch07-ex09 | 2 | ch09 |
+| Nested calls run inside out | ch05-ex09 (explained in prompt) | ch06-ex07, ch07-ex06 (read aloud) | 3 | **ch08** |
+| Filtering with a logical vector | ch05-ex11 | ch06-ex08, ch06-ex09 | 3 | — |
 
 `sum()` of logicals and filtering both have natural homes in module 8, where
 you filter data frames. Coercion belongs in module 7 — a data frame column
 arriving as character is the most common real form of it.
+
+### Introduced in module 6
+
+| Concept | Intro | Returns in | n | Needs to return by |
+|---|---|---|---|---|
+| `NA` means unknown, not zero or text | ch06-ex01 | ch06-ex02/03/10 | 4 | — |
+| `NA` spreads through calculations | ch06-ex02 | ch06-ex03, ch06-ex08 | 3 | **ch08** |
+| `na.rm = TRUE` | ch06-ex04 | ch06-ex10, ch07-ex05, ch08-ex12, ch09-ex09 | 5 | — |
+| `== NA` never works | ch06-ex05 | ch06-ex06, ch08-ex10 (misconceptions) | 3 | — |
+| `is.na()` | ch06-ex06 | ch06-ex07, ch06-ex09, ch08-ex09, ch08-ex10 | 5 | — |
+| `sum(is.na(x))` to check a strange result | ch06-ex07 | ch07-ex10 (via `summary`) | 2 | ch09 |
+| `!` means not | ch06-ex12 | ch06-ex09, ch08-ex09/10/11 | 5 | — |
+| A gap silently changes a filter | ch06-ex08 | ch06-ex09, ch08-ex08, ch08-ex10 | 4 | — |
+
+### What module 6 brought back
+
+- Vectorised arithmetic (ch05-ex03) → ch06-ex02
+- Named arguments, and `=` not `<-` inside a call (ch04) → ch06-ex04, both
+  as misconceptions
+- Argument order matters (ch02-ex06, ch04-ex05) → ch06-ex04's `positional`
+  misconception, where `mean(sbp, TRUE)` sets `trim` instead
+- `sum()` of logicals (ch05-ex06) → ch06-ex07
+- `class()` and coercion (ch03, ch05-ex07) → ch06-ex01, by contrast
+- Filtering with a logical vector (ch05-ex11) → ch06-ex08, ch06-ex09
+- Names are exact and case-sensitive (ch03-ex04) → ch06-ex11
+- Assignment prints nothing (ch03-ex01) → ch06-ex11's feedback
+- `length()` counts slots (ch05-ex06) → ch06-ex07's misconception, and
+  ch06-ex08's feedback
+- Write the question, not its answer (ch03-ex02's `hardcoded-numbers`) →
+  ch06-ex09's `hardcoded-logicals`
 
 ### Design rule learned in module 5
 
@@ -90,6 +120,285 @@ question inside the brackets). It should never ask them to *recall* a
 function name they've never been shown. Nobody can derive `c()` or `sum()`.
 Name the function in the prompt or the preceding prose, or make it a choice
 between several so each wrong answer teaches what that function does.
+
+### Introduced in module 11
+
+| Concept | Intro | Returns in | n | Needs to return by |
+|---|---|---|---|---|
+| `for (x in values)` — the name takes each value in turn | ch11-ex01 | ch11-ex02/03/05/08/09 | 6 | — |
+| The body runs once per value | ch11-ex01 | ch11-ex02 | 2 | — |
+| Inside a loop, nothing shows unless printed | ch11-ex03 | — | **1** | **ch13** |
+| `1:length(x)` and `x[i]` — counting through positions | ch11-ex04 | — | 1 | ch14 |
+| A loop that could be one line | ch11-ex04 | ch11-ex05 | 2 | **ch17** |
+| `if` runs one block; `else` the other | ch11-ex06 | ch11-ex07, ex08 | 3 | — |
+| `if` needs exactly one TRUE or FALSE | ch11-ex07 | ch11-ex08 | 2 | ch13 |
+| `if` stops on `NA` | ch11-ex08 | — | **1** | **ch13** |
+| `[[ ]]` takes a name stored in a variable | ch11-ex09 | — | 1 | ch14 |
+| The loop variable survives the loop, holding the last value | ch11-ex01 | — | 1 | ch14 |
+| Braces can be dropped around a one-line block | ch11-ex06 | ch11-ex05, ex07, ex08 | 4 | — |
+| `else` must follow `}` on the same line | ch11-ex06 (feedback) | — | 1 | ch13 |
+| `if` is not `ifelse()` | ch11 prose | ch11-ex07 | 2 | — |
+| Each `print()` shows its own line, starting `[1]` | ch11-ex02 | — | 1 | ch13 |
+
+**Unkept promise: `[1]`.** Module 2 says "ignore the `[1]` for now… it'll
+make sense in a few modules", and as far as I can tell it never does. The
+natural place is module 5, the first time a vector prints: `[1]` is the
+position of the first value on that line, which only shows its purpose when
+a long vector wraps and the next line starts `[26]`. `print(1:30)` shows it.
+
+**Module 11 was reordered** so `if` is introduced before any exercise uses
+it. On screen: ex01, 02, 03, 06, 07, 08, 04, 05, 09.
+
+### What module 11 brought back
+
+- Arithmetic applies to every value (ch05-ex03) → ch11-ex02, ex04: the loop's
+  output is `sbp - 10`, and the payoff deferred from module 6
+- Returned vs stored (ch05-ex04) → ch11-ex03, a loop that throws its results
+  away
+- Indexing by position (ch05-ex02) → ch11-ex04's `sbp[i]`
+- `mean()` of TRUE/FALSE gives a fraction (ch05-ex06, ch09-ex09) → ch11-ex05,
+  with `sum()` and `length()` as its distractors
+- `ifelse()` (ch09-ex10/11) → ch11-ex07, as the tool `if` isn't
+- Missing values, and the three ways functions handle them (ch06, ch08-ex08,
+  ch10-ex08) → ch11-ex08 names all three
+- Lists, `$` giving `NULL` on a wrong name, and `names()` (ch10) → ch11-ex09
+- `[[ ]]` (ch10-ex03, mentioned) → ch11-ex09, where it's actually needed
+
+`attr(,...)` lines (due ch11) didn't fit a module about loops; carry to
+module 13, where reading unfamiliar output is the theme.
+
+### Introduced in module 10
+
+| Concept | Intro | Returns in | n | Needs to return by |
+|---|---|---|---|---|
+| A list: named pieces of any size and type | ch10-ex01 | ch10-ex06, ch11-ex09 | 3 | — |
+| The printout is a report; the object is the list | ch10-ex01 | ch10-ex03 | 2 | **ch15** |
+| `names()` shows what's inside | ch10-ex02 | ch11-ex09 (feedback) | 2 | ch14 |
+| `$` takes a piece out of a list | ch10-ex03 | ch10-ex06 | 2 | — |
+| `[[ ]]` does the same as `$` | ch10-ex03 (why) | ch11-ex09 | 2 | — |
+| Printed numbers are rounded; the stored one isn't | ch10-ex03 | — | 1 | ch13 |
+| Tests run with defaults you didn't choose (Welch) | ch10-ex04 | — | **1** | **ch13** |
+| `x` and `y` in output are argument names | ch10-ex05 | — | **1** | **ch13** |
+| `attr(,...)` lines are labels, not values | ch10-ex06 (why) | — | 1 | ch13 |
+| Scientific notation, e.g. `5e-04` | ch10-ex07 | — | **1** | **ch13** |
+| Never report p = 0 | ch10-ex07 | — | 1 | ch17 |
+| Some functions drop missing values silently | ch10-ex08 | — | **1** | **ch13** |
+
+### What module 10 brought back
+
+- `$` with a wrong name returns NULL silently (ch07, ch09) → ch10-ex03,
+  and `result$names` in ch10-ex02
+- Defaults are decisions made for you, and the usage line (ch04) → ch10-ex04
+- Argument order matters (ch02-ex06, ch04, ch09-ex10) → ch10-ex05
+- Indexing a vector by position (ch05-ex02) → ch10-ex06
+- `round()` (ch02, ch04, ch09-ex06) → ch10-ex07
+- Missing values, and `mean()` returning `NA` (ch06) → ch10-ex08
+- Different functions, different rules for missing values — a new twist on
+  ch06: `t.test()` drops them where `mean()` refuses
+
+Module 10 is a 30-minute module, so it carries less old material than the
+45-minute ones by design.
+
+### Introduced in module 9
+
+| Concept | Intro | Returns in | n | Needs to return by |
+|---|---|---|---|---|
+| Storing into a new column name creates it | ch09-ex01 | ch09-ex03, ex08, ex11 | 4 | — |
+| One value fills every row; several must match | ch09-ex02 | — | 1 | ch13 |
+| A formula runs down every row at once | ch09-ex03 | ch09-ex08 | 2 | ch13 |
+| A new column inherits its ingredients' missing values | ch09-ex03, ch09-ex05 | — | 2 | **ch13** |
+| Check a new column beside its ingredients | ch09-ex04 | — | **1** | **ch13** |
+| Storing into an existing column replaces it | ch09-ex06 | — | **1** | **ch13** |
+| `df[, "col"] <-` adds a column; `df["col", ] <-` adds a row | ch09-ex07 | — | **1** | **ch13** |
+| `mean()` of a logical column gives a fraction | ch09-ex09 | ch11-ex05 | 2 | — |
+| `ifelse(test, yes, no)` | ch09-ex10 | ch09-ex11, ch11-ex07 | 3 | — |
+| Changing a filtered copy doesn't change the original | ch09-ex12 | — | **1** | ch13 |
+| A note typed into a number column makes it text | ch09-ex13 | — | **1** | ch13 |
+
+### What module 9 brought back
+
+- Columns must be the same length (ch07-ex03) → ch09-ex02
+- MAP, and all three wrong formulas from module 2 (ch02-ex07/08) → ch09-ex03
+- `NA` spreads through calculations (ch06) → ch09-ex03, ex05, ex08
+- `$` with a wrong name returns NULL silently (ch07-ex04) → ch09-ex01
+- Names are exact and case-sensitive (ch03-ex04) → ch09-ex01
+- Several columns with `c()` (ch08-ex05) → ch09-ex04
+- `patients["age", ]` fails silently (ch08-ex03) → ch09-ex04, and again as
+  assignment in ch09-ex07
+- `df[, "col"]` is the same as `df$col` (ch08-ex03) → ch09-ex07
+- Check the middle step (ch06 rule) → ch09-ex04
+- `summary()` and `NA's` (ch07-ex10) → ch09-ex05
+- Argument order matters, and `round()` (ch02-ex06, ch04) → ch09-ex06
+- Reassignment overwrites silently (ch03-ex03) → ch09-ex06
+- Comparison gives a logical vector (ch05-ex05) → ch09-ex08
+- `mean()` of logicals, `na.rm`, and `nrow()` (ch05-ex06, ch06, ch08) →
+  ch09-ex09, where `nrow()` appears as the reason 0.4 is wrong
+- Reading a usage line, and an unfamiliar call (ch04) → ch09-ex10
+- Naming lets you reorder; `=` not `<-` in a call (ch04) → ch09-ex11
+- Filtering never changes the original (ch08-ex11) → ch09-ex12
+- One type per vector, and the spreadsheet view hiding it (ch05, ch07) →
+  ch09-ex13
+
+**Operators introduced on first use, not before:** `>=` is explained in
+ch09-ex08's prompt. `*` is only explained in a hint (ch02-ex08) and in
+ch09-ex03's prompt — worth one sentence in module 2's prose. A short list of
+comparison operators (`>`, `<`, `>=`, `<=`, `==`, `!=`) would sit naturally
+in module 5's comparison section.
+
+**Planned for module 18: what the editor does for you.** Once students are
+in RStudio, show the typing help it gives, and why each matters:
+
+- **Autocomplete.** Type `result$` and RStudio lists every name inside; Tab
+  fills one in. That would have prevented both `result$p.val` and
+  `result$p` in ch10-ex03 — the full name, spelled right, every time. The
+  same works for column names after `patients$` and for function names.
+- **Bracket pairing.** Type `(` and the `)` appears. Select some text and
+  type `(` or `"`, and it's wrapped rather than replaced.
+- **Matching-bracket highlight.** Put the cursor beside a bracket and its
+  partner lights up — the fastest way to find the unclosed bracket from
+  ch02-ex09.
+
+The course's own editor already does the last one. Worth pointing that out
+in module 18 as "you've been using this since module 2".
+
+**Planned: `head()` for sanity checks on large data.** Pointless on five
+rows, so it waits until data is bigger than a screen — module 19, when
+students read a real file, and again in module 13's sanity-check theme.
+`head(patients, 10)` is the same idea as `patients[1:10, ]`.
+
+**Still owed:** `&` (due ch09) didn't fit naturally; carry to module 13 with
+the other missing-value traps, where `TRUE & NA` versus `FALSE & NA` is
+worth a second look. `str()` is named in ch09-ex13's feedback but not
+retrieved — also module 13.
+
+### Introduced in module 8
+
+| Concept | Intro | Returns in | n | Needs to return by |
+|---|---|---|---|---|
+| `df[row, col]` — rows before the comma | ch08-ex01 | ch08-ex02 to ex13 | 13 | — |
+| Columns by position as well as by name | ch08-ex13 | — | 1 | ch09 |
+| A blank side means "all of them" | ch08-ex02 | ch08-ex03/04/06/07 | 5 | — |
+| `patients["age", ]` fails silently | ch08-ex03 (distractor) | ch09-ex04, ch09-ex07 | 3 | — |
+| `df[, "col"]` is the same as `df$col` | ch08-ex03 | ch08-ex12, ch09-ex07 | 3 | — |
+| Several rows or columns with `c()` | ch08-ex04, ch08-ex05 | ch09-ex04 | 3 | — |
+| Filtering rows with a logical vector | ch08-ex06 | ch08-ex07/08/10/11 | 5 | — |
+| An `NA` in a filter adds a whole `NA` row | ch08-ex08 | ch08-ex10 | 2 | **ch13** |
+| `&` means and; `FALSE & NA` is `FALSE` | ch08-ex09 | ch08-ex10 | 2 | **ch13** |
+| `nrow()` | ch08-ex11 | ch09-ex09 (misconception) | 2 | ch13 |
+| Filtering never changes the original | ch08-ex11 | ch09-ex12 | 2 | — |
+
+### What module 8 brought back
+
+- Indexing by position, from 1 (ch05-ex02) → ch08-ex01, ex02, ex04
+- `c()` to make a vector of positions or names (ch05-ex01) → ch08-ex04, ex05
+- Quotes make text; a bare name is a variable (ch03, ch07-ex09) → ch08-ex03,
+  ex05, ex07
+- Row = one patient (ch07) → ch08-ex02, ex08
+- Filtering one column by another (ch07-ex11) → ch08-ex06
+- Comparison gives a logical vector (ch05-ex05) → ch08-ex07, ex09
+- `$` with a wrong name returns NULL silently (ch07-ex04) → ch08-ex07's
+  `wrong-name` misconception, where a misspelt column keeps no rows
+- A gap silently changes a filter (ch06-ex08) → ch08-ex08, now a whole row
+- `is.na()` and `!` (ch06) → ch08-ex09, ex10, ex11
+- `== NA` never works (ch06-ex05) → ch08-ex10's `equals-na` misconception
+- Write the question, not its answer (ch03-ex02, ch06-ex09) → ch08-ex10
+- Brackets must close (ch02-ex09) → ch08-ex06's `unclosed` misconception
+- Returned vs stored (ch05-ex04) → ch08-ex11
+- Nested calls read inside out (ch05-ex09, ch06 rule) → ch08-ex12
+- `NA` spreads through calculations, and `na.rm` (ch06) → ch08-ex12
+
+**Carried to module 9**, where they fit adding and changing columns:
+argument order, reassignment overwriting silently, the help page, one type
+per vector, and `data.frame()` itself.
+
+### Introduced in module 7
+
+| Concept | Intro | Returns in | n | Needs to return by |
+|---|---|---|---|---|
+| `data.frame()` from vectors | ch07 prose, ch07-ex03 | — | 1 | **ch08** |
+| Row = one patient, column = one variable | ch07-ex01, ch07-ex02 | ch07-ex11 | 3 | ch08 |
+| Columns must be the same length | ch07-ex03 | ch09-ex02 | 2 | — |
+| `$` pulls out a column as a vector | ch07-ex04 | ch07-ex05/06/09/11 | 5 | — |
+| `$` with a wrong name returns NULL silently | ch07-ex04 (misconception) | ch08-ex07 (misconception) | 2 | ch13 |
+| `str()` shows shape and types | ch07-ex07 | ch07-ex08 | 2 | **ch13** |
+| A spreadsheet view hides types | ch07-ex08 | ch09-ex13 | 2 | — |
+| `summary()`, and `NA's` across every column | ch07-ex10 | ch09-ex05 | 2 | ch13 |
+| Filtering one column by another | ch07-ex11 | ch08-ex06 | 2 | — |
+| `"<5"` is not missing — a clinical judgement | ch07-ex09 | — | **1** | ch13 |
+
+### What module 7 brought back
+
+- Vectors, `NA` and `na.rm` (ch05, ch06) → ch07-ex01, ch07-ex02, ch07-ex05
+- `sum()` of logicals, and `length()` as its distractor → ch07-ex06
+- Reading a nested call inside out (ch06 rule) → ch07-ex06's explanation
+- Coercion: one text value turns a column to text (ch05-ex07) → ch07-ex08
+- `class()` and `as.numeric()` (ch03, ch05-ex09) → ch07-ex09
+- Reassignment overwrites silently (ch03-ex03) → ch07-ex09's explanation
+- `as.numeric()` turns unreadable text into `NA` → ch07-ex09
+- Names are exact and case-sensitive (ch03-ex04) → ch07-ex04, ch07-ex09
+- Errors that stop are cheap (ch02-ex09) → ch07-ex03
+- Filtering with a logical vector (ch05-ex11) → ch07-ex11
+
+Nested calls in the full sense — one function inside another — didn't
+return here. Due by module 8.
+
+**Module 8 should open with bracket indexing on data frames**:
+`patients[3, "sbp"]`, `patients[2, ]`, `patients[, "age"]`. It's the direct
+extension of `sbp[2]` from module 5, and the comma is one of the most common
+things beginners misread in generated code. Then logical row selection,
+`patients[patients$discharged, ]`, which generalises ch07-ex11.
+
+### Design rules learned in module 8
+
+**Fade the scaffolding.** A blank placed exactly where the answer goes turns
+*where it goes* into a given. That's fine the first time a skill appears, and
+wrong after that — especially when placement is the lesson, as the comma is
+in module 8. Give the full structure once (`patients[______, ]`), then just
+the brackets (`patients[______]`), then nothing (`______`).
+
+**For two-slot answers, show the comma, not a blank.** `patients[______]`
+reads as "one thing goes here", when the answer is two things with a comma
+between them. `patients[ , ]` shows the shape without saying which side
+anything goes on.
+
+**When you remove scaffolding, accept every correct answer.** Without the
+comma provided, `patients[c("age", "sbp")]` also works. Say so in the
+explanation instead of marking valid R wrong.
+
+**Check analogies for direction.** "Like x-y coordinates" and "like cell B3
+in Excel" both put columns first — the opposite of `[row, col]`. A theatre
+seat (row, then seat) gets it right.
+
+### Design rules learned in module 6
+
+**Read nested calls aloud, inside out.** Whenever an exercise wraps one
+function around another, the explanation should give the plain-language
+reading of each layer: `is.na(sbp)` asks *which values are missing?*;
+`sum(is.na(sbp))` asks *how many are missing in total?* This is how
+experienced people read code, and it's the skill that makes nesting
+readable rather than intimidating.
+
+**Describe how people actually work, not an ideal checklist.** "Run this on
+every dataset before anything else" isn't what anyone does — they start
+working, notice something odd, and go back to check. Same lesson as
+`class()` in module 5. Frame diagnostic tools as what you reach for *after*
+something looks wrong. Students who are told to check everything first, and
+then don't, conclude they're doing it wrong.
+
+**Teach checking the middle step.** Run the inner piece on its own line
+before using it — `!is.na(sbp)` before `sbp[!is.na(sbp)]`. It's the most
+transferable debugging habit there is, and it's exactly how you'd check what
+an AI handed you. Worth prompting in any exercise where a question goes
+inside brackets or a call goes inside another.
+
+**Only announce review when an exercise is purely review.** Interleaving
+works partly because the learner has to recognise which earlier idea
+applies. Labelling every exercise that brings something back removes that.
+So ch06-ex04, which mixes old and new, stays unannounced; ch06-ex11, which is
+entirely old material, gets one framing line so it doesn't feel out of place.
+
+**The grader's working is for authors.** Check logs appear only in the
+harness or with `?dev`. Learners see feedback and R's own error messages.
 
 ## What module 5 was planned to carry
 

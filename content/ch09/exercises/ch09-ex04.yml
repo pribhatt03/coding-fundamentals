@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch09-ex04
+type: predict
+title: Look before you trust it
+topic: columns
+difficulty: 2
+tags: [data-frames, indexing, vectors]
+follows: ch09-ex03
+
+prompt: |
+  Before trusting a new column, it's worth seeing it beside the columns it
+  was made from. Which of these shows `sbp`, `dbp` and `map` side by side,
+  for every patient?
+
+hint: |
+  You're choosing columns, so the names go after the comma.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+  patients$dbp <- c(88, 76, 82, 84, 94)
+  patients$map <- (patients$sbp + 2 * patients$dbp) / 3
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: cols
+      text: '`patients[, c("sbp", "dbp", "map")]`'
+      correct: true
+      feedback: |
+        Right — every row, three columns. Checking a new column against its
+        ingredients is the fastest way to catch a formula that's quietly
+        wrong. It's the same habit as checking the middle step in module 6.
+    - id: rows
+      text: '`patients[c("sbp", "dbp", "map"), ]`'
+      feedback: |
+        That puts the names on the *row* side, asking for rows called "sbp",
+        "dbp" and "map". There aren't any, so you get three rows of `NA`s — and
+        no error.
+    - id: summ
+      text: "`summary(patients)`"
+      feedback: |
+        Useful, but it summarises each column separately. You couldn't check
+        that one patient's MAP matches their own two pressures.
+    - id: chain
+      text: "`patients$sbp$dbp$map`"
+      feedback: |
+        `$` takes one column at a time. `patients$sbp` is a vector, and a
+        vector has no columns to reach into.

@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch07-ex08
+type: fix-the-llm
+title: What the spreadsheet view hides
+topic: data-frames
+difficulty: 2
+tags: [data-frames, types, coercion, critical-appraisal]
+follows: ch07-ex07
+
+prompt: |
+  A lab export arrives as `labs`. Opened in a viewer, the CRP column looks
+  like a column of numbers. `str()` says:
+
+  ```
+  'data.frame':	5 obs. of  3 variables:
+   $ age: num  67 54 71 48 62
+   $ crp: chr  "12.4" "<5" "31.0" "8.2" ...
+   $ wbc: num  11.2 7.8 14.1 9 6.5
+  ```
+
+  Which column will cause trouble when you use the `mean()` function on
+  it?
+
+hint: |
+  Look at the three letters after each colon.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: crp
+      text: "`crp`"
+      correct: true
+      feedback: |
+        Right — it's `chr`, character, because of that `"<5"`. One value that
+        isn't a plain number turned the whole column into text, exactly as in
+        module 5.
+
+        Here's the part worth remembering. In a spreadsheet-style viewer,
+        `12.4` and `"12.4"` look identical. You could scroll through this data
+        and never see a problem. `str()` shows you what R actually thinks
+        each column is, which is why it's worth a glance whenever you meet a
+        new dataset or an analysis gives you something odd.
+    - id: age
+      text: "`age`"
+      feedback: |
+        `age` is `num` — numeric — so it will average fine.
+    - id: wbc
+      text: "`wbc`"
+      feedback: |
+        `wbc` is `num`. Notice it shows `9` rather than `9.0`; R drops a
+        trailing zero, but the value is the same number.
+    - id: none
+      text: "None — they all look like numbers"
+      feedback: |
+        They *look* like numbers, which is exactly the trap. Check the type
+        after each colon: one of them isn't `num`.

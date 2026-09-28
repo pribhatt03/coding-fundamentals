@@ -88,6 +88,9 @@
         },
         {
           "$ref": "#/$defs/rcode"
+        },
+        {
+          "$ref": "#/$defs/table"
         }
       ]
     }
@@ -388,6 +391,57 @@
               }
             }
           }
+        }
+      }
+    },
+    "table": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "select",
+        "columns",
+        "rows",
+        "options"
+      ],
+      "properties": {
+        "kind": {
+          "const": "table"
+        },
+        "select": {
+          "enum": [
+            "column",
+            "row",
+            "cell"
+          ],
+          "description": "What the learner clicks. Option ids: a column name; r1, r2\u2026; or r3-sbp for a cell."
+        },
+        "columns": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "array"
+          },
+          "description": "Values in column order. Use null for NA."
+        },
+        "options": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/option"
+          }
+        },
+        "other": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Feedback for clicking a target that has no option of its own. Required unless every target has one."
         }
       }
     }

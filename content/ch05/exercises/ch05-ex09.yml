@@ -15,7 +15,7 @@ prompt: |
   First, a new idea. You can put one function call *inside* another. R runs
   the inside one first, then hands its result to the outside one:
 
-  ```r
+  ```rtry
   round(sqrt(2), 1)
   ```
 

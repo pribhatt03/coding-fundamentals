@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch09-ex01
+type: fill-blank
+title: Adding a column
+topic: columns
+difficulty: 1
+tags: [data-frames, columns, vectors]
+
+prompt: |
+  The diastolic pressures were recorded too: 88, 76, 82, 84 and 94, in the
+  same order as the patients appear in the data frame.
+
+  Assigning to a column that doesn't exist yet creates it. Add them as a
+  column called `dbp`.
+
+hint: |
+  One value per patient, combined into a vector — then stored under the new
+  column's name.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: r-code
+  starter: |
+    patients$dbp <- ______
+  solution:
+    code: |
+      patients$dbp <- c(88, 76, 82, 84, 94)
+    why: |
+      `patients$dbp` didn't exist, so storing something there creates it — a
+      fifth column, lined up with the other four. The values are in the same
+      order as the patients appear in the data frame, so each one lands in
+      the right row.
+  checks:
+    - expr: as.numeric(patients$dbp)
+      equals: [88, 76, 82, 84, 94]
+      on_fail: |
+        `patients$dbp` should hold the five diastolic pressures, in order.
+  misconceptions:
+    - id: wrong-length
+      match:
+        on: error
+        pattern: "replacement has \\d+ rows?, data has"
+      feedback: |
+        There are five patients, so the column needs five values — one for
+        each patient, in the order they appear in the data frame. R won't
+        guess which patient a missing value belongs to.
+    - id: wrong-case
+      match:
+        on: result
+        expr: is.null(patients$dbp)
+        equals: [true]
+      feedback: |
+        There's no `dbp` column — check the capitals. `patients$DBP` would
+        create a *different* column, and asking for `patients$dbp` afterwards
+        quietly gives back nothing. Column names are exact.

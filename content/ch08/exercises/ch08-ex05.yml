@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch08-ex05
+type: fill-blank
+title: Just the columns you need
+topic: indexing
+difficulty: 2
+tags: [data-frames, indexing, vectors]
+follows: ch08-ex04
+
+prompt: |
+  Keep every patient, but only the `age` and `sbp` columns.
+
+hint: |
+  Column names go after the comma, in quotes. You need two of them.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: r-code
+  starter: |
+    patients[ , ]
+  solution:
+    code: |
+      patients[, c("age", "sbp")]
+    why: |
+      Blank before the comma for every row, and a vector of two names after
+      it. Same idea as the last exercise, on the other side of the comma.
+  checks:
+    - expr: colnames(.result)
+      equals: [age, sbp]
+      on_fail: |
+        That didn't give you exactly the `age` and `sbp` columns, in that
+        order.
+  misconceptions:
+    - id: no-quotes
+      match:
+        on: error
+        pattern: "age\\W+not found|sbp\\W+not found"
+      feedback: |
+        Column names need quotes inside square brackets. Without them, R
+        goes looking for variables called `age` and `sbp`, which don't
+        exist on their own.

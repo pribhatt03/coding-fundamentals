@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch08-ex07
+type: fill-blank
+title: Asking a question of the rows
+topic: filtering
+difficulty: 2
+tags: [data-frames, filtering, comparison]
+follows: ch08-ex06
+
+prompt: |
+  Keep only the patients older than 60.
+
+hint: |
+  You need a question that's TRUE for each patient over 60. Ask it of the
+  `age` column.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: r-code
+  starter: |
+    patients[ , ]
+  solution:
+    code: |
+      patients[patients$age > 60, ]
+    why: |
+      `patients$age > 60` asks each patient *are you over 60?* and gives
+      `TRUE FALSE TRUE FALSE TRUE`. The brackets keep the rows that said
+      yes. This is how filtering works underneath, whatever it's written
+      as.
+  checks:
+    - expr: as.numeric(.result$age)
+      equals: [67, 71, 62]
+      on_fail: |
+        Not the three patients over 60 yet.
+  misconceptions:
+    - id: wrong-name
+      match:
+        on: result
+        expr: nrow(.result)
+        equals: [0]
+      feedback: |
+        No rows came back — and no error. That usually means a column name
+        is slightly wrong: `patients$Age` doesn't exist, so `$` quietly gives
+        back nothing, and a question asked of nothing keeps nothing. Check
+        the spelling and capitals against the table.
+    - id: wrong-side
+      match:
+        on: error
+        pattern: "undefined columns"
+      feedback: |
+        R used your TRUEs and FALSEs to pick *columns* — five answers for
+        four columns — because they weren't before a comma. To choose
+        patients, the question goes on the row side: before the comma, with
+        the column side left blank.
+    - id: bare-age
+      match:
+        on: error
+        pattern: "age\\W+not found"
+      feedback: |
+        `age` only exists as a column inside `patients`. Write
+        `patients$age` so R knows where to find it.

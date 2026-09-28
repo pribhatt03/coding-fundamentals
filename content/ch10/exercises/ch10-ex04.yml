@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch10-ex04
+type: debug
+title: Which test did R run?
+topic: lists
+difficulty: 2
+tags: [lists, defaults, critical-appraisal]
+follows: ch10-ex03
+
+prompt: |
+  You asked for a t-test. There's more than one kind. Click the part of the
+  printout that tells you which kind R actually ran.
+
+hint: |
+  It's the line at the very top.
+
+response:
+  kind: span
+  language: text
+  code: |
+    <<a|Welch Two Sample t-test>>
+
+    <<b|data:  drug and placebo>>
+    t = -4.5272, df = 13.874, <<c|p-value = 0.0004844>>
+  options:
+    - id: a
+      correct: true
+      feedback: |
+        Right — a *Welch* test. There are two common versions of this t-test.
+        Student's version assumes both groups are about equally spread out;
+        Welch's doesn't assume that, which makes it the safer choice when
+        you're not sure.
+
+        You never asked for Welch. It's the default: `t.test()`'s usage line
+        includes `var.equal = FALSE` — the groups' spread is *not* assumed to
+        be equal — and that picks Welch's version.
+
+        Welch is usually a sensible choice. But it's a decision made for you,
+        and it's worth knowing it was made. If a paper's methods say
+        "Student's t-test" and the code ran Welch, the numbers won't match.
+    - id: b
+      feedback: |
+        This line tells you which data went into the t-test — here, the `drug`
+        and `placebo` vectors — but not which kind of test was run on them.
+    - id: c
+      feedback: |
+        This is the result, not the method. The kind of test is named above
+        everything else.

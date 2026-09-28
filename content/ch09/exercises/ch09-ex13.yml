@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch09-ex13
+type: fix-the-llm
+title: Filling in the missing reading
+topic: columns
+difficulty: 3
+tags: [data-frames, types, coercion, critical-appraisal]
+follows: ch09-ex12
+
+prompt: |
+  Someone wanted to record *why* patient 3's systolic is missing, so they
+  wrote a note into the cell:
+
+  ```r
+  patients$sbp[3] <- "not taken"
+  ```
+
+  What type is the `sbp` column now?
+
+hint: |
+  A column is a vector, and a vector holds one type.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: chr
+      text: "Character — the whole column is text now"
+      correct: true
+      feedback: |
+        Right. One text value turned every value in the column into text —
+        `142` is now `"142"`. In a spreadsheet-style view it looks exactly the
+        same as before.
+
+        Why it matters: try to do any math on that column and it won't work,
+        because every value in it is now character, not numeric.
+
+        The instinct was a good one: *why* a value is missing is worth
+        recording. It just belongs in its own column, like
+        `patients$sbp_note`, so the numbers stay numbers.
+    - id: num
+      text: "Still numeric — only one cell changed"
+      feedback: |
+        A column can't be mostly numbers with one note in it. It's a vector,
+        and a vector holds one type, so the whole column became text.
+    - id: mixed
+      text: "Mixed — numbers with one piece of text"
+      feedback: |
+        That's how it would look in a spreadsheet, and exactly why it's easy to
+        miss. R doesn't allow mixed columns: one piece of text makes every
+        value text.

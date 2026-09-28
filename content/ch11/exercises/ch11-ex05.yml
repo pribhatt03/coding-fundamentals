@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch11-ex05
+type: predict
+title: A counting loop in one line
+topic: loops
+difficulty: 3
+tags: [loops, logical, functions, critical-appraisal]
+follows: ch11-ex04
+
+prompt: |
+  ```r
+  high <- 0
+  for (reading in sbp) {
+    if (reading > 140) high <- high + 1
+  }
+  high / length(sbp)
+  ```
+
+  Read it piece by piece:
+
+  - `high <- 0` starts a count at zero.
+  - The loop goes through every reading, and adds one to the count each time
+    a reading is over 140.
+  - The last line divides the count by the number of readings.
+
+  So the whole chunk works out the *fraction* of readings over 140, and gives
+  `0.5`. Which single line gives the same answer?
+
+hint: |
+  It's the *fraction* of readings over 140. In module 5, one function gave a
+  fraction of TRUEs rather than a count.
+
+setup: |
+  sbp <- c(118, 142, 131, 156)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: mean
+      text: "`mean(sbp > 140)`"
+      correct: true
+      feedback: |
+        Right. `sbp > 140` gives `FALSE TRUE FALSE TRUE`, and the mean of TRUEs
+        and FALSEs is the fraction that are TRUE — here, 0.5. Five lines,
+        including an `if` inside a loop, become one.
+    - id: sum
+      text: "`sum(sbp > 140)`"
+      feedback: |
+        That gives 2 — the count of high readings. The loop's last line divides
+        the count by the number of readings, which makes it a fraction.
+    - id: length
+      text: "`length(sbp > 140)`"
+      feedback: |
+        That gives 4 — the number of answers, one per reading, whether TRUE or
+        FALSE.
+    - id: bare
+      text: "`sbp > 140`"
+      feedback: |
+        That gives four TRUEs and FALSEs, one per reading. It's the question;
+        you still need to turn the answers into a single fraction.

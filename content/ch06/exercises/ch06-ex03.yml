@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch06-ex03
+type: predict
+title: Averaging with a missing value
+topic: missing-values
+difficulty: 1
+tags: [na, functions]
+follows: ch06-ex02
+
+prompt: |
+  What does this return?
+
+  ```r
+  sbp <- c(118, NA, 131, 156)
+  mean(sbp)
+  ```
+
+hint: |
+  You saw what happened when one value became unknown in the last
+  exercise.
+
+setup: |
+  sbp <- c(118, NA, 131, 156)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: na
+      text: "`NA`"
+      correct: true
+      feedback: |
+        Right. One unknown value anywhere in the input makes the answer
+        unknown, so the whole average comes back `NA`. R is refusing to
+        guess — and it's refusing loudly enough that you can't miss it,
+        which is the point.
+    - id: threemean
+      text: "`135` — the average of the three real readings"
+      feedback: |
+        That's a reasonable answer to a different question, and you can ask
+        R for it — the next exercise does. But by default, `mean()` includes
+        every value, missing ones included.
+    - id: err
+      text: "An error"
+      feedback: |
+        No error — `mean()` returns a value, and the value is `NA`. That's
+        the quiet kind of failure: it looks like an answer.
+    - id: zeromean
+      text: "`101.25` — counting the missing value as zero"
+      feedback: |
+        That would mean treating a reading nobody took as a reading of
+        zero. R won't do that, and neither should anyone else.

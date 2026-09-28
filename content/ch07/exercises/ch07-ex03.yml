@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch07-ex03
+type: predict
+title: Columns that don't line up
+topic: data-frames
+difficulty: 2
+tags: [data-frames, vectors, errors]
+follows: ch07-ex02
+
+prompt: |
+  There are five ages but only four blood pressures. What happens?
+
+  ```r
+  age <- c(67, 54, 71, 48, 62)
+  sbp <- c(142, 118, 131, 156)
+  data.frame(age, sbp)
+  ```
+
+hint: |
+  Each row is one patient. Which patient would the fifth age belong to?
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: err
+      text: "An error — the columns have different lengths"
+      correct: true
+      feedback: |
+        Right. Every row is one patient, so every column has to have exactly
+        one value per patient. With four readings for five people, R can't
+        know which patient is missing one — so it refuses.
+
+        This is the loud, cheap kind of error. The dangerous version is the
+        one where the lengths *do* match but the values are in the wrong
+        order, and nothing tells you.
+    - id: pad
+      text: "A table with `NA` added for the fifth blood pressure"
+      feedback: |
+        That would mean R guessing that the *last* patient is the one
+        without a reading. It won't guess. For all it knows, the missing reading belongs to patient 2.
+    - id: drop
+      text: "A table of four patients, with the last age dropped"
+      feedback: |
+        R never silently throws away data here. It stops and tells you the
+        two columns don't match.

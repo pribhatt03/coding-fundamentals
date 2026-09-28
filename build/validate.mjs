@@ -79,6 +79,27 @@ function customRules(ex, file) {
     if (!r.options.some((o) => o.correct)) fail(file, "no span marked correct");
   }
 
+  if (r.kind === "table") {
+    r.rows.forEach((row, i) => {
+      if (row.length !== r.columns.length) {
+        fail(file, `table row ${i + 1} has ${row.length} values but there are ${r.columns.length} columns`);
+      }
+    });
+    const targets =
+      r.select === "column" ? r.columns
+      : r.select === "row" ? r.rows.map((_, i) => `r${i + 1}`)
+      : r.rows.flatMap((_, i) => r.columns.map((c) => `r${i + 1}-${c}`));
+    for (const o of r.options) {
+      if (!targets.includes(o.id)) fail(file, `table option "${o.id}" isn't a ${r.select} in this table`);
+    }
+    const correct = r.options.filter((o) => o.correct);
+    if (correct.length !== 1) fail(file, `table needs exactly 1 correct option, found ${correct.length}`);
+    const covered = new Set(r.options.map((o) => o.id));
+    if (!r.other && targets.some((t) => !covered.has(t))) {
+      fail(file, `not every ${r.select} has an option, so "other" feedback is required`);
+    }
+  }
+
   if (r.kind === "prose") {
     const ids = new Set();
     for (const c of r.rubric) {
@@ -97,7 +118,9 @@ function customRules(ex, file) {
   if (r.kind === "r-code") {
     // fix-the-llm exercises hand the learner broken code to repair, so they
     // legitimately have no blank.
-    if (!r.starter.includes("______") && ex.type !== "fix-the-llm") {
+    // A starter like `df[ , ]` or `ifelse( , , )` is deliberate: it shows how
+    // many slots there are without saying what goes in any of them.
+    if (!r.starter.includes("______") && !/\[\s*,\s*\]|\(\s*,[\s,]*\)/.test(r.starter) && ex.type !== "fix-the-llm") {
       warn(file, "starter has no ______ blank — intentional?");
     }
     for (const m of r.misconceptions ?? []) {
@@ -193,6 +216,22 @@ for (const ch of chapters) {
     await mkdir(OUT, { recursive: true });
     await writeFile(join(OUT, `${ch}.json`), JSON.stringify(bundle));
     bundles.set(ch, bundle.length);
+    // Datasets for the Data panel, if the chapter has any.
+    try {
+      const sets = yaml.load(await readFile(join(CONTENT, ch, "data.yml"), "utf8")) ?? [];
+      for (const d of sets) {
+        for (const [i, row] of (d.rows ?? []).entries()) {
+          if (row.length !== d.columns.length) {
+            fail(`${ch}/data.yml`, `${d.name} row ${i + 1} has ${row.length} values, ${d.columns.length} columns`);
+          }
+        }
+      }
+      await mkdir(join("web", "data"), { recursive: true });
+      await writeFile(join("web", "data", `${ch}.json`), JSON.stringify(sets));
+    } catch (e) {
+      if (e.code !== "ENOENT") fail(`${ch}/data.yml`, e.message);
+    }
+
     // Chapter prose, if it exists, gets copied alongside for the preview page.
     try {
       await mkdir(PROSE_OUT, { recursive: true });
@@ -205,6 +244,27 @@ for (const ch of chapters) {
 if (!CHECK_ONLY && !errors.length) {
   const built = chapters.filter((c) => bundles.has(c)).sort();
   await writeFile(join(OUT, "index.json"), JSON.stringify(built));
+
+  // The module menu, grouped by part, with each module's own title.
+  const titles = {};
+  for (const ch of built) {
+    try {
+      const m = (await readFile(join(CONTENT, ch, `${ch}.md`), "utf8")).match(/^# \d+\.\s+(.+)$/m);
+      if (m) titles[ch] = m[1].trim();
+    } catch { /* no prose yet */ }
+  }
+  let parts = [];
+  try { parts = yaml.load(await readFile(join(CONTENT, "outline.yml"), "utf8")) ?? []; }
+  catch (e) { if (e.code !== "ENOENT") fail("outline.yml", e.message); }
+  const placed = new Set(parts.flatMap((p) => p.modules ?? []));
+  const outline = parts
+    .map((p) => ({ part: p.part, title: p.title,
+                   modules: (p.modules ?? []).filter((c) => built.includes(c))
+                                            .map((c) => ({ id: c, title: titles[c] ?? null })) }))
+    .filter((p) => p.modules.length);
+  const loose = built.filter((c) => !placed.has(c));
+  if (loose.length) outline.push({ part: null, title: "Other", modules: loose.map((c) => ({ id: c, title: titles[c] ?? null })) });
+  await writeFile(join("web", "outline.json"), JSON.stringify(outline));
 }
 
 /* ------------------------------------------------------------ reference --- */
@@ -217,9 +277,17 @@ let reference = [];
 try {
   reference = yaml.load(await readFile(join(CONTENT, "reference.yml"), "utf8")) ?? [];
 } catch (e) {
-  warnings.push(`reference.yml: ${e.code === "ENOENT" ? "missing" : e.message}`);
+  // A broken reference would ship an empty Functions panel, so this stops the
+  // build rather than warning.
+  if (e.code === "ENOENT") warnings.push("reference.yml: missing");
+  else fail("reference.yml", `could not be read: ${e.message}`);
 }
 
+let plannedModules = new Set();
+try {
+  const outlineYml = yaml.load(await readFile(join(CONTENT, "outline.yml"), "utf8")) ?? [];
+  plannedModules = new Set(outlineYml.flatMap((p) => p.modules ?? []));
+} catch { /* no outline */ }
 const chapterOrder = [...bundles.keys()].filter((c) => /^ch\d+$/.test(c)).sort();
 const refByName = new Map();
 for (const [i, f] of reference.entries()) {
@@ -231,8 +299,10 @@ for (const [i, f] of reference.entries()) {
   if (f?.introduced && !chapterOrder.includes(f.introduced)) {
     warn(where, `introduced in "${f.introduced}", which has no exercises`);
   }
-  if (f?.note_from && !chapterOrder.includes(f.note_from)) {
-    warn(where, `note_from "${f.note_from}" is not a chapter with exercises`);
+  // A note can be held for a module that's planned but not written yet; it
+  // stays hidden until that module exists.
+  if (f?.note_from && !chapterOrder.includes(f.note_from) && !plannedModules.has(f.note_from)) {
+    warn(where, `note_from "${f.note_from}" isn't a module in outline.yml`);
   }
   if (f?.name) refByName.set(f.name, f);
 }

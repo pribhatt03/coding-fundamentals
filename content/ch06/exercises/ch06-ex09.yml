@@ -1,0 +1,71 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch06-ex09
+type: fix-the-llm
+title: Filter without the phantom
+topic: missing-values
+difficulty: 3
+tags: [na, indexing, logical]
+follows: ch06-ex12
+
+prompt: |
+  Now use it. Keep only the readings that aren't missing, then filter what's
+  left.
+
+hint: |
+  The blank is the question you just checked in the last exercise.
+
+setup: |
+  sbp <- c(118, NA, 131, 156)
+
+response:
+  kind: r-code
+  starter: |
+    clean <- sbp[______]
+    clean[clean > 140]
+  solution:
+    code: |
+      clean <- sbp[!is.na(sbp)]
+      clean[clean > 140]
+    why: |
+      `clean` holds the three readings that exist, and filtering those gives
+      a single answer with nothing invented. Doing it in two steps also
+      leaves a record: anyone reading this can see that a missing value was
+      dropped on purpose.
+  checks:
+    - expr: as.numeric(clean)
+      equals: [118, 131, 156]
+      on_fail: |
+        `clean` should hold the three readings that aren't missing.
+    - expr: as.numeric(.result)
+      equals: [156]
+      on_fail: |
+        The last line should give just the readings over 140, with no `NA`.
+  misconceptions:
+    - id: kept-only-na
+      match:
+        on: result
+        expr: is.na(.result)
+        equals: [true]
+      feedback: |
+        You've kept only the missing value instead of everything but it.
+        `is.na(sbp)` is TRUE where the values are missing — put `!` in front to turn
+        the question around.
+    - id: hardcoded-logicals
+      match:
+        on: source
+        pattern: "sbp\\[\\s*c\\("
+      feedback: |
+        That gives the right answer — for these four readings, and no
+        others. Give it the next shift's readings and the TRUEs and FALSEs
+        would be in the wrong places, quietly keeping the wrong values.
+        `!is.na(sbp)` asks the question fresh every time, whatever the data
+        turns out to be. Write the question, not its answer.
+    - id: phantom-remains
+      match:
+        on: source
+        pattern: "clean\\s*<-\\s*sbp\\s*$|clean\\s*<-\\s*sbp\\s*\\n"
+      feedback: |
+        `clean` is still the original vector, missing value and all, so the `NA` comes
+        straight through to the answer. The brackets need a question in
+        them.

@@ -1,0 +1,44 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch08-ex01
+type: predict
+title: Row, then column
+topic: indexing
+difficulty: 1
+tags: [data-frames, indexing]
+
+prompt: |
+  In module 5, `sbp[2]` picked the second value of a vector. A data frame
+  has two directions, so its square brackets take two things, separated by a
+  comma: **the row first, then the column.**
+
+  ```r
+  patients[4, "age"]
+  ```
+
+  Click the value this picks out.
+
+hint: |
+  Count down four rows, then find the `age` column.
+
+response:
+  kind: table
+  select: cell
+  columns: [age, blood_type, sbp, discharged]
+  rows:
+    - [67, "A+", 142, true]
+    - [54, "O-", 118, false]
+    - [71, "B+", null, false]
+    - [48, "O+", 131, true]
+    - [62, "A-", 156, true]
+  other: |
+    Row first, then column: the number before the comma is the row, and the
+    name after it is the column. Count down to row 4, then across to `age`.
+  options:
+    - id: r4-age
+      correct: true
+      feedback: |
+        Right — 48. Row 4, column `age`. The comma is doing all the work: what
+        comes before it chooses rows, what comes after it chooses columns.
+        That one rule is behind almost every bracket you'll see in a data
+        frame.

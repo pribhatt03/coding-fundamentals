@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch11-ex03
+type: predict
+title: A loop that seems to do nothing
+topic: loops
+difficulty: 2
+tags: [loops, return-values, critical-appraisal]
+follows: ch11-ex02
+
+prompt: |
+  The same loop, without `print()`. What appears?
+
+  ```r
+  sbp <- c(118, 142, 131, 156)
+  for (reading in sbp) {
+    reading - 10
+  }
+  ```
+
+hint: |
+  Outside a loop, R shows you each result automatically. Is that still true
+  inside one?
+
+setup: |
+  sbp <- c(118, 142, 131, 156)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: nothing
+      text: "Nothing at all"
+      correct: true
+      feedback: |
+        Right, and it surprises nearly everyone. Inside a loop, R doesn't show
+        results unless something prints them. Each subtraction happens, and
+        each answer is thrown away.
+
+        Worth knowing when you're handed code: a loop that seems to do nothing
+        is often calculating something and discarding it, because nothing
+        stores or prints the result.
+    - id: four
+      text: "The four corrected readings, one per line"
+      feedback: |
+        That's what you'd get with `print()`. Without it, the results are
+        worked out and discarded — R only shows values automatically outside a
+        loop.
+    - id: last
+      text: "Just `146`"
+      feedback: |
+        Not even the last one. Nothing inside the loop is shown unless it's
+        printed.

@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch11-ex07
+type: fix-the-llm
+title: An if given a whole column
+topic: conditionals
+difficulty: 2
+tags: [conditionals, vectors, critical-appraisal]
+follows: ch11-ex06
+
+prompt: |
+  You were handed this to flag high readings:
+
+  ```r
+  sbp <- c(118, 142, 131, 156)
+  if (sbp > 140) print("high")
+  ```
+
+  What happens?
+
+hint: |
+  How many TRUEs and FALSEs does `sbp > 140` give? How many can `if` take?
+
+setup: |
+  sbp <- c(118, 142, 131, 156)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: err
+      text: "An error — `if` can only take one TRUE or FALSE"
+      correct: true
+      feedback: |
+        Right: *the condition has length > 1*. `sbp > 140` gives four answers,
+        and `if` needs exactly one.
+
+        Worth knowing: before R 4.2, released in 2022, this ran anyway — `if`
+        quietly used the *first* answer and warned. Older examples online
+        still assume that, and so does code learned from them. When you want
+        an answer for every value, that's `ifelse()` from module 9:
+        `ifelse(sbp > 140, "high", "not high")`.
+    - id: twice
+      text: '`"high"` is printed twice, once for each high reading'
+      feedback: |
+        That's what someone *means* by this, and it's a very natural reading.
+        But `if` isn't a loop: it takes a single TRUE or FALSE, and four
+        answers is an error.
+    - id: first
+      text: "It checks only the first reading, and prints nothing"
+      feedback: |
+        That's what older versions of R did, with a warning. Since R 4.2 it's
+        an error instead — `if` must get exactly one TRUE or FALSE.

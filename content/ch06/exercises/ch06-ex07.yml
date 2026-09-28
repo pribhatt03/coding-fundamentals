@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch06-ex07
+type: fill-blank
+title: How much is missing?
+topic: missing-values
+difficulty: 2
+tags: [na, logical, functions]
+follows: ch06-ex06
+
+prompt: |
+  Count how many of the readings are missing.
+
+hint: |
+  `is.na(sbp)` gives `FALSE TRUE FALSE FALSE`. In arithmetic, `TRUE` counts
+  as 1 and `FALSE` counts as 0. Which function would add those up?
+
+setup: |
+  sbp <- c(118, NA, 131, 156)
+
+response:
+  kind: r-code
+  starter: |
+    ______(is.na(sbp))
+  solution:
+    code: |
+      sum(is.na(sbp))
+    why: |
+      Read it from the inside out. `is.na(sbp)` asks *which values are
+      missing?* and answers `FALSE TRUE FALSE FALSE`. Wrapping `sum()`
+      around it asks *how many values are missing in total?* — and since
+      each TRUE counts as 1, adding them up counts the TRUEs.
+
+      When a result comes out strange, this is one of the first things worth
+      checking.
+  checks:
+    - expr: as.numeric(.result)
+      equals: [1]
+      on_fail: |
+        Not 1 yet. You want a function that adds up the TRUEs.
+  misconceptions:
+    - id: used-length
+      match:
+        on: result
+        expr: as.numeric(.result)
+        equals: [4]
+      feedback: |
+        `length()` gives 4 — one answer per reading, not the number of
+        missing ones. Worth knowing on its own, though: `length(sbp)` is
+        also 4, because a missing value still takes up a place in the vector. The
+        number of readings you actually have is a different question.

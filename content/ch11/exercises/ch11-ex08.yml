@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch11-ex08
+type: predict
+title: A loop meets a missing value
+topic: conditionals
+difficulty: 3
+tags: [loops, conditionals, na, critical-appraisal]
+follows: ch11-ex07
+
+prompt: |
+  One reading is missing. What happens?
+
+  ```r
+  sbp <- c(118, NA, 131, 156)
+  for (reading in sbp) {
+    if (reading > 140) print("high")
+  }
+  ```
+
+hint: |
+  On the second pass, `reading` is `NA`. What is `NA > 140`, and can `if`
+  act on that?
+
+setup: |
+  sbp <- c(118, NA, 131, 156)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: stops
+      text: "It stops with an error at the missing reading, and never checks 156"
+      correct: true
+      feedback: |
+        Right: *missing value where TRUE/FALSE needed*. `NA > 140` is `NA`, and
+        `if` must have a definite TRUE or FALSE. The loop stops at the second
+        reading — so the 156, which really is high, is never looked at.
+
+        You've now seen three ways missing values behave. A filter invented a
+        patient (module 8), `t.test()` dropped one silently (module 10), and
+        here `if` stops loudly. This one is the good kind: you can't miss it.
+        `ifelse()` would give `NA` for that reading and carry on.
+    - id: skips
+      text: '`"high"` once, for 156 — the missing one is skipped'
+      feedback: |
+        Skipping is what a reader might expect, but `if` can't skip. It needs
+        a TRUE or FALSE, and `NA > 140` is neither, so the loop stops there.
+    - id: silent
+      text: "Nothing — none of them are printed"
+      feedback: |
+        Something does appear: an error, at the second reading. The loop never
+        gets as far as 156.

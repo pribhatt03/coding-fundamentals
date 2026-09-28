@@ -23,7 +23,10 @@ const moduleNo = (ch) => (ch?.match(/\d+/) ? String(+ch.match(/\d+/)[0]) : ch);
 function noteShown(f) {
   if (!f.note) return false;
   if (!f.note_from || !current) return true;
-  return chapters.indexOf(current) >= chapters.indexOf(f.note_from);
+  // A note held for a module that doesn't exist yet stays hidden.
+  const from = chapters.indexOf(f.note_from);
+  if (from < 0) return false;
+  return chapters.indexOf(current) >= from;
 }
 
 function visible() {
@@ -50,7 +53,9 @@ function render() {
       <h3><code>${esc(f.name)}()</code><span class="fnfrom">module ${moduleNo(f.introduced)}</span></h3>
       <p>${inline(f.does)}</p>
       <pre class="fnusage"><code>${esc(f.usage)}</code></pre>
-      <pre class="fnex"><code>${esc(f.example)}${f.result ? `\n<span class="fnres">${esc(f.result)}</span>` : ""}</code></pre>
+      ${[{ example: f.example, result: f.result }, ...(f.also ?? [])].map((x) =>
+        `<pre class="fnex"><code>${esc(x.example)}${x.result ? `\n<span class="fnres">${esc(x.result)}</span>` : ""}</code></pre>`
+      ).join("")}
       ${noteShown(f) ? `<p class="fnnote">${inline(f.note)}</p>` : ""}
     </article>`).join("")
     : `<p class="fnnone">Nothing matches "${esc(q)}". Try describing what you want
@@ -58,6 +63,7 @@ function render() {
 }
 
 function open() {
+  document.dispatchEvent(new CustomEvent("sidepanel:open", { detail: "fn" }));
   panel.hidden = false;
   requestAnimationFrame(() => panel.classList.add("open"));
   input.focus();
@@ -88,14 +94,17 @@ export async function mount(buttonHost) {
   panel.id = "fnpanel";
   panel.hidden = true;
   panel.setAttribute("aria-label", "Function reference");
+  panel.className = "sidepanel";
   panel.innerHTML = `
-    <header>
-      <h2>Functions</h2>
-      <button class="linky fnclose" aria-label="Close">Close</button>
-    </header>
-    <input type="search" placeholder="Search by name, or by what it does">
-    <p class="fncount"></p>
-    <div class="fnlist"></div>`;
+    <div class="panelhead">
+      <header>
+        <h2>Functions</h2>
+        <button class="linky fnclose" aria-label="Close">Close</button>
+      </header>
+      <input type="search" placeholder="Search by name, or by what it does">
+      <p class="fncount"></p>
+    </div>
+    <div class="fnlist panelbody"></div>`;
   document.body.append(panel);
 
   list = panel.querySelector(".fnlist");
@@ -104,9 +113,20 @@ export async function mount(buttonHost) {
   input.oninput = render;
   panel.querySelector(".fnclose").onclick = close;
   addEventListener("keydown", (e) => { if (e.key === "Escape" && !panel.hidden) close(); });
+  document.addEventListener("sidepanel:open", (e) => { if (e.detail !== "fn" && !panel.hidden) close(); });
 
   render();
 }
+
+/** Open the panel, optionally with a search already typed. */
+export function openWith(query = "") {
+  if (!panel) return;
+  input.value = query;
+  render();
+  open();
+}
+
+export function isMounted() { return !!panel; }
 
 /** Limit the list to functions introduced up to this chapter. */
 export function setChapter(ch) { current = ch; render(); }

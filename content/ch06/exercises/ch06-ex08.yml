@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch06-ex08
+type: predict
+title: Filtering with a missing value
+topic: missing-values
+difficulty: 3
+tags: [na, indexing, logical, critical-appraisal]
+follows: ch06-ex07
+
+prompt: |
+  This is the filtering you did at the end of the last module, on a vector
+  that now has a missing value in it.
+
+  First, `sbp > 140` gives `FALSE NA FALSE TRUE`. The missing reading can't
+  be compared with 140, so its answer is `NA` — just as `NA - 10` was `NA`.
+
+  ```r
+  sbp <- c(118, NA, 131, 156)
+  sbp[sbp > 140]
+  ```
+
+  What does the last line return?
+
+hint: |
+  Square brackets keep a value where the answer is TRUE and drop it where
+  the answer is FALSE. What can they do with an `NA`?
+
+setup: |
+  sbp <- c(118, NA, 131, 156)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: phantom
+      text: "`NA 156`"
+      correct: true
+      feedback: |
+        Yes — and this is the one to remember from this module. Square
+        brackets keep a value wherever the answer is TRUE and drop it
+        wherever it's FALSE. When the answer is `NA`, they can't decide
+        either way — so instead of skipping it, they hand back an `NA`.
+
+        You asked for readings over 140 and got back a value that was never
+        a reading at all. Nothing warned you. Count what came back and you
+        get a clean, wrong answer:
+
+        ```r
+        length(sbp[sbp > 140])
+        ```
+
+        That returns `2`. There was one high reading.
+    - id: justhigh
+      text: "`156`"
+      feedback: |
+        That's what you wanted, but it isn't what square brackets give you.
+        They can only keep or drop a value when the answer is TRUE or
+        FALSE — an `NA` in the question becomes an `NA` in the answer.
+    - id: withna
+      text: "`118 NA 131 156` — everything"
+      feedback: |
+        The filter does work for the values it can decide about. Only the
+        missing one causes trouble.
+    - id: err
+      text: "An error about missing values"
+      feedback: |
+        No error. It returns something that looks like a result, which is
+        exactly what makes it dangerous.

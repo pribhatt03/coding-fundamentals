@@ -1,0 +1,73 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch09-ex09
+type: fill-blank
+title: What fraction are hypertensive?
+topic: columns
+difficulty: 3
+tags: [logical, na, functions]
+follows: ch09-ex08
+
+prompt: |
+  Of the patients who have a systolic recorded, what fraction are
+  hypertensive?
+
+hint: |
+  In module 5, one function gave the *fraction* of TRUEs rather than the
+  count. And there's a missing value in this column.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+  patients$dbp <- c(88, 76, 82, 84, 94)
+  patients$map <- (patients$sbp + 2 * patients$dbp) / 3
+  patients$hypertensive <- patients$sbp >= 140
+
+response:
+  kind: r-code
+  starter: |
+    ______
+  solution:
+    code: |
+      mean(patients$hypertensive, na.rm = TRUE)
+    why: |
+      Each TRUE counts as 1 and each FALSE as 0, so the average of a TRUE/FALSE
+      column is the fraction that are TRUE. With `na.rm = TRUE`, the patient
+      without a reading is left out — two hypertensive out of four measured.
+  checks:
+    - expr: as.numeric(.result)
+      equals: [0.5]
+      on_fail: |
+        Not 0.5 yet. You want the fraction of the *measured* patients who are
+        TRUE.
+  misconceptions:
+    - id: still-na
+      match:
+        on: result
+        expr: is.na(.result)
+        equals: [true]
+      feedback: |
+        `NA` — the patient without a reading is still included. Add
+        `na.rm = TRUE`.
+    - id: counted
+      match:
+        on: result
+        expr: as.numeric(.result)
+        equals: [2]
+      feedback: |
+        That's how many are hypertensive — a count. The question asks for the
+        fraction. One function gives the fraction of TRUEs directly.
+    - id: over-five
+      match:
+        on: result
+        expr: as.numeric(round(.result, 2))
+        equals: [0.4]
+      feedback: |
+        That's 2 out of 5 — it counts the patient without a reading as *not*
+        hypertensive. `nrow(patients)` is 5, but only four patients were
+        measured. Nobody knows whether patient 3 is hypertensive, so they
+        shouldn't be in either count.

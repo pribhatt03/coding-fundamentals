@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch07-ex07
+type: predict
+title: Reading str()
+topic: data-frames
+difficulty: 1
+tags: [data-frames, types, functions]
+follows: ch07-ex06
+
+prompt: |
+  `str()` shows the *structure* of a data frame. This is what it gives for
+  `patients`:
+
+  ```
+  'data.frame':	5 obs. of  4 variables:
+   $ age       : num  67 54 71 48 62
+   $ blood_type: chr  "A+" "O-" "B+" "O+" ...
+   $ sbp       : num  142 118 NA 131 156
+   $ discharged: logi  TRUE FALSE FALSE TRUE TRUE
+  ```
+
+  How many patients are in the data?
+
+hint: |
+  "obs." is short for observations. In this data, each observation is a
+  patient.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: five
+      text: "5"
+      correct: true
+      feedback: |
+        Right. The first line gives you the shape: 5 observations (rows)
+        and 4 variables (columns). Then each line after it is one column,
+        with its type — `num`, `chr` or `logi`, which are numeric,
+        character and logical — and its first few values.
+
+        That type column is what makes `str()` worth reaching for, as the
+        next exercise shows.
+    - id: four
+      text: "4"
+      feedback: |
+        4 is the number of *variables* — the columns. Observations are the
+        rows, and there are 5.
+    - id: twenty
+      text: "20"
+      feedback: |
+        That's 5 × 4, the total number of values in the table. The number of
+        patients is the number of rows.

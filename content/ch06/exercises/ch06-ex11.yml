@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch06-ex11
+type: debug
+title: Where did the answer go?
+topic: missing-values
+difficulty: 2
+tags: [variables, na, debugging]
+follows: ch06-ex10
+
+prompt: |
+  This was meant to store the average and then show it. Press **Run** and
+  you'll see R report that it can't find `mean_sbp`.
+
+  Click the name that actually was created.
+
+hint: |
+  Read both names one character at a time.
+
+setup: |
+  sbp <- c(118, NA, 131, 156)
+
+response:
+  kind: span
+  language: r
+  runnable: true
+  code: |
+    sbp <- c(118, NA, 131, 156)
+    <<a|Mean_sbp>> <- mean(sbp, na.rm = TRUE)
+    <<b|mean_sbp>>
+  options:
+    - id: a
+      correct: true
+      feedback: |
+        Right. The capital `M` makes this a different name entirely, so the
+        average is sitting safely in `Mean_sbp` while the last line asks for
+        something that was never created.
+
+        Notice that the second line gave no output and no complaint. Storing
+        something never prints anything, so there was nothing to tell you
+        the name wasn't the one you meant. The error only appeared one line
+        later, asking for a name that doesn't exist.
+    - id: b
+      feedback: |
+        This is the name R can't find — it's the line reporting the problem,
+        not the line that caused it. Compare it letter by letter with the
+        name on the line above.

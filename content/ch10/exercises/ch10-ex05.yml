@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch10-ex05
+type: predict
+title: Which mean is which?
+topic: lists
+difficulty: 2
+tags: [lists, arguments, critical-appraisal]
+follows: ch10-ex04
+
+prompt: |
+  The printout ends with:
+
+  ```
+  mean of x mean of y
+    130.125   143.125
+  ```
+
+  The code was `t.test(drug, placebo)`. Which group had the mean of 130.125?
+
+hint: |
+  `x` and `y` aren't names from your data. They're the names of
+  `t.test()`'s first two arguments.
+
+setup: |
+  drug    <- c(128, 134, 121, 139, 125, 131, 127, 136)
+  placebo <- c(142, 138, 149, 135, 144, 151, 140, 146)
+  result  <- t.test(drug, placebo)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: drug
+      text: "The drug group"
+      correct: true
+      feedback: |
+        Right. `t.test()`'s first two arguments are called `x` and `y`, and
+        `drug` was written first — so it's `x`. The printout uses the
+        argument names, not your names.
+
+        Swap the order to `t.test(placebo, drug)` and the labels swap too,
+        along with the sign of the difference and the interval. Nothing warns
+        you. The order you wrote them in is the only record of which is which.
+    - id: placebo
+      text: "The placebo group"
+      feedback: |
+        `x` is the first argument, and `drug` was written first. So `mean of
+        x` is the drug group — 130.125 — and placebo is `y`.
+    - id: cant
+      text: "You can't tell from the output"
+      feedback: |
+        You can't tell from the output *alone* — which is exactly the trap. But
+        you can from the call: `x` is the first argument, and `drug` came
+        first.

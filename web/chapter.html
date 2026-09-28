@@ -15,18 +15,23 @@
 <script type="module" src="./theme.js"></script>
 </head>
 <body class="reading">
-  <header class="bar">
-    <select id="chapter"></select>
-    <span id="count"></span>
-    <span id="status"></span>
-    <span id="warn"></span>
-    <span id="fnslot"></span>
-    <span id="themeslot"></span>
-    <button id="events" class="linky">event log</button>
-    <button id="reset" class="linky">reset progress</button>
-    <a href="./test.html">harness</a>
-  </header>
-  <div class="bar-track"><div id="bar-fill"></div></div>
+  <div class="topbar">
+    <header class="bar">
+      <select id="chapter"></select>
+      <span id="count"></span>
+      <span id="status"></span>
+      <span id="warn"></span>
+      <span id="devtools" hidden>
+        <button id="events" class="linky">event log</button>
+        <a href="./test.html">harness</a>
+      </span>
+      <button id="reset" class="linky">reset progress</button>
+      <span id="dataslot"></span>
+      <span id="fnslot"></span>
+      <span id="themeslot"></span>
+    </header>
+    <div class="bar-track"><div id="bar-fill"></div></div>
+  </div>
   <main id="chapter-body"></main>
   <script type="module" src="./chapter.js"></script>
 </body>

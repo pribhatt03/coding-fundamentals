@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch07-ex09
+type: fix-the-llm
+title: Converting the column
+topic: data-frames
+difficulty: 3
+tags: [data-frames, coercion, types, functions, critical-appraisal]
+follows: ch07-ex08
+
+prompt: |
+  Convert the `crp` column to numbers, storing the result back in the same
+  column. The second line then checks its type.
+
+  `labs` is in the **Data** panel if you want it in view.
+
+hint: |
+  `as.numeric()` converts text to numbers. What goes inside it is the
+  column itself, `labs$crp`.
+
+setup: |
+  labs <- data.frame(
+    age = c(67, 54, 71, 48, 62),
+    crp = c("12.4", "<5", "31.0", "8.2", "19.5"),
+    wbc = c(11.2, 7.8, 14.1, 9.0, 6.5)
+  )
+
+response:
+  kind: r-code
+  starter: |
+    labs$crp <- ______
+    class(labs$crp)
+  solution:
+    code: |
+      labs$crp <- as.numeric(labs$crp)
+      class(labs$crp)
+    why: |
+      The column is numeric now, and the old text version is gone — storing
+      back into the same name overwrites it.
+
+      Look at the warning, though. `"<5"` couldn't be read as a number, so
+      it became `NA`. That's a real decision, and R just made it for you.
+      But "<5" doesn't mean nobody knows — it means below 5. Whether it
+      should be `NA`, 5, or something else is a clinical call, and it's
+      yours to make.
+  checks:
+    - expr: class(labs$crp)
+      equals: [numeric]
+      on_fail: |
+        The column isn't numeric yet. Put `as.numeric()` around the column on
+        the right of the arrow.
+  misconceptions:
+    - id: forgot-dollar
+      match:
+        on: error
+        pattern: "crp\\W+not found"
+      feedback: |
+        `crp` isn't a variable of its own — it's a column that lives inside
+        `labs`, so R can't find it by that name alone. Pulling a column out
+        with `$` doesn't create a new variable; each time you want the
+        column, you reach into the data frame for it: `labs$crp`.
+    - id: bare-column
+      match:
+        on: source
+        pattern: "(^|[^$\\w.])crp\\b"
+      feedback: |
+        There's a `crp` here without `labs$` in front of it. `crp` isn't a
+        variable of its own — it's a column that lives inside `labs`.
+        Pulling a column out with `$` doesn't create a new variable; each
+        time you want the column, you reach into the data frame for it:
+        `labs$crp`.
+    - id: still-character
+      match:
+        on: result
+        expr: class(labs$crp)
+        equals: [character]
+      feedback: |
+        Still character. Whatever is on the right of the arrow has to convert
+        the column, not just copy it.

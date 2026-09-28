@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch08-ex06
+type: fill-blank
+title: Only the patients who went home
+topic: filtering
+difficulty: 2
+tags: [data-frames, filtering, logical]
+follows: ch08-ex05
+
+prompt: |
+  The row side of the brackets can take TRUEs and FALSEs too, just as a
+  vector's could. Keep only the patients who have been discharged.
+
+hint: |
+  `patients$discharged` is already TRUE for exactly the rows you want. Which
+  side of the comma does it go on?
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: r-code
+  starter: |
+    patients[ , ]
+  solution:
+    code: |
+      patients[patients$discharged, ]
+    why: |
+      The TRUEs and FALSEs pick rows, and the blank after the comma keeps
+      every column. In module 7 you used one column to filter another; now
+      the same idea keeps whole patients.
+  checks:
+    - expr: as.numeric(.result$age)
+      equals: [67, 48, 62]
+      on_fail: |
+        Not the three discharged patients yet. The TRUEs and FALSEs go before
+        the comma.
+  misconceptions:
+    - id: wrong-side
+      match:
+        on: error
+        pattern: "undefined columns"
+      feedback: |
+        R used your TRUEs and FALSEs to pick *columns* — five answers for
+        four columns — because they weren't before a comma. To choose
+        patients, the question goes on the row side: before the comma, with
+        the column side left blank.
+    - id: unclosed
+      match:
+        on: error
+        pattern: "unexpected"
+      feedback: |
+        Check the brackets. There's a `$` inside square brackets here, and
+        it's easy to lose track of which one you've closed.

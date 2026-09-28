@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch09-ex10
+type: fix-the-llm
+title: Labels the wrong way round
+topic: columns
+difficulty: 2
+tags: [functions, arguments, critical-appraisal]
+follows: ch09-ex09
+
+prompt: |
+  `ifelse()` gives one of two values depending on a question. Its usage
+  line, also in the **Functions** panel, is:
+
+  ```
+  ifelse(test, yes, no)
+  ```
+
+  `test` is a comparison that gives TRUE or FALSE. `yes` is what you get
+  back when the answer is TRUE, and `no` is what you get back when it's
+  FALSE.
+
+  You were handed this to label each patient by age:
+
+  ```r
+  patients$age_group <- ifelse(patients$age >= 65, "under 65", "65 and over")
+  ```
+
+  What does the 67-year-old's `age_group` say?
+
+hint: |
+  For the 67-year-old, the test is TRUE. Which argument does `ifelse()` hand
+  back when the test is TRUE?
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: wrong
+      text: '`"under 65"`'
+      correct: true
+      feedback: |
+        Right — and every label in the column is backwards. The test is TRUE
+        for the 67-year-old, so `ifelse()` gives the second argument, `yes`,
+        which here is `"under 65"`. The labels were typed in the wrong order.
+
+        It runs cleanly and every value looks sensible. Nothing but reading
+        the call against its usage line catches it.
+    - id: right
+      text: '`"65 and over"`'
+      feedback: |
+        That's what the code was *meant* to say. But `ifelse()` hands back its
+        second argument when the test is TRUE, and the second argument here
+        is `"under 65"`.
+    - id: err
+      text: "An error"
+      feedback: |
+        It runs without complaint. Both labels are valid text, so R has no way
+        to know they're in the wrong places.

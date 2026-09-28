@@ -1,0 +1,57 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch08-ex02
+type: predict
+title: Leaving a side blank
+topic: indexing
+difficulty: 1
+tags: [data-frames, indexing]
+follows: ch08-ex01
+
+prompt: |
+  Nothing is written after the comma this time. What does this give you?
+
+  ```r
+  patients[2, ]
+  ```
+
+hint: |
+  A blank doesn't mean "nothing". Which side of the comma is the 2 on?
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: row
+      text: "All of row 2 — that patient's age, blood type, blood pressure and discharge status"
+      correct: true
+      feedback: |
+        Right. The 2 is before the comma, so it picks a row. The blank after
+        the comma means *every column*. So you get one whole patient: 54,
+        O-, 118, not yet discharged.
+
+        A blank means "all of them", on whichever side it sits.
+    - id: column
+      text: "The `blood_type` column, since it's the second column"
+      feedback: |
+        That's what `patients[, 2]` would give — with the 2 *after* the
+        comma. Here it's before the comma, so it's picking a row.
+    - id: onevalue
+      text: "Just `54`, the first value in row 2"
+      feedback: |
+        The blank after the comma means every column, not the first one. You
+        get the whole row.
+    - id: err
+      text: "An error — something is missing after the comma"
+      feedback: |
+        Leaving a side blank is allowed, and deliberate. It means "all of
+        them".

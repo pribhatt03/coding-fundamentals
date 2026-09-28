@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch06-ex10
+type: fix-the-llm
+title: A missing value is not a zero
+topic: missing-values
+difficulty: 2
+tags: [na, critical-appraisal]
+follows: ch06-ex09
+
+prompt: |
+  Three patients were weighed. The second one's weight was never recorded.
+
+  Someone building the spreadsheet typed `0` in the empty cell, so the
+  column reads `70, 0, 82`. Another version left it as `70, NA, 82`.
+
+  Both give you a mean. Which one should you report?
+
+hint: |
+  Work out both averages. One of them describes a patient who doesn't
+  exist.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: narm
+      text: "`mean(c(70, NA, 82), na.rm = TRUE)` — 76 kg"
+      correct: true
+      feedback: |
+        Right. This is the average of the patients you actually weighed. It
+        isn't perfect — you're assuming the missing patient is roughly like
+        the others — but the assumption is visible in the code, and the
+        number is one you can defend.
+    - id: zero
+      text: "`mean(c(70, 0, 82))` — 50.67 kg"
+      feedback: |
+        This treats an unrecorded weight as a patient weighing nothing, and
+        the average drops by 25 kg. Nothing in R can catch this, because `0`
+        is a perfectly good number. Only someone who knows that adults don't
+        weigh zero would notice — and that's you.
+    - id: narm-on-zero
+      text: "`mean(c(70, 0, 82), na.rm = TRUE)` — 50.67 kg"
+      feedback: |
+        `na.rm = TRUE` only removes values that are `NA`. To R, a zero isn't
+        missing — it's a measurement of nothing — so it stays in, and the
+        average is still 25 kg too low. Once someone has typed a zero into an
+        empty cell, no argument can tell it apart from a real zero. Only you
+        can.
+    - id: forgot-narm
+      text: "`mean(c(70, NA, 82))` — `NA`"
+      feedback: |
+        This gives `NA`, not a weight. Keeping the missing value as `NA` is the right
+        instinct — but without `na.rm = TRUE`, `mean()` includes it, and one
+        unknown value makes the whole average unknown. Easy to forget, and
+        the reason the argument is worth checking every time you average
+        something that might have missing values.

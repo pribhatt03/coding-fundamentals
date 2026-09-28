@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch07-ex06
+type: fill-blank
+title: How many went home?
+topic: data-frames
+difficulty: 2
+tags: [data-frames, logical, functions]
+follows: ch07-ex05
+
+prompt: |
+  The `discharged` column is TRUE for patients who have gone home. Count
+  how many have.
+
+hint: |
+  A column of TRUEs and FALSEs is exactly what you counted in modules 5
+  and 6.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: r-code
+  starter: |
+    ______(patients$discharged)
+  solution:
+    code: |
+      sum(patients$discharged)
+    why: |
+      Read it inside out. `patients$discharged` asks *who has gone home?*
+      and answers `TRUE FALSE FALSE TRUE TRUE`. Wrapping `sum()` around it
+      asks *what's the total number (who've gone home)?* — the brackets in
+      that question sit exactly where they sit in the code. Since each TRUE
+      counts as 1, the answer is 3.
+  checks:
+    - expr: as.numeric(.result)
+      equals: [3]
+      on_fail: |
+        Not 3 yet. You want a function that adds up the TRUEs.
+  misconceptions:
+    - id: used-length
+      match:
+        on: result
+        expr: as.numeric(.result)
+        equals: [5]
+      feedback: |
+        `length()` gives 5 — the number of patients, not the number who went
+        home. You want to add up the TRUEs.

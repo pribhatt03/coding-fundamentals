@@ -1,0 +1,80 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch09-ex11
+type: fill-blank
+title: Labels the right way round
+topic: columns
+difficulty: 3
+tags: [functions, arguments, named-arguments]
+follows: ch09-ex10
+
+prompt: |
+  Write it correctly. Name each argument — `test`, `yes` and `no` — so the
+  order can't go wrong.
+
+hint: |
+  `test = ` the question, `yes = ` the label when it's TRUE, `no = ` the
+  label when it's FALSE.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: r-code
+  starter: |
+    patients$age_group <- ifelse( , , )
+  solution:
+    code: |
+      patients$age_group <- ifelse(test = patients$age >= 65, yes = "65 and over", no = "under 65")
+    why: |
+      With the names written in, anyone reading the line can check each label
+      against its condition — and the order stops mattering, because R
+      matches them by name. That's exactly the protection the last exercise
+      needed.
+  checks:
+    - expr: patients$age_group
+      equals: ["65 and over", "under 65", "65 and over", "under 65", "under 65"]
+      on_fail: |
+        The labels aren't right yet. The 67- and 71-year-olds should be
+        "65 and over".
+  misconceptions:
+    - id: arrow-in-call
+      match:
+        on: source
+        pattern: "(test|yes|no)\\s*<-"
+      feedback: |
+        Inside a call, attach a value to an argument with `=`, not `<-`. `<-`
+        stores something in a variable; `=` says *this value is for that
+        argument*.
+    - id: unnamed
+      match:
+        on: source
+        pattern: "^(?![\\s\\S]*\\btest\\s*=)[\\s\\S]*ifelse"
+      feedback: |
+        That gives the right labels — but only because you typed them in the
+        right order this time. The last exercise shows how easily that goes
+        wrong. Write `test =`, `yes =` and `no =` in front of each one, so the
+        labels can't end up backwards.
+    - id: case-differs
+      match:
+        on: result
+        expr: identical(tolower(patients$age_group), c("65 and over", "under 65", "65 and over", "under 65", "under 65")) && !identical(patients$age_group, c("65 and over", "under 65", "65 and over", "under 65", "under 65"))
+        equals: [true]
+      feedback: |
+        The labels are in the right places, but typed with different capital
+        letters from the prompt. To R, `"65 And over"` and `"65 and over"` are
+        different labels — so a later filter looking for one would never find
+        the other. Match them exactly.
+    - id: still-swapped
+      match:
+        on: result
+        expr: patients$age_group[1]
+        equals: ["under 65"]
+      feedback: |
+        Still backwards. `yes` is the label for when the test is TRUE — for
+        patients who *are* 65 and over.

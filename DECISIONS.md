@@ -90,6 +90,17 @@ attempt, and attempts don't pay to rebuild it.
 `eval(parse(text = .submitted))`. Escaping R source into an R string literal
 works until someone types a backslash.
 
+**Say "missing value", never "gap".** In prose, feedback, titles and the
+reference alike.
+
+**Refer to exercises by their number on screen**, not their id. Ids are
+stable and never renumbered, so once an exercise is inserted mid-module the
+two drift apart — ch08-ex13 is the second exercise a student sees.
+
+**Don't call a data frame a "2x2 table".** For medical students that means
+the contingency table from sensitivity and specificity. Say "a table of rows
+and columns".
+
 **Four themes, chosen by the student.** Paper, Night, Sepia and High
 contrast. Every theme sets the same CSS variables and nothing elsewhere in
 `course.css` refers to a literal colour, so a fifth theme is one block. Each
@@ -150,6 +161,27 @@ solved by finding `sum()` in the panel.
 inline code in prose and feedback. It's the theme's call colour, so purple
 in Paper and mint in Night.
 
+**Code in an exercise's prompt runs against that exercise's data**, in its
+Run workspace. Prose code runs in a shared scratch space per module, which
+has no `patients` in it.
+
+**Data panel columns appear when they're built.** `after:` in a module's
+`data.yml` holds a column back until the exercise that creates it is done.
+
+**Every output a student sees should come from R, not from memory.** Printed
+output in prompts, expected values in checks, and examples in the Functions
+panel. From module 10 on, exercises are written against R's actual output.
+`npm run check-examples` runs every reference example through R and flags
+any mismatch — it caught a p-value I'd written as 0.0347 that R gives as
+0.0797.
+
+**Run and Check never share a workspace.** Run evaluates in its own space
+on top of the exercise's data, so anything a student creates while
+experimenting persists between Runs, like the RStudio console. Check always
+starts fresh from the original data. When they shared one, a `crp` created
+with Run was quietly used by Check, and a wrong answer got the wrong
+feedback.
+
 **Run behaves like the R console.** Every top-level line that produces a
 visible value prints it. Evaluating a block as a single expression printed
 only the last line, which taught students something false about R. Grading
@@ -158,6 +190,76 @@ still evaluates as one expression, because it needs the final value.
 **Warnings are shown.** `options(warn = 1)` makes R print warnings as they
 happen, so Run displays them. "It ran but warned" is one of the course's
 central failure modes, and R was silently holding them back.
+
+**Prompt code is runnable from the start.** Every R code block becomes a
+scratchpad, including ones inside a predict exercise's prompt. That means a
+student can run the code before predicting. We tried locking it until the
+exercise was answered, and decided against it: checking by running is a
+habit worth having, and a student who runs first still has to read the
+output and choose. ```` ```rtry ```` fences behave the same as ```` ```r ````.
+
+**Check the middle step as its own exercise.** In RStudio, one-off checks
+happen in the console rather than the script. Rather than asking students to
+juggle a scratchpad and an answer box at once, the check becomes a short
+exercise of its own immediately before the one that uses it — ch06-ex12
+asks what `!is.na(sbp)` returns, then ch06-ex09 uses it. One idea per
+exercise. Module 18 can name the console.
+
+**A fifth response kind: `table`.** A clickable data frame, laid out like
+RStudio's `View()` — row numbers, `NA` in italics, numbers right-aligned.
+Students click a column, a row or a cell, depending on `select`. It's span
+over a grid, so it reuses the same grading: option ids, feedback on every
+option, a full review after the right answer. Cells have too many targets to
+give each one feedback, so `other` catches clicks with no option of their
+own, and the build refuses a table that has neither full coverage nor
+`other`.
+
+**Spacing: compact is the default.** A roomier version exists behind
+`?space=open` but didn't feel right in practice. A heading sits close to what it introduces and
+far from what came before it, like a nested list; the big gaps go between
+sections and between exercises.
+
+**The grid deliberately shows no types.** A viewer shows `142` and `"142"`
+identically, which is exactly why `str()` matters. ch07-ex08 is built on
+that gap.
+
+**The module menu is grouped by part.** `content/outline.yml` lists the parts
+and which modules belong to each; the build pulls every module's title from
+its `# N. Title` heading. Twenty modules stay scannable as "Part B — Working
+with data › 7 · Shape and inspection". Non-module chapters like `demo` only
+appear with `?dev`.
+
+**Parts open with their own page.** A `::: part` block in a chapter's
+markdown isn't shown inline. It becomes a full-screen page that fades in the
+first time the module is opened, with very little on it, and fades away into
+the module when the student continues. It shows again whenever the student
+walks into the part from the previous module's "next" link, and a small label
+at the top of the module brings it back any time. Make it
+specific to what the student has actually done — "you caught a number that
+was secretly text" — not generic encouragement, which students learn to skip.
+
+**A Data panel, like RStudio's Environment pane.** Every data frame used in
+a module is listed in `content/chNN/data.yml` and shown in a side panel, so
+students can keep it in view while writing code about it rather than
+scrolling back to find a column name. These must match the data frames each
+exercise's `setup` builds; nothing checks that automatically yet.
+
+**A wrong prediction points at the code above it.** On a multiple-choice
+exercise whose prompt has runnable code, a wrong answer adds a line saying
+the code runs and the student can check it themselves. Predicting, being
+wrong, then running it to see why is exactly the loop the course is built
+on.
+
+**The Data panel shows more than tables.** An entry with `print:` shows a
+vector or a list the way R prints it — module 10 uses it for `result`. Like
+RStudio's Environment pane, which lists every object, not just data frames.
+
+**Two wrong code answers in a row point at the Functions panel.** A repeated
+miss usually means a missing piece of knowledge rather than a slip. Only for
+code exercises, and it never gives the answer — it says where to look.
+
+**Side panels keep their head pinned.** Title, search, Close and the count
+stay put while the list scrolls. Only one panel is open at a time.
 
 **Attempt counts are recorded but never shown to students.** Seeing "6
 attempts" is discouraging and tells them nothing useful.
@@ -287,6 +389,34 @@ See `CONCEPTS.md` for what's thin.
   slugs recorded in every analytics event; renaming one silently merges two
   different exercises in the data. The chapter shows position ("6 of 9")
   instead, so prose order and file order can differ freely.
+- **Scope layout rules to `main`.** CodeMirror draws every line of code as
+  its own `<pre>`, so a bare `pre { margin }` rule spreads code apart line by
+  line. And a bare `h2` rule reaches the side panels' titles. Anything about
+  the module's spacing belongs under `main`.
+- **`captureConditions: false` swallows R errors.** webR's own code, with
+  that setting, catches the error itself, prints "Error: ..." to stderr and
+  reports success. So in Check, every error was treated as "it ran", grading
+  carried on against the unchanged data, and no `on: error` misconception in
+  the course ever fired. Students got whichever other feedback happened to
+  match — the "capital letters" message for a wrong-length column, "still
+  character" for `labs$crp <- crp`. Check now uses `captureConditions: true`,
+  which throws the error to us. Run keeps it off, so errors print like the
+  console, and recognises them by the "Error" prefix.
+- **I misdiagnosed this twice.** First I blamed quote marks, then leftover
+  state from Run. Both fixes were harmless but neither was the cause. The
+  lesson: when feedback is wrong, test the failing case directly rather than
+  reasoning about it — and read the library's source when behaviour doesn't
+  match what its option names suggest.
+- **Don't match R error messages on their quote marks.** R prints straight
+  or curly quotes around names depending on the system, so `'crp' not found`
+  silently never matched. Error patterns use `crp\W+not found` instead.
+- **A broken reference used to ship an empty Functions panel.** A YAML error
+  in `reference.yml` only warned, then wrote an empty file. It now fails the
+  build. Multi-line example output needs an explicit indentation indicator,
+  `|2-`, or leading spaces on the first line confuse the parser.
+- **A CSS `display` rule overrides the `hidden` attribute.** `hidden` is
+  just a default `display: none`, and any stylesheet rule setting `display`
+  beats it. The course stylesheet now forces `[hidden]` to stay hidden.
 - **A `str_replace` that matches nothing fails silently.** One wrong space of
   indentation in a schema edit produced 238 confusing validation errors
   pointing at the wrong thing. Same failure mode as the swallowed `catch`.
@@ -295,7 +425,9 @@ See `CONCEPTS.md` for what's thin.
 
 ## Not built yet
 
-- **An orientation for the site itself.** Students need to be shown, once,
+- **An orientation for the site itself.** Should also explain that
+  `______` in an answer box means "replace this" — code won't run until it's
+  gone. Students also need to be shown, once,
   that they can switch colour themes, sync progress across devices, reveal an
   answer without penalty, run and edit any code block in the prose, and use
   Cmd/Ctrl+Enter. This belongs in module 1, after the objectives — the course

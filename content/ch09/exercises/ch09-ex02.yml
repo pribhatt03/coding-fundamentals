@@ -1,0 +1,57 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch09-ex02
+type: predict
+title: Not enough values
+topic: columns
+difficulty: 1
+tags: [data-frames, columns, errors]
+follows: ch09-ex01
+
+prompt: |
+  Only three diastolic pressures were written down. What happens?
+
+  ```r
+  patients$dbp <- c(88, 76, 82)
+  ```
+
+hint: |
+  There are five patients. Which two would be missing a value — the last
+  two, or some other two?
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: err
+      text: "An error — three values for five patients"
+      correct: true
+      feedback: |
+        Right — the same rule as building a data frame in module 7. Every
+        column needs one value per patient, and R won't guess which patients
+        the three belong to.
+
+        There's one exception worth knowing: a *single* value is copied into
+        every row. `patients$ward <- "cardiology"` gives all five patients the
+        same ward. One value can't be ambiguous; three can.
+    - id: pad
+      text: "Patients 4 and 5 get `NA`"
+      feedback: |
+        That would mean R assuming the missing readings belong to the last two
+        patients. It won't. For all it knows, patient 2's is the one missing.
+    - id: recycle
+      text: "The three values repeat: 88, 76, 82, 88, 76"
+      feedback: |
+        If you give R a single value to store as a column, it fills the whole
+        column with that value. But stretching three values across five
+        patients would pair readings with the wrong people, so it stops you
+        instead.

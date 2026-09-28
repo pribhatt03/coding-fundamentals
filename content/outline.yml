@@ -1,0 +1,31 @@
+# The course's parts, in order. Used to group the module menu. Modules that
+# haven't been written yet are listed here and simply don't appear until they
+# exist. Module titles come from each chapter's "# N. Title" heading.
+
+- part: A
+  title: Mechanics
+  modules: [ch01, ch02, ch03, ch04, ch05, ch06]
+
+- part: B
+  title: Working with data
+  modules: [ch07, ch08, ch09]
+
+- part: C
+  title: Reading what you get back
+  modules: [ch10, ch11, ch12]
+
+- part: D
+  title: When it breaks
+  modules: [ch13, ch14]
+
+- part: E
+  title: Working with AI
+  modules: [ch15, ch16, ch17]
+
+- part: F
+  title: Out of the sandbox
+  modules: [ch18, ch19]
+
+- part: G
+  title: Close
+  modules: [ch20]

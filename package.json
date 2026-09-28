@@ -5,7 +5,8 @@
   "scripts": {
     "check": "node build/validate.mjs --check",
     "build": "node build/validate.mjs",
-    "dev": "node build/serve.mjs"
+    "dev": "node build/serve.mjs",
+    "check-examples": "node build/check-examples.mjs"
   },
   "devDependencies": {
     "ajv": "^8.17.1",

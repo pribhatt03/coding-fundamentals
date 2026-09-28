@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch07-ex04
+type: fill-blank
+title: Pulling out one column
+topic: data-frames
+difficulty: 1
+tags: [data-frames, vectors]
+follows: ch07-ex03
+
+prompt: |
+  `$` pulls one column out of a data frame. Write the data frame's name,
+  then `$`, then the column's name.
+
+  Get the blood pressure column from `patients`.
+
+  From here on, the data frames in this module are in the **Data** panel at
+  the top of the page. Open it to keep `patients` in view while you work.
+
+hint: |
+  The column name is exactly as it appears at the top of the table.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: r-code
+  starter: |
+    patients$______
+  solution:
+    code: |
+      patients$sbp
+    why: |
+      What comes back is an ordinary vector — `142 118 NA 131 156`. So
+      everything you know about vectors now works on a column: arithmetic,
+      `mean()`, `is.na()`, filtering with square brackets.
+  checks:
+    - expr: identical(.result, patients$sbp)
+      equals: [true]
+      on_fail: |
+        That isn't the blood pressure column. Check the name against the
+        table.
+  misconceptions:
+    - id: wrong-case
+      match:
+        on: result
+        expr: is.null(.result)
+        equals: [true]
+      feedback: |
+        You got `NULL` — nothing at all — and no error. `$` with a name that
+        doesn't exist quietly returns nothing, so a single wrong letter or
+        capital slips through without complaint. Column names are exact,
+        the same way variable names are.

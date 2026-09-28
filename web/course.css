@@ -132,6 +132,9 @@ main > div > ul,
 main > div > h1,
 main > div > h2,
 main > div > h3 { max-width: var(--measure); margin-left: var(--breakout); }
+/* Bullets hang in the left margin, so a list needs extra indent to keep its
+   markers inside the text column rather than poking out to the left of it. */
+main > div > ul { margin-left: calc(var(--breakout) + 1.4rem); }
 
 /* ------------------------------------------------------------- reading --- */
 
@@ -168,30 +171,39 @@ pre code { background: none; padding: 0; font-size: inherit; color: inherit; }
 
 /* --------------------------------------------------------------- chrome --- */
 
-.bar {
+/* The header and the progress bar are one sticky block. Sticking them
+   separately meant the track scrolled out of view whenever the header
+   wrapped to two lines. */
+.topbar {
   position: sticky; top: 0; z-index: 5;
+  background: var(--paper);
+  margin-bottom: 3rem;
+}
+
+.bar {
   display: flex; gap: 1.1rem; align-items: center; flex-wrap: wrap;
   padding: .75rem 0 .7rem;
-  background: var(--paper);
   border-bottom: 1px solid var(--rule);
   font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
   font-size: .78rem;
   color: var(--ink-soft);
 }
+.bar select#chapter { width: 8.5rem; text-overflow: ellipsis; }
 .bar select {
   font: inherit; color: inherit; padding: .2rem .3rem;
   background: transparent; border: 1px solid var(--rule); border-radius: 3px;
 }
 .bar a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--rule); }
 .bar a:hover { color: var(--ink); }
-#fnslot { margin-left: auto; }
+.bar #reset { margin-left: auto; }
 #fnbtn { font-weight: 600; color: var(--ink); }
+#devtools:not([hidden]) { display: inline-flex; gap: 1.1rem; }
+/* A display rule overrides the hidden attribute, so anything that sets
+   display must exclude [hidden] explicitly. */
+[hidden] { display: none !important; }
 #warn { color: var(--err); }
 
-.bar-track {
-  position: sticky; top: 2.6rem; z-index: 4;
-  height: 2px; background: var(--rule); margin: -1px 0 3rem;
-}
+.bar-track { height: 3px; background: var(--rule); margin-top: -1px; }
 #bar-fill { height: 100%; width: 0; background: var(--ok); transition: width .4s ease; }
 
 button.linky {
@@ -256,7 +268,7 @@ label.opt code { background: var(--paper-sunk); color: var(--ink); }
 
 .row { display: flex; gap: .55rem; align-items: center; margin: .8rem 0 0; }
 button.act {
-  font: inherit; font-size: .85rem; padding: .38rem 1.05rem;
+  font: inherit; font-size: .85rem; font-weight: 600; padding: .38rem 1.05rem;
   border: 1px solid var(--rule); border-radius: 4px;
   background: transparent; color: var(--ink); cursor: pointer;
   transition: border-color .12s ease, background .12s ease;
@@ -307,7 +319,9 @@ textarea::placeholder { color: var(--term-dim); }
 .verdictbox.pass .verdict { color: var(--ok); }
 .verdictbox.fail .verdict { color: var(--wait); }
 .verdictbox p, .revealbox p { margin: .45rem 0; }
-.verdictbox pre, .revealbox pre { margin: .7rem 0; font-size: .76rem; }
+.verdictbox pre { margin: .7rem 0; font-size: .76rem; }
+.revealbox pre { margin: .6rem 0 1rem; font-size: .76rem; }
+.revealbox .verdict { margin-bottom: .6rem; }
 .detail {
   font-family: "IBM Plex Mono", monospace;
   font-size: .72rem; color: var(--ink-soft);
@@ -338,7 +352,11 @@ textarea::placeholder { color: var(--term-dim); }
   border: 1px dashed var(--rule); border-radius: 4px; padding: .85rem 1rem; margin: 0;
 }
 
-.scratch { margin: 0 0 1.5rem; }
+.scratch {
+  margin: 0 0 1.5rem;
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: .95rem;
+}
 
 .chapnav {
   display: flex; justify-content: space-between;
@@ -392,7 +410,7 @@ textarea::placeholder { color: var(--term-dim); }
 .cm-s-default .cm-variable-2 { color: var(--syn-number); }
 .cm-s-default .cm-operator   { color: var(--term-dim); }
 .cm-s-default .cm-variable   { color: var(--term-ink); }
-.cm-callname,
+.cm-s-default .cm-callname,
 .fncall                      { color: var(--syn-call); }
 
 /* --------------------------------------------------------------- mobile --- */
@@ -401,11 +419,14 @@ textarea::placeholder { color: var(--term-dim); }
   body.reading { font-size: 17px; padding: 0 1.1rem 5rem; }
   main { max-width: none; }
   h1 { font-size: 1.7rem; margin-top: 2rem; }
+  .topbar { margin-bottom: 2rem; }
   .bar { font-size: .72rem; gap: .7rem; }
   .bar a { display: none; }
+  .bar #status, .bar #count { display: none; }
   .exercise { margin: 2rem 0; padding-left: 1rem; border-left-width: 3px; }
-  main > div > p, main > div > ul,
+  main > div > p,
   main > div > h1, main > div > h2, main > div > h3 { margin-left: 0; max-width: none; }
+  main > div > ul { margin-left: 1.4rem; max-width: none; }
   .spancode { font-size: .78rem; line-height: 2.6; }
   .spancode .sel { padding: .3em .45em; }
   label.opt { padding: .75rem .85rem; }
@@ -415,34 +436,44 @@ textarea::placeholder { color: var(--term-dim); }
 }
 
 
-/* ------------------------------------------------------ function panel --- */
+/* --------------------------------------------------------- side panels --- */
+/* Functions and Data. The head stays pinned while the list scrolls, so
+   Close and search are always in reach. Only one panel is open at a time. */
 
-#fnpanel {
+.sidepanel {
   position: fixed; top: 0; right: 0; bottom: 0; z-index: 20;
   width: min(26rem, 100vw);
   background: var(--paper);
   border-left: 1px solid var(--rule);
   box-shadow: -12px 0 32px color-mix(in srgb, var(--ink) 10%, transparent);
-  padding: 1.1rem 1.3rem 3rem;
   overflow-y: auto;
   font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
   font-size: .9rem; line-height: 1.55; color: var(--ink);
   transform: translateX(100%);
   transition: transform .18s ease;
 }
-#fnpanel.open { transform: none; }
-@media (prefers-reduced-motion: reduce) { #fnpanel { transition: none; } }
+.sidepanel.wide { width: min(34rem, 100vw); }
+.sidepanel.open { transform: none; }
+@media (prefers-reduced-motion: reduce) { .sidepanel { transition: none; } }
 
-#fnpanel header { display: flex; align-items: baseline; justify-content: space-between; }
-#fnpanel h2 { font-size: 1.05rem; margin: 0; }
-#fnpanel input {
+.panelhead {
+  position: sticky; top: 0; z-index: 1;
+  background: var(--paper);
+  padding: 1.1rem 1.3rem .2rem;
+  border-bottom: 1px solid var(--rule);
+}
+.panelbody { padding: 0 1.3rem 3rem; }
+.panelhead header { display: flex; align-items: baseline; justify-content: space-between; }
+.panelhead h2 { font-size: 1.05rem; margin: 0; }
+.panelhead input {
   width: 100%; margin: .9rem 0 .35rem; padding: .5rem .7rem;
   font: inherit; color: var(--ink); background: var(--paper-sunk);
   border: 1px solid var(--rule); border-radius: 4px;
 }
-.fncount { font-size: .75rem; color: var(--ink-soft); margin: 0 0 1rem; }
+.fncount { font-size: .75rem; color: var(--ink-soft); margin: .4rem 0 .8rem; }
 
 .fn { padding: 1rem 0; border-top: 1px solid var(--rule); }
+.fn:first-child { border-top: 0; }
 .fn h3 { display: flex; align-items: baseline; gap: .6rem; margin: 0 0 .35rem; font-size: 1rem; }
 .fn h3 code { font-family: "IBM Plex Mono", monospace; color: var(--syn-call); font-weight: 500; }
 .fnfrom { margin-left: auto; font-size: .72rem; font-weight: 400; color: var(--ink-soft); }
@@ -452,3 +483,155 @@ textarea::placeholder { color: var(--term-dim); }
 .fnres { color: var(--term-dim); }
 .fnnote { font-size: .8rem; color: var(--ink-soft); }
 .fnnone { color: var(--ink-soft); font-size: .85rem; }
+
+.dataset { padding: 1.2rem 0 .4rem; }
+.dataset h3 { margin: 0; font-size: 1rem; }
+.dataset h3 code { font-family: "IBM Plex Mono", monospace; color: var(--syn-call); font-weight: 500; }
+.datashape { font-size: .75rem; color: var(--ink-soft); margin: .15rem 0 .7rem; }
+.dataset table.df { min-width: 0; }
+
+#databtn, #fnbtn { font-weight: 600; color: var(--ink); }
+
+.nudge {
+  font-size: .82rem; color: var(--ink-soft);
+  margin: .8rem 0 0; padding-top: .6rem; border-top: 1px solid var(--rule);
+}
+.nudge .linky { color: var(--ink); font-weight: 600; }
+
+/* ------------------------------------------------------- data frames --- */
+/* Laid out like RStudio's View(), not Excel: row numbers, NA in italics,
+   numbers right-aligned, and no types — which is the point of ch07-ex08. */
+
+.dfwrap { overflow-x: auto; margin: 0 0 .2rem; }
+table.df {
+  border-collapse: collapse;
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-size: .8rem;
+  background: var(--term);
+  color: var(--term-ink);
+  border: 1px solid var(--term-edge);
+  border-radius: 4px;
+  min-width: 60%;
+}
+table.df th, table.df td {
+  padding: .42rem .85rem;
+  border-bottom: 1px solid var(--term-edge);
+  text-align: left;
+  white-space: nowrap;
+}
+table.df thead th {
+  color: var(--syn-call);
+  font-weight: 500;
+  border-bottom: 1px solid var(--term-edge);
+}
+table.df th.rn {
+  color: var(--term-dim);
+  background: var(--term-gutter);
+  text-align: right;
+  font-weight: 400;
+  width: 1%;
+}
+table.df td.num { text-align: right; }
+table.df .tna { font-style: italic; color: var(--term-dim); }
+table.df tbody tr:last-child > * { border-bottom: 0; }
+
+/* what's clickable depends on what the exercise asks for */
+.df-column th[data-col], .df-column td,
+.df-row th.rn, .df-row td,
+.df-cell td { cursor: pointer; }
+
+table.df .hot {
+  background: color-mix(in srgb, var(--term-ink) 10%, transparent);
+}
+table.df .picked {
+  background: color-mix(in srgb, var(--syn-call) 22%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--syn-call) 60%, transparent);
+}
+
+
+/* ----------------------------------------------------------- part page --- */
+/* A new part of the course opens as its own page: a clean screen, very little
+   on it, fading in and then fading away into the module. */
+
+body.locked { overflow: hidden; }
+
+.partoverlay {
+  position: fixed; inset: 0; z-index: 50;
+  display: grid; place-items: center;
+  padding: 2rem 1.5rem;
+  background: var(--paper);
+  opacity: 0;
+  transition: opacity .6s ease;
+}
+.partoverlay.show { opacity: 1; }
+
+.partcard {
+  max-width: 34rem;
+  font-family: Literata, Georgia, serif;
+  transform: translateY(10px);
+  opacity: 0;
+  transition: transform .7s ease .15s, opacity .7s ease .15s;
+}
+.partoverlay.show .partcard { transform: none; opacity: 1; }
+
+.partcard > p:first-child {
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: .8rem; font-weight: 600; letter-spacing: .03em;
+  color: var(--ok); margin: 0 0 .6rem;
+}
+.partcard h1 { font-size: 2.8rem; line-height: 1.06; letter-spacing: -.02em; margin: 0 0 1.8rem; }
+.partcard p, .partcard li { font-size: 1.12rem; line-height: 1.65; }
+.partcard ul { margin: 0 0 1.4rem 1.4rem; }
+.partcard li { margin-bottom: .45rem; }
+.partcard strong { font-weight: 600; }
+.partcard .partgo { margin-top: 1.2rem; font-size: .95rem; padding: .6rem 1.4rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .partoverlay, .partcard { transition: none; }
+  .partcard { transform: none; }
+}
+@media (max-width: 700px) {
+  .partcard h1 { font-size: 2.1rem; }
+}
+
+/* -------------------------------------------------------- open spacing --- */
+/* More room *between* blocks, never inside them. Every rule is scoped to
+   main, the module text: unscoped, the heading rule pushed the side panels'
+   titles down, and the pre rule spread out every line of code, because
+   CodeMirror draws each line as its own <pre>. */
+
+:root[data-space="open"] main { line-height: 1.8; }
+:root[data-space="open"] main p { margin-bottom: 1.55rem; }
+:root[data-space="open"] main > div > pre { margin-bottom: 1.9rem; }
+:root[data-space="open"] main .scratch { margin-bottom: 2rem; }
+:root[data-space="open"] main .exercise { margin: 4.25rem 0; padding-top: .5rem; padding-bottom: .5rem; }
+:root[data-space="open"] main .exhead { margin-bottom: 1.2rem; }
+:root[data-space="open"] main .exercise .prompt p { margin-bottom: 1.1rem; }
+:root[data-space="open"] main .exercise .prompt > *:last-child { margin-bottom: 1.4rem; }
+:root[data-space="open"] main label.opt { padding: .8rem 1rem; margin-bottom: .6rem; }
+:root[data-space="open"] main .row { margin-top: 1.1rem; }
+:root[data-space="open"] main .verdictbox,
+:root[data-space="open"] main .revealbox { margin-top: 1.5rem; padding: 1.2rem 1.35rem; }
+:root[data-space="open"] main .rev { margin: 1.35rem 0; }
+:root[data-space="open"] main .exfoot { margin-top: 1.5rem; }
+/* code keeps its normal line spacing inside the open layout */
+:root[data-space="open"] main .CodeMirror,
+:root[data-space="open"] main pre { line-height: 1.7; }
+
+
+/* A heading introduces what follows it, so it sits close to the thing below
+   and far from the thing above — like a nested list. Space goes *between*
+   sections and exercises, not between a heading and its own content. */
+:root[data-space="open"] main h2 { margin-top: 4.75rem; margin-bottom: .9rem; }
+:root[data-space="open"] main > div:has(> h2:last-child) + .exercise { margin-top: 1.2rem; }
+:root[data-space="open"] main > div:has(> h2:last-child) + .scratch { margin-top: .6rem; }
+
+/* The label that brings a part's opening page back. */
+.parteyebrow {
+  display: block; margin: 0 0 .4rem var(--breakout); padding: 0;
+  background: none; border: 0; cursor: pointer;
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: .78rem; font-weight: 600; letter-spacing: .02em; color: var(--ok);
+}
+.parteyebrow:hover { text-decoration: underline; }
+@media (max-width: 700px) { .parteyebrow { margin-left: 0; } }

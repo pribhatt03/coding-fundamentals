@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch11-ex06
+type: predict
+title: Reading an if
+topic: conditionals
+difficulty: 1
+tags: [conditionals, reading-code]
+follows: ch11-ex03
+
+prompt: |
+  `if` runs one block of code or another, depending on a single TRUE or
+  FALSE. What does this print?
+
+  ```r
+  map <- 106
+  if (map < 65) {
+    print("low")
+  } else {
+    print("adequate")
+  }
+  ```
+
+  When a block is a single line, the curly brackets are sometimes left out:
+  `if (map < 65) print("low")` means the same as the version with brackets.
+  You'll see both in generated code.
+
+hint: |
+  Work out `map < 65` first. Then follow the matching block.
+
+setup: |
+  map <- 106
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: adequate
+      text: '`"adequate"`'
+      correct: true
+      feedback: |
+        Right. `106 < 65` is FALSE, so R skips the first block and runs the one
+        after `else`. Only one of the two blocks ever runs.
+
+        One R quirk worth knowing: `else` has to come straight after the
+        closing `}`, on the same line. Put `else` on a line of its own and R
+        stops with an error, because it thinks the `if` has already
+        finished.
+    - id: low
+      text: '`"low"`'
+      feedback: |
+        That block only runs when `map < 65` is TRUE. 106 isn't below 65, so R
+        skips it and runs the `else` block instead.
+    - id: both
+      text: "Both, one after the other"
+      feedback: |
+        `if` picks exactly one block. The condition is either TRUE or FALSE,
+        and only the matching block runs.

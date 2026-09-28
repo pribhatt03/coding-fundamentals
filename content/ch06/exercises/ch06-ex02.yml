@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch06-ex02
+type: predict
+title: Arithmetic with a hole in it
+topic: missing-values
+difficulty: 1
+tags: [na, vectors, arithmetic]
+follows: ch06-ex01
+
+prompt: |
+  The cuff was reading 10 mmHg high again. What does the last line return?
+
+  ```r
+  sbp <- c(118, NA, 131, 156)
+  sbp - 10
+  ```
+
+hint: |
+  The subtraction still happens to every value. What's ten less than a
+  number nobody wrote down?
+
+setup: |
+  sbp <- c(118, NA, 131, 156)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: napropagates
+      text: "`108 NA 121 146`"
+      correct: true
+      feedback: |
+        Yes. The subtraction is applied to every value, exactly as before —
+        and ten less than an unknown number is still unknown, so the missing value stays missing. `NA` moving through a calculation untouched is the
+        single most important thing about it.
+    - id: allna
+      text: "`NA NA NA NA`"
+      feedback: |
+        Only the missing value is affected. The other three are perfectly
+        good numbers and R subtracts from them normally.
+    - id: skipped
+      text: "`108 121 146` — the missing one is skipped"
+      feedback: |
+        R never quietly drops a value. You get four answers for four
+        readings, and the one it couldn't work out stays `NA`. Silently
+        returning three values where you expected four would be far more
+        dangerous.
+    - id: zero
+      text: "`108 -10 121 146`"
+      feedback: |
+        That would be treating the missing value as a zero. `NA` doesn't mean zero —
+        it means nobody knows. Ten less than "nobody knows" is still
+        "nobody knows".

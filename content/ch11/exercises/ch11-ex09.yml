@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch11-ex09
+type: predict
+title: Why the double brackets?
+topic: lists
+difficulty: 2
+tags: [lists, loops, indexing]
+follows: ch11-ex05
+
+prompt: |
+  One more — nothing new, just things you already know turning up together.
+  This loop prints two pieces of the t-test result from module 10:
+
+  ```r
+  for (name in c("p.value", "method")) {
+    print(result[[name]])
+  }
+  ```
+
+  Why does it use `result[[name]]` rather than `result$name`?
+
+hint: |
+  `$` takes whatever you type after it as the name. What would it look for
+  here?
+
+setup: |
+  drug    <- c(128, 134, 121, 139, 125, 131, 127, 136)
+  placebo <- c(142, 138, 149, 135, 144, 151, 140, 146)
+  result  <- t.test(drug, placebo)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: literal
+      text: '`result$name` would look for a piece actually called "name"'
+      correct: true
+      feedback: |
+        Right. There *is* a variable called `name` — on the first pass it holds
+        the text `"p.value"`. But `$` never looks inside a variable. It takes
+        whatever is typed after it as the name itself, so `result$name` means
+        *the piece of `result` called `name`*. There isn't one, so you get
+        `NULL`.
+
+        Double brackets work differently: R works out what's inside them
+        first. `result[[name]]` becomes `result[["p.value"]]`, which is the
+        p-value. That's why loops over the pieces of a list — often
+        `for (name in names(result))` — use `[[ ]]`.
+    - id: same
+      text: "They'd do exactly the same thing"
+      feedback: |
+        They would if the name were typed out, like `result$p.value`. But here
+        the name is held in the variable `name`, and `$` doesn't look inside
+        variables — it would search for a piece literally called `name`, and
+        find nothing.
+    - id: faster
+      text: "`[[ ]]` is faster inside a loop"
+      feedback: |
+        Speed isn't the reason. `$` would take `name` as the piece's actual
+        name, and there's no piece called that.

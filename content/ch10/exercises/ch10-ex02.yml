@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch10-ex02
+type: fill-blank
+title: What's inside?
+topic: lists
+difficulty: 1
+tags: [lists, functions]
+follows: ch10-ex01
+
+prompt: |
+  `names()` lists the names of the pieces inside something. Use it on
+  `result`.
+
+hint: |
+  The function name goes directly before the brackets.
+
+setup: |
+  drug    <- c(128, 134, 121, 139, 125, 131, 127, 136)
+  placebo <- c(142, 138, 149, 135, 144, 151, 140, 146)
+  result  <- t.test(drug, placebo)
+
+response:
+  kind: r-code
+  starter: |
+    ______(result)
+  solution:
+    code: |
+      names(result)
+    why: |
+      Ten pieces, each with a name. Some you'll recognise from the printout —
+      `p.value`, `conf.int`, `estimate`, `method`. Others, like `stderr` and
+      `null.value`, are there even though the printout never showed them.
+
+      When you're handed a result you don't recognise, `names()` is the
+      quickest way to find out what's in it.
+  checks:
+    - expr: '"p.value" %in% .result'
+      equals: [true]
+      on_fail: |
+        That didn't list the pieces inside `result`.
+  misconceptions:
+    - id: dollar-names
+      match:
+        on: source
+        pattern: "result\\$names"
+      feedback: |
+        `result$names` looks for a piece *called* `names` inside the list, and
+        there isn't one — so it quietly gives back nothing. `names()` is a
+        function: it goes in front, with `result` inside the brackets.

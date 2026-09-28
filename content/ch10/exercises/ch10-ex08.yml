@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch10-ex08
+type: fix-the-llm
+title: A missing value, handled quietly
+topic: lists
+difficulty: 3
+tags: [na, functions, critical-appraisal]
+follows: ch10-ex07
+
+prompt: |
+  One placebo reading is missing:
+
+  ```r
+  placebo <- c(142, 138, NA, 135, 144, 151, 140, 146)
+  ```
+
+  In module 6, `mean(placebo)` would give `NA`. What does
+  `t.test(drug, placebo)` do?
+
+hint: |
+  Not every function treats a missing value the same way.
+
+setup: |
+  drug    <- c(128, 134, 121, 139, 125, 131, 127, 136)
+  placebo <- c(142, 138, 149, 135, 144, 151, 140, 146)
+  result  <- t.test(drug, placebo)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: drops
+      text: "Quietly leaves the missing reading out, and runs on the other seven"
+      correct: true
+      feedback: |
+        Right — and it doesn't say so. `mean()` refuses to guess and gives
+        `NA`; `t.test()` drops the missing value and carries on. Different
+        functions, different rules.
+
+        The only clues are in the printout, and only if you compare it with the
+        one from exercise 1. The placebo mean is now 142.29 instead of 143.125
+        — the average of seven readings, not eight — and `df` has dropped from
+        13.874 to 12.994, because there's less data. So when a result comes
+        from data that has missing values, check how many values the function
+        actually used.
+    - id: na
+      text: "Returns `NA`, like `mean()` does"
+      feedback: |
+        That's what `mean()` does, and it's a reasonable guess. But `t.test()`
+        takes a different approach: it drops the missing reading and runs on
+        what's left — without telling you.
+    - id: err
+      text: "Stops with an error about the missing value"
+      feedback: |
+        No error. It drops the missing reading and runs on the other seven,
+        and nothing in the printout says it did.

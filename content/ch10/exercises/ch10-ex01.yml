@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch10-ex01
+type: predict
+title: What a test hands back
+topic: lists
+difficulty: 1
+tags: [lists, functions]
+
+prompt: |
+  Systolic pressures in eight patients on a drug, and eight on placebo:
+
+  ```r
+  drug    <- c(128, 134, 121, 139, 125, 131, 127, 136)
+  placebo <- c(142, 138, 149, 135, 144, 151, 140, 146)
+  result  <- t.test(drug, placebo)
+  result
+  ```
+
+  Printing `result` shows this:
+
+  ```
+         Welch Two Sample t-test
+
+  data:  drug and placebo
+  t = -4.5272, df = 13.874, p-value = 0.0004844
+  alternative hypothesis: true difference in means is not equal to 0
+  95 percent confidence interval:
+   -19.164014  -6.835986
+  sample estimates:
+  mean of x mean of y
+    130.125   143.125
+  ```
+
+  What is `result`, underneath that printout?
+
+hint: |
+  The printout looks like a report. But you stored it with `<-`, and later
+  exercises will pull single numbers back out of it.
+
+setup: |
+  drug    <- c(128, 134, 121, 139, 125, 131, 127, 136)
+  placebo <- c(142, 138, 149, 135, 144, 151, 140, 146)
+  result  <- t.test(drug, placebo)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: list
+      text: "A collection of named pieces — the p-value, the interval, the means — that you can take out one at a time"
+      correct: true
+      feedback: |
+        Right. What you see printed is a tidy report, laid out for humans. The
+        output itself is a *list*: a set of named pieces, each of which you can
+        pull out on its own.
+
+        That matters because code rarely wants the whole report. It wants one
+        number — the p-value for a table, the interval for a figure — and
+        taking it from the list is far safer than copying it off the screen.
+    - id: text
+      text: "A block of text — the report you see"
+      feedback: |
+        It prints as text, but that's just how R chooses to show it. Underneath
+        are separate named pieces you can take out one by one, which you
+        couldn't do with a block of text.
+    - id: number
+      text: "A single number — the p-value"
+      feedback: |
+        The p-value is in there, but so is a lot else: the interval, the two
+        means, the name of the test. `result` holds all of it.
+    - id: df
+      text: "A data frame"
+      feedback: |
+        Close in spirit — it holds several things under names — but a data
+        frame needs every column to be the same length. These pieces aren't:
+        the p-value is one number, the interval is two. That's what a list
+        allows.

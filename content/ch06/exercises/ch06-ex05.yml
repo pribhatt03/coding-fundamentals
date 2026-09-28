@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch06-ex05
+type: predict
+title: Asking which one is missing
+topic: missing-values
+difficulty: 2
+tags: [na, logical, comparison]
+follows: ch06-ex04
+
+prompt: |
+  It seems reasonable to ask which value is the missing one. What does this
+  return?
+
+  ```r
+  sbp <- c(118, NA, 131, 156)
+  sbp == NA
+  ```
+
+hint: |
+  `==` asks *is this equal to that*. Can you know whether an unknown number
+  equals an unknown number?
+
+setup: |
+  sbp <- c(118, NA, 131, 156)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: allna
+      text: "`NA NA NA NA`"
+      correct: true
+      feedback: |
+        Yes, and it catches nearly everyone. `==` asks whether two things
+        are equal, and nobody can say whether a number equals an unknown —
+        so every answer is itself unknown. Even `118 == NA` is `NA`, not
+        `FALSE`.
+
+        The dangerous part is that this *looks* like it worked. You get four
+        answers back and none of them is an error. The next exercise has the
+        function you actually want.
+    - id: spotit
+      text: "`FALSE TRUE FALSE FALSE`"
+      feedback: |
+        That's the answer you wanted, and it's what `is.na()` gives you —
+        but `==` can't produce it. Comparing anything with `NA` gives `NA`,
+        including `NA == NA`.
+    - id: allfalse
+      text: "`FALSE FALSE FALSE FALSE`"
+      feedback: |
+        R doesn't decide the comparison is false. It decides it can't be
+        answered, which is a different thing and comes back as `NA`.
+    - id: err
+      text: "An error"
+      feedback: |
+        No error. That's the problem — this runs cleanly and gives you four
+        useless answers.

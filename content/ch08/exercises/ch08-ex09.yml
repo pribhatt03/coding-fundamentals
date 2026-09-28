@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch08-ex09
+type: predict
+title: Two questions at once
+topic: filtering
+difficulty: 3
+tags: [logical, na, filtering]
+follows: ch08-ex08
+
+prompt: |
+  To keep the phantom out, you need rows where the reading *isn't missing*
+  **and** is over 140. `&` means *and*: it gives TRUE only where both sides
+  are TRUE.
+
+  Check the question before you use it. What does this give?
+
+  ```r
+  !is.na(patients$sbp) & patients$sbp > 140
+  ```
+
+hint: |
+  Left side: `TRUE TRUE FALSE TRUE TRUE`. Right side: `TRUE FALSE NA FALSE
+  TRUE`. Work through them in pairs — and think about what `FALSE and
+  unknown` must be.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: clean
+      text: "`TRUE FALSE FALSE FALSE TRUE`"
+      correct: true
+      feedback: |
+        Right — and look at the third one. The left side says FALSE, *not
+        missing* is false. The right side is `NA`. And `FALSE & NA` is
+        `FALSE`: if one half is definitely false, the whole thing is false,
+        whatever the unknown turns out to be. That's exactly why this works.
+        No `NA` left, so no phantom row.
+    - id: nasurvives
+      text: "`TRUE FALSE NA FALSE TRUE`"
+      feedback: |
+        That's the right side on its own. `&` combines both sides, and
+        `FALSE & NA` comes out FALSE — if one half is certainly false, the
+        answer is false no matter what the unknown is.
+    - id: leftonly
+      text: "`TRUE TRUE FALSE TRUE TRUE`"
+      feedback: |
+        That's the left side on its own — which readings aren't missing. `&`
+        needs both sides to be TRUE.

@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch08-ex13
+type: predict
+title: Numbers on both sides
+topic: indexing
+difficulty: 1
+tags: [data-frames, indexing]
+follows: ch08-ex01
+
+prompt: |
+  A column doesn't have to be named — you can pick it by its position,
+  counting from the left, the same way rows are counted from the top.
+
+  ```r
+  patients[3, 2]
+  ```
+
+  Click the value this picks out.
+
+hint: |
+  Row 3 first. Then the second column along.
+
+response:
+  kind: table
+  select: cell
+  columns: [age, blood_type, sbp, discharged]
+  rows:
+    - [67, "A+", 142, true]
+    - [54, "O-", 118, false]
+    - [71, "B+", null, false]
+    - [48, "O+", 131, true]
+    - [62, "A-", 156, true]
+  other: |
+    Row first, then column — both counted from 1. Go down to row 3, then
+    across to the second column.
+  options:
+    - id: r3-blood_type
+      correct: true
+      feedback: |
+        Right — `B+`. Row 3, column 2. Numbers and names both work on either
+        side of the comma: `patients[3, 2]` and `patients[3, "blood_type"]`
+        pick exactly the same value.
+
+        Names are usually the better choice in code you write, because they
+        still point at the right column if the columns are ever reordered. But
+        you'll see numbers constantly in generated code, so it's worth reading
+        both fluently.
+    - id: r2-sbp
+      feedback: |
+        That's row 2, column 3 — the numbers read the other way round. The
+        first number is always the row.

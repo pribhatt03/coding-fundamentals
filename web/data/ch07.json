@@ -1,0 +1,1 @@
+[{"name":"patients","columns":["age","blood_type","sbp","discharged"],"rows":[[67,"A+",142,true],[54,"O-",118,false],[71,"B+",null,false],[48,"O+",131,true],[62,"A-",156,true]]},{"name":"labs","columns":["age","crp","wbc"],"rows":[[67,"12.4",11.2],[54,"<5",7.8],[71,"31.0",14.1],[48,"8.2",9],[62,"19.5",6.5]]}]

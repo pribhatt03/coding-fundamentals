@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch10-ex03
+type: fill-blank
+title: Taking out the p-value
+topic: lists
+difficulty: 1
+tags: [lists, indexing]
+follows: ch10-ex02
+
+prompt: |
+  `$` takes one piece out of a list, just as it took one column out of a
+  data frame. Get the p-value.
+
+hint: |
+  Use the name exactly as `names()` showed it.
+
+setup: |
+  drug    <- c(128, 134, 121, 139, 125, 131, 127, 136)
+  placebo <- c(142, 138, 149, 135, 144, 151, 140, 146)
+  result  <- t.test(drug, placebo)
+
+response:
+  kind: r-code
+  starter: |
+    result$______
+  solution:
+    code: |
+      result$p.value
+    why: |
+      `0.0004844103` — more digits than the printout showed, because the
+      printout rounds for display. The number in the list is the real one
+      that was stored.
+
+      You'll also see this written `result[["p.value"]]`, with double square
+      brackets. It does exactly the same thing.
+  checks:
+    - expr: identical(.result, result$p.value)
+      equals: [true]
+      on_fail: |
+        That isn't the p-value yet.
+  misconceptions:
+    - id: partial-name
+      match:
+        on: source
+        pattern: "result\\$p\\.(?!value\\b)\\w*"
+      feedback: |
+        That works — but only by luck. When a name is cut short, `$` on a list
+        quietly fills in the rest, *if* only one name starts that way.
+        `p.val` can only mean `p.value`, so R gives you that.
+
+        It's fragile. It's also why `result$p` gives `NULL`: `p` could mean
+        `p.value` *or* `parameter`, so R won't guess. Always write the full
+        name.
+    - id: wrong-name
+      match:
+        on: result
+        expr: is.null(.result)
+        equals: [true]
+      feedback: |
+        You got `NULL` — nothing — and no error. `$` with a name that isn't in
+        the list quietly gives back nothing, the same as a misspelt column
+        name. The name is `p.value`, with a full stop, exactly as `names()`
+        printed it.

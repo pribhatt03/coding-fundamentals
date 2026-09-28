@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch09-ex05
+type: predict
+title: What the new column inherited
+topic: columns
+difficulty: 2
+tags: [data-frames, na, functions]
+follows: ch09-ex04
+
+prompt: |
+  You run:
+
+  ```r
+  summary(patients$map)
+  ```
+
+  What will its `NA's` count be?
+
+hint: |
+  MAP is made from two columns. Only one of them needs a missing value.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+  patients$dbp <- c(88, 76, 82, 84, 94)
+  patients$map <- (patients$sbp + 2 * patients$dbp) / 3
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: one
+      text: "1"
+      correct: true
+      feedback: |
+        Right. Patient 3's systolic is missing, so their MAP can't be worked
+        out, whatever their diastolic is. A new column inherits every missing
+        value from the columns it was made from.
+
+        So whenever you build a column from others, expect it to be missing a
+        value wherever any of its ingredients is.
+    - id: zero
+      text: "0 — `map` is a brand new column"
+      feedback: |
+        It's new, but it was made from `sbp`, and patient 3's systolic is
+        missing. Anything calculated from a missing value is missing, so their
+        MAP is `NA`.
+    - id: five
+      text: "5"
+      feedback: |
+        Only one patient is missing a systolic. The other four MAPs are
+        worked out normally — the missing value only affects its own row.

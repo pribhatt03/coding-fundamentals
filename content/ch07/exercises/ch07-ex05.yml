@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch07-ex05
+type: fill-blank
+title: Averaging a column
+topic: data-frames
+difficulty: 2
+tags: [data-frames, na, functions]
+follows: ch07-ex04
+
+prompt: |
+  Get the average blood pressure across the patients who have a reading.
+
+hint: |
+  It's the same as averaging a vector that's missing a value — you did exactly
+  this in the last module.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: r-code
+  starter: |
+    mean(patients$sbp, ______)
+  solution:
+    code: |
+      mean(patients$sbp, na.rm = TRUE)
+    why: |
+      `patients$sbp` is a vector with a missing value in it, so everything from the
+      last module applies: without `na.rm = TRUE`, one missing reading makes
+      the whole average `NA`.
+  checks:
+    - expr: as.numeric(round(.result, 2))
+      equals: [136.75]
+      on_fail: |
+        Not 136.75 yet. The column has a missing value in it.
+  misconceptions:
+    - id: still-na
+      match:
+        on: result
+        expr: is.na(.result)
+        equals: [true]
+      feedback: |
+        `NA` — the missing blood pressure is still being included. A column
+        with a missing value behaves exactly like the vectors in the last module.

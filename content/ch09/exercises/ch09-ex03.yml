@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch09-ex03
+type: fill-blank
+title: MAP for every patient
+topic: columns
+difficulty: 2
+tags: [data-frames, columns, arithmetic, critical-appraisal]
+follows: ch09-ex02
+
+prompt: |
+  In module 2 you worked out one patient's mean arterial pressure by hand.
+  Now do it for everyone at once.
+
+  MAP = (SBP + 2 × DBP) / 3
+
+  Add it as a column called `map`. In R, multiply with `*` rather than ×.
+
+hint: |
+  Arithmetic on a column happens to every value at once, just as it did on a
+  vector. Use the two columns in the formula.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+  patients$dbp <- c(88, 76, 82, 84, 94)
+
+response:
+  kind: r-code
+  starter: |
+    patients$map <- ______
+  solution:
+    code: |
+      patients$map <- (patients$sbp + 2 * patients$dbp) / 3
+    why: |
+      One line, five MAPs. R works down the rows in step: the first
+      patient's systolic with the first patient's diastolic, and so on. That
+      lining-up is what makes a data frame more than separate vectors.
+
+      Look at patient 3, though. Their systolic is missing, so their MAP is
+      `NA` too.
+  checks:
+    - expr: as.numeric(round(patients$map[-3], 2))
+      equals: [106, 90, 99.67, 114.67]
+      on_fail: |
+        The MAPs aren't right yet. Check the formula against the one above —
+        which pressure is doubled, and what the division applies to.
+    - expr: is.na(patients$map[3])
+      equals: [true]
+      on_fail: |
+        Patient 3's MAP should be `NA`, since their systolic is missing.
+  misconceptions:
+    - id: simple-average
+      match:
+        on: result
+        expr: round(patients$map[1], 2)
+        equals: [115]
+      feedback: |
+        That's the simple average of systolic and diastolic — the exact
+        mistake from module 2. Diastolic counts twice, because the heart
+        spends about two-thirds of each beat in diastole.
+    - id: swapped-weight
+      match:
+        on: result
+        expr: round(patients$map[1], 2)
+        equals: [124]
+      feedback: |
+        You've doubled the systolic instead of the diastolic. It's the lower
+        number that counts twice.
+    - id: missing-parens
+      match:
+        on: result
+        expr: round(patients$map[1], 2)
+        equals: [200.67]
+      feedback: |
+        The division is only reaching part of the formula. Wrap the whole of
+        `patients$sbp + 2 * patients$dbp` in brackets before dividing by 3.
+    - id: bare-columns
+      match:
+        on: source
+        pattern: "(^|[^$\\w.])(sbp|dbp)\\b"
+      feedback: |
+        `sbp` and `dbp` only exist as columns inside `patients`. Write
+        `patients$sbp` and `patients$dbp` so R knows where to find them.

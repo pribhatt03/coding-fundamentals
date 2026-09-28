@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch07-ex11
+type: fill-blank
+title: The ages of those who went home
+topic: data-frames
+difficulty: 3
+tags: [data-frames, indexing, logical]
+follows: ch07-ex10
+
+prompt: |
+  Get the ages of the patients who have been discharged.
+
+hint: |
+  Square brackets keep the values that line up with a TRUE. Which column is
+  already TRUE for exactly the patients you want?
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: r-code
+  starter: |
+    patients$age[______]
+  solution:
+    code: |
+      patients$age[patients$discharged]
+    why: |
+      `patients$discharged` is already TRUE for exactly the patients who
+      went home, so you don't need to ask a question — the column *is* the
+      answer. Square brackets keep the ages lined up with each TRUE.
+
+      You've just used one column to filter another. Because every row is
+      one patient, the values line up, and that's what makes a data frame
+      more than a pile of separate vectors.
+  checks:
+    - expr: as.numeric(.result)
+      equals: [67, 48, 62]
+      on_fail: |
+        Not the three discharged patients' ages yet. The blank needs a
+        column that's TRUE for the right patients.
+  misconceptions:
+    - id: bare-column
+      match:
+        on: source
+        pattern: "(^|[^$\\w.])discharged\\b"
+      feedback: |
+        `discharged` only exists as a column inside `patients`. Write
+        `patients$discharged` so R knows where to find it.
+    - id: forgot-dollar
+      match:
+        on: error
+        pattern: "discharged\\W+not found"
+      feedback: |
+        `discharged` only exists inside `patients`. Write `patients$discharged`
+        so R knows where to find it.

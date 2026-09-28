@@ -1,0 +1,67 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch11-ex04
+type: fix-the-llm
+title: One line instead of a loop
+topic: loops
+difficulty: 2
+tags: [loops, vectors, critical-appraisal]
+follows: ch11-ex08
+
+prompt: |
+  Generated code often builds a result with a loop like this:
+
+  ```r
+  corrected <- c()
+  for (i in 1:length(sbp)) {
+    corrected[i] <- sbp[i] - 10
+  }
+  ```
+
+  `1:length(sbp)` makes the numbers `1 2 3 4`, so `i` counts through the
+  positions, and `sbp[i]` is the reading at each one. The loop fills
+  `corrected` one position at a time.
+
+  Write one line that gives the same `corrected`.
+
+hint: |
+  You did this to a whole vector in module 5, with no loop at all.
+
+setup: |
+  sbp <- c(118, 142, 131, 156)
+
+response:
+  kind: r-code
+  starter: |
+    corrected <- ______
+  solution:
+    code: |
+      corrected <- sbp - 10
+    why: |
+      Four lines of loop, one line of R. Arithmetic on a vector already
+      happens to every value, so the loop was doing by hand what R does on
+      its own.
+
+      That's why R code often doesn't need loops — and why, when generated
+      code has one, it's worth asking whether it could be a single line.
+      Shorter code has fewer places for a mistake to hide.
+  checks:
+    - expr: as.numeric(corrected)
+      equals: [108, 132, 121, 146]
+      on_fail: |
+        `corrected` should hold each reading minus 10.
+  misconceptions:
+    - id: kept-loop
+      match:
+        on: source
+        pattern: "for\\s*\\("
+      feedback: |
+        That's the loop again. It works, but the point is that the whole thing
+        fits in one line — what does `sbp - 10` give you on its own?
+    - id: no-subtraction
+      match:
+        on: result
+        expr: as.numeric(corrected)
+        equals: [118, 142, 131, 156]
+      feedback: |
+        That's `sbp` unchanged. Each reading still needs 10 taken off.

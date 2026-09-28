@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch07-ex10
+type: predict
+title: Reading summary()
+topic: data-frames
+difficulty: 1
+tags: [data-frames, na, functions]
+follows: ch07-ex09
+
+prompt: |
+  `summary()` gives a quick overview. Here's what it shows for the blood
+  pressure column, `summary(patients$sbp)`:
+
+  ```
+     Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's
+    118.0   127.8   136.5   136.8   145.5   156.0       1
+  ```
+
+  How many blood pressure readings are missing?
+
+hint: |
+  One of those labels is about missing values.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: one
+      text: "1"
+      correct: true
+      feedback: |
+        Right — `NA's` counts the missing values.
+
+        It's worth knowing because `summary()` works on a whole data frame
+        too. Give it `patients` instead of one column, and you get this
+        overview for every column at once, including how many values are
+        missing in each. Real datasets have dozens of columns, so that's how
+        you spot the missing values across all of them in one go.
+    - id: zero
+      text: "0"
+      feedback: |
+        Look at the last label, `NA's`. It isn't zero.
+    - id: five
+      text: "5"
+      feedback: |
+        There are five patients, but only one of them is missing a reading.
+        The `NA's` entry counts just the missing ones.

@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch07-ex01
+type: predict
+title: Finding a column
+topic: data-frames
+difficulty: 1
+tags: [data-frames, vectors]
+
+prompt: |
+  This is the `patients` data frame. Each row is one patient; each column
+  is one thing measured about them.
+
+  Click the column that holds each patient's systolic blood pressure.
+
+hint: |
+  Column names in R tend to be short. What would you abbreviate "systolic
+  blood pressure" to?
+
+response:
+  kind: table
+  select: column
+  columns: [age, blood_type, sbp, discharged]
+  rows:
+    - [67, "A+", 142, true]
+    - [54, "O-", 118, false]
+    - [71, "B+", null, false]
+    - [48, "O+", 131, true]
+    - [62, "A-", 156, true]
+  options:
+    - id: sbp
+      correct: true
+      feedback: |
+        Right. And look at what's in it: the same four readings you've worked
+        with for two modules, missing value included. A column in a data frame is just
+        a vector — everything you learned in modules 5 and 6 still works on
+        it.
+    - id: age
+      feedback: |
+        That's each patient's age. The blood pressures are the column with
+        one missing value in it.
+    - id: blood_type
+      feedback: |
+        That's blood type — a character column, since `"A+"` isn't a number.
+        You're looking for numbers in the 100s.
+    - id: discharged
+      feedback: |
+        That's a logical column: TRUE if the patient has gone home, FALSE if
+        not. You're looking for numbers.

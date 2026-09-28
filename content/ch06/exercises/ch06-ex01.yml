@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch06-ex01
+type: predict
+title: A reading that never happened
+topic: missing-values
+difficulty: 1
+tags: [na, types, vectors]
+
+prompt: |
+  The cuff failed on the second reading, so there's no value for it. R
+  writes a missing value as `NA`.
+
+  ```r
+  sbp <- c(118, NA, 131, 156)
+  class(sbp)
+  ```
+
+  What does the last line return?
+
+hint: |
+  In the last module, one text value turned the whole vector to text. Does
+  `NA` do the same thing?
+
+setup: |
+  sbp <- c(118, NA, 131, 156)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: numeric
+      text: "`\"numeric\"`"
+      correct: true
+      feedback: |
+        Right, and this is worth noticing. `NA` isn't text and it isn't a
+        word — it's a blank that takes on whatever type the vector already
+        is. So unlike `"131"` in the last module, a missing value doesn't
+        drag everything else along with it. The vector is still numbers,
+        with a hole in it.
+    - id: character
+      text: "`\"character\"`"
+      feedback: |
+        That's what a quoted value like `\"131\"` would have done. `NA`
+        behaves differently: it has no type of its own, so it fits into a
+        numeric vector without changing it.
+    - id: logical
+      text: "`\"logical\"`"
+      feedback: |
+        On its own, `NA` is technically logical — but once it's inside a
+        vector of numbers it takes that vector's type. The vector stays
+        numeric.
+    - id: err
+      text: "An error — you can't mix `NA` with numbers"
+      feedback: |
+        `NA` is allowed anywhere. R is built around the idea that real data is often incomplete, so missing values are a normal part of a vector
+        rather than a fault.

@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch09-ex07
+type: predict
+title: The same column, with brackets
+topic: columns
+difficulty: 2
+tags: [data-frames, indexing, critical-appraisal]
+follows: ch09-ex06
+
+prompt: |
+  Generated code often uses square brackets instead of `$`. Which of these
+  does the same as `patients$map <- (patients$sbp + 2 * patients$dbp) / 3`?
+
+hint: |
+  A column name goes after the comma.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+  patients$dbp <- c(88, 76, 82, 84, 94)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: cols
+      text: '`patients[, "map"] <- (patients$sbp + 2 * patients$dbp) / 3`'
+      correct: true
+      feedback: |
+        Right. Blank before the comma for every row, `"map"` after it for the
+        column. It's the same as `patients$map`, and you'll see both.
+    - id: rowside
+      text: '`patients["map", ] <- (patients$sbp + 2 * patients$dbp) / 3`'
+      feedback: |
+        This one fails silently, and it's worth knowing why. It puts `"map"`
+        on the *row* side, so R adds a new row called "map" and spreads the
+        five values across it — a sixth "patient" made of MAPs. No error, and
+        no new column.
+    - id: bare
+      text: "`patients[, map] <- (patients$sbp + 2 * patients$dbp) / 3`"
+      feedback: |
+        Without quotes, R looks for a variable called `map`, and there isn't
+        one — so it stops with an error. Column names in square brackets need
+        quotes.

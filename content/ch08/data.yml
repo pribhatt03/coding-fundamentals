@@ -1,0 +1,13 @@
+# Data frames shown in the Data panel for this module. Values in column
+# order; null for NA. These must match the data frames built in each
+# exercise's setup — the panel is what students look at while they write
+# code against them.
+
+- name: patients
+  columns: [age, blood_type, sbp, discharged]
+  rows:
+    - [67, "A+", 142, true]
+    - [54, "O-", 118, false]
+    - [71, "B+", null, false]
+    - [48, "O+", 131, true]
+    - [62, "A-", 156, true]

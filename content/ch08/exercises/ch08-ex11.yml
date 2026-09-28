@@ -1,0 +1,57 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch08-ex11
+type: fill-blank
+title: Who is still in hospital?
+topic: filtering
+difficulty: 2
+tags: [data-frames, filtering, logical, variables, functions]
+follows: ch08-ex10
+
+prompt: |
+  Store the patients who have *not* been discharged in `inpatients`, then
+  count them. `nrow()` counts the rows in a data frame.
+
+hint: |
+  `!` turns TRUE into FALSE and FALSE into TRUE.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: r-code
+  starter: |
+    inpatients <- ______
+    nrow(inpatients)
+  solution:
+    code: |
+      inpatients <- patients[!patients$discharged, ]
+      nrow(inpatients)
+    why: |
+      `!patients$discharged` asks *who has not gone home?* The result is a
+      new, smaller data frame stored under its own name — and `patients`
+      itself is untouched. Filtering hands you a result; it never changes
+      the original unless you store over it.
+  checks:
+    - expr: as.numeric(inpatients$age)
+      equals: [54, 71]
+      on_fail: |
+        `inpatients` should hold the two patients who haven't gone home.
+    - expr: as.numeric(.result)
+      equals: [2]
+      on_fail: |
+        The last line should count the rows in `inpatients`.
+  misconceptions:
+    - id: went-home
+      match:
+        on: result
+        expr: as.numeric(.result)
+        equals: [3]
+      feedback: |
+        Three — that's the patients who *have* gone home. Put `!` in front to
+        turn the question around.

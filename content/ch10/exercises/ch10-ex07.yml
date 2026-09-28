@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch10-ex07
+type: predict
+title: Rounding a small p-value
+topic: lists
+difficulty: 2
+tags: [functions, critical-appraisal]
+follows: ch10-ex06
+
+prompt: |
+  The p-value is `0.0004844103`. Rounding it for a table:
+
+  ```r
+  round(result$p.value, 4)
+  ```
+
+  R prints `5e-04`. What does that mean?
+
+hint: |
+  The `e` means *times ten to the power of*.
+
+setup: |
+  drug    <- c(128, 134, 121, 139, 125, 131, 127, 136)
+  placebo <- c(142, 138, 149, 135, 144, 151, 140, 146)
+  result  <- t.test(drug, placebo)
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: small
+      text: "0.0005"
+      correct: true
+      feedback: |
+        Right. `5e-04` is scientific notation: 5 × 10⁻⁴, which is 0.0005.
+        Calculators and spreadsheets write very small and very large numbers
+        the same way. R switches to it when a number is small, and you'll see
+        it constantly — tiny p-values often print as something like
+        `2.2e-16`.
+
+        One more thing worth knowing. Round to three places instead, and
+        `round(result$p.value, 3)` gives `0`. A p-value is never actually zero,
+        so never report it that way: write *p* < 0.001.
+    - id: five
+      text: "Roughly 5"
+      feedback: |
+        The `e-04` shrinks it: it means × 10⁻⁴, so the 5 moves four places to
+        the right of the decimal point. It's 0.0005.
+    - id: euler
+      text: "5 multiplied by the number *e*"
+      feedback: |
+        Reasonable guess, but here `e` isn't the constant 2.718. It means
+        *times ten to the power of*, so `5e-04` is 5 × 10⁻⁴ — 0.0005.
+    - id: code
+      text: "An error code"
+      feedback: |
+        It's a number, written compactly. `5e-04` is 5 × 10⁻⁴, which is
+        0.0005.

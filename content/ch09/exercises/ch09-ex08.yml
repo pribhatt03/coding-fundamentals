@@ -1,0 +1,64 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch09-ex08
+type: fill-blank
+title: A column of TRUE and FALSE
+topic: columns
+difficulty: 2
+tags: [data-frames, columns, logical, comparison]
+follows: ch09-ex07
+
+prompt: |
+  Add a column called `hypertensive` that is TRUE for every patient whose
+  systolic is 140 or more. In R, *greater than or equal to* is written
+  `>=`.
+
+hint: |
+  A comparison gives one TRUE or FALSE per patient. Store it the same way
+  you stored `dbp`.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+  patients$dbp <- c(88, 76, 82, 84, 94)
+  patients$map <- (patients$sbp + 2 * patients$dbp) / 3
+
+response:
+  kind: r-code
+  starter: |
+    ______
+  solution:
+    code: |
+      patients$hypertensive <- patients$sbp >= 140
+    why: |
+      The comparison asks each patient *is your systolic 140 or more?*, and
+      the answers become a column. Patient 3 gets `NA` — nobody can say
+      whether a missing reading is over 140.
+  checks:
+    - expr: which(patients$hypertensive)
+      equals: [1, 5]
+      on_fail: |
+        `hypertensive` should be TRUE for the patients at 142 and 156.
+    - expr: is.na(patients$hypertensive[3])
+      equals: [true]
+      on_fail: |
+        Patient 3 should be `NA`, since their systolic is missing.
+  misconceptions:
+    - id: bare-sbp
+      match:
+        on: source
+        pattern: "(^|[^$\\w.])sbp\\b"
+      feedback: |
+        `sbp` only exists as a column inside `patients`. Write `patients$sbp`.
+    - id: not-stored
+      match:
+        on: result
+        expr: is.null(patients$hypertensive)
+        equals: [true]
+      feedback: |
+        The comparison worked, but it wasn't stored anywhere, so there's no
+        `hypertensive` column. Put `patients$hypertensive <-` in front of it.

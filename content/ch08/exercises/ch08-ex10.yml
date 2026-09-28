@@ -1,0 +1,74 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch08-ex10
+type: fix-the-llm
+title: Filter without the phantom
+topic: filtering
+difficulty: 3
+tags: [data-frames, filtering, na, logical]
+follows: ch08-ex09
+
+prompt: |
+  Now use it. Keep only the patients whose systolic is recorded and over
+  140.
+
+hint: |
+  The blank is the question you just checked.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: r-code
+  starter: |
+    ______
+  solution:
+    code: |
+      patients[!is.na(patients$sbp) & patients$sbp > 140, ]
+    why: |
+      You've pulled two real patients, with no phantom. The line of code is
+      now longer than the first version, and every part of it is there for
+      a reason.
+  checks:
+    - expr: as.numeric(.result$age)
+      equals: [67, 62]
+      on_fail: |
+        Not the two patients at 142 and 156 yet.
+  misconceptions:
+    - id: wrong-side
+      match:
+        on: error
+        pattern: "undefined columns"
+      feedback: |
+        R used your TRUEs and FALSEs to pick *columns* — five answers for
+        four columns — because they weren't before a comma. To choose
+        patients, the question goes on the row side: before the comma, with
+        the column side left blank.
+    - id: hardcoded
+      match:
+        on: source
+        pattern: "\\[\\s*c\\("
+      feedback: |
+        That gives the right rows for these five patients, and no others. Add
+        a sixth patient and it would quietly keep the wrong ones. Write the
+        question, not its answer.
+    - id: equals-na
+      match:
+        on: source
+        pattern: "[!=]=\\s*NA"
+      feedback: |
+        Comparing with `NA` never works — `== NA` and `!= NA` both give `NA`
+        for every row. To ask whether something is missing, use `is.na()`.
+    - id: phantom-remains
+      match:
+        on: result
+        expr: nrow(.result)
+        equals: [3]
+      feedback: |
+        Three rows, so the phantom is still there. The question needs both
+        halves, joined with `&`.

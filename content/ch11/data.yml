@@ -1,0 +1,9 @@
+# Shown in the Data panel. sbp is used by most of this module; result
+# comes back from module 10 for the last exercise. Printouts from R.
+
+- name: sbp
+  shape: numeric vector, 4 values
+  print: '[1] 118 142 131 156'
+- name: result
+  shape: list of 10 pieces — printed as a report
+  print: "        Welch Two Sample t-test\n\ndata:  drug and placebo\nt = -4.5272, df = 13.874, p-value = 0.0004844\nalternative hypothesis: true difference in means is not equal to 0\n95 percent confidence interval:\n -19.164014  -6.835986\nsample estimates:\nmean of x mean of y\n  130.125   143.125"

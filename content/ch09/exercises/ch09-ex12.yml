@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch09-ex12
+type: predict
+title: A column on a copy
+topic: columns
+difficulty: 2
+tags: [data-frames, filtering, variables]
+follows: ch09-ex11
+
+prompt: |
+  ```r
+  older <- patients[patients$age >= 65, ]
+  older$flag <- TRUE
+  ```
+
+  Does `patients` now have a `flag` column?
+
+hint: |
+  Think back to what filtering does to the original.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: no
+      text: "No — `older` is a separate data frame"
+      correct: true
+      feedback: |
+        Right. Filtering handed you a new data frame, stored as `older`, and
+        adding a column changes only `older`. `patients` is exactly as it was.
+
+        The flip side is worth knowing: if you meant to flag those patients in
+        the original, this code quietly does nothing to it.
+    - id: yes
+      text: "Yes — `older` is part of `patients`"
+      feedback: |
+        `older` was made *from* `patients`, but it's a copy. Changing it
+        doesn't reach back into the original.
+    - id: partly
+      text: "Yes, but only for the rows aged 65 and over"
+      feedback: |
+        That's what someone often *wants* here, but it isn't what happens.
+        `older` is a separate copy, so `patients` gets no new column at all.

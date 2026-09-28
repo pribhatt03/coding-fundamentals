@@ -1,0 +1,71 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch06-ex04
+type: fill-blank
+title: Averaging what you do have
+topic: missing-values
+difficulty: 2
+tags: [na, functions, named-arguments]
+follows: ch06-ex03
+
+prompt: |
+  You've decided you want the average of just the readings that were
+  recorded, leaving out the missing one. `mean()` has an argument for
+  exactly this.
+
+  Its usage line is:
+
+  ```
+  mean(x, trim = 0, na.rm = FALSE, ...)
+  ```
+
+hint: |
+  `na.rm` is short for "NA remove". Its default is `FALSE`.
+
+setup: |
+  sbp <- c(118, NA, 131, 156)
+
+response:
+  kind: r-code
+  starter: |
+    mean(sbp, ______)
+  solution:
+    code: |
+      mean(sbp, na.rm = TRUE)
+    why: |
+      `na.rm = TRUE` tells `mean()` to drop the missing values before
+      averaging. The decision is recorded in the code, where anyone reading
+      it can see what you chose — which is better than a number that quietly
+      ignored a missing value.
+  checks:
+    - expr: as.numeric(round(.result, 2))
+      equals: [135]
+      on_fail: |
+        Not 135 yet. The argument that drops missing values needs to be
+        named and set to `TRUE`.
+  misconceptions:
+    - id: positional
+      match:
+        on: source
+        pattern: "mean\\(\\s*sbp\\s*,\\s*(TRUE|T)\\s*\\)"
+      feedback: |
+        This is why naming matters. The second position in `mean()` is
+        `trim`, not `na.rm` — look at the usage line again. R takes your
+        `TRUE` as a value for `trim` and never hears about the missing
+        value. Write `na.rm = TRUE` and the position stops mattering.
+    - id: arrow-in-call
+      match:
+        on: source
+        pattern: "na\\.rm\\s*<-"
+      feedback: |
+        Inside a call you attach a value to an argument with `=`, not `<-`.
+        `<-` stores something in a variable that lives on afterwards; `=`
+        says *this value is for that argument, in this call only*.
+    - id: still-na
+      match:
+        on: result
+        expr: is.na(.result)
+        equals: [true]
+      feedback: |
+        Still `NA`, so the missing value is still being included. Check the
+        argument name and that it's set to `TRUE`.

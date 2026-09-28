@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch11-ex01
+type: debug
+title: What changes each time round
+topic: loops
+difficulty: 1
+tags: [loops, reading-code]
+
+prompt: |
+  A `for` loop runs the same code once for every value in a vector. It reads
+  almost like English — *for each reading in sbp*:
+
+  ```
+  for (reading in sbp) {
+    ...
+  }
+  ```
+
+  Each time round, the loop puts the next value of `sbp` into `reading`, then
+  runs the code between the curly brackets. The name `reading` is made up by
+  whoever wrote the loop; it could have been anything.
+
+  Click the name that holds a *different* value each time the loop goes
+  round.
+
+hint: |
+  After `for (`, one name is new — the loop makes it up. The other already
+  existed.
+
+setup: |
+  sbp <- c(118, 142, 131, 156)
+
+response:
+  kind: span
+  language: r
+  runnable: true
+  code: |
+    for (<<a|reading>> in <<b|sbp>>) {
+      <<c|print(reading - 10)>>
+    }
+  options:
+    - id: a
+      correct: true
+      feedback: |
+        Right. `reading` is a variable made up by the loop. The first time
+        round it holds 118, then 142, then 131, then 156 — one value from
+        `sbp` at a time.
+
+        One thing that surprises people: it doesn't disappear when the loop
+        ends. Afterwards, `reading` still exists, holding the last value, 156.
+        So if a later line uses `reading`, it quietly gets 156 — worth knowing
+        when you're reading code that reuses a name.
+    - id: b
+      feedback: |
+        `sbp` is the whole set of values the loop walks through. It stays the
+        same the whole time; the loop takes one value from it on each pass.
+    - id: c
+      feedback: |
+        This is the *body* — the code that runs each time round. It uses the
+        changing value, but it isn't the value itself.
