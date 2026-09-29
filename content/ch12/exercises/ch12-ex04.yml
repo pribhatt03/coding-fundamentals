@@ -38,8 +38,9 @@ response:
       text: "No — dplyr has its own versions of those functions, and they now take priority"
       correct: true
       feedback: |
-        Right. It's a message, not an error. Base R already has a function
-        called `filter()`, and so does dplyr. When two loaded packages share a
+        Right. It's a message, not an error. Base R — the code that's already
+        available in R at baseline — has a function called `filter()`, and so
+        does dplyr. When two loaded packages share a
         name, the one loaded last wins — so from now on, `filter()` means
         dplyr's. The old one is "masked": still there, but hidden behind it.
 

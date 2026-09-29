@@ -1,0 +1,80 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch12-ex13
+type: predict
+title: Something you've never seen
+topic: reading-code
+difficulty: 2
+tags: [tidyverse, reading-code, critical-appraisal]
+follows: ch12-ex12
+packages: [dplyr]
+
+prompt: |
+  Generated code hands you this. You've never seen `arrange()`, and it isn't
+  in the Functions panel — most of what you'll meet in real code won't be.
+
+  ```r
+  patients |> arrange(desc(sbp))
+  ```
+
+  Work it out the way you would for real:
+
+  - **Name it.** The function is `arrange()`. What does the name suggest?
+    And what might `desc` be short for?
+  - **Try it.** Run the box above and look at what comes back.
+  - **Check it.** Compare it with the data in the **Data** panel. What
+    changed, and what didn't?
+
+  What does it do?
+
+hint: |
+  Look at the order of the `sbp` column in the output — and at where patient
+  3's missing reading ended up.
+
+setup: |
+  library(dplyr)
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE),
+    dbp        = c(88, 76, 82, 84, 94)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: sorts
+      text: "It puts the patients in order of systolic, highest first — with the missing reading at the end"
+      correct: true
+      feedback: |
+        Right. `arrange()` sorts the rows, and `desc` means *descending*, so the
+        highest systolic comes first. Each patient moves as a whole — their
+        age, blood type and everything else travel with their blood pressure.
+
+        And one thing you could only learn by trying it: the missing reading
+        goes to the end. It goes to the end in *both* directions — sorting
+        lowest first puts it last too. The name doesn't tell you that; running
+        it on data you know does.
+
+        That's the whole routine, and it works on any function you'll ever
+        meet: name it, try it on something small where you already know the
+        answer, and check what it did against what the code needed.
+    - id: keeps
+      text: "It keeps only the patients with the highest systolic"
+      feedback: |
+        Run it and count the rows: all five patients are still there. Nothing
+        was removed — they're in a different order.
+    - id: columnonly
+      text: "It sorts the systolic column, leaving the other columns where they were"
+      feedback: |
+        That would be a disaster — every blood pressure would end up next to the
+        wrong patient. Look at the output: each row moved as a whole. Since
+        module 7, a row has been one patient, and sorting keeps it that way.
+    - id: drops
+      text: "It drops the patient whose systolic is missing"
+      feedback: |
+        Count the rows in the output: all five are there. The patient with the
+        missing reading is still in the data — look at where they ended up.

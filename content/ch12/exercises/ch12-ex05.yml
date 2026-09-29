@@ -41,8 +41,9 @@ response:
         looking for a variable called `sbp` and doesn't find one.
 
         The error points at `sbp`, but the real problem is a missing
-        `library()` line. When an error doesn't make sense, check that the
-        packages are loaded before you check your spelling.
+        `library()` line. When an error doesn't make sense for the inputs you
+        gave — inputs that match the usage line you looked up — check that the
+        function's package is loaded before you check your spelling.
     - id: typo
       text: "`sbp` is misspelled"
       feedback: |

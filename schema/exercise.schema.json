@@ -120,6 +120,11 @@
           "type": "string",
           "minLength": 1,
           "description": "Markdown. Required on every option, right or wrong."
+        },
+        "last": {
+          "type": "boolean",
+          "default": false,
+          "description": "Keep this option at the end even when options are shuffled. For catch-alls like 'Neither' or 'You can't tell'."
         }
       }
     },

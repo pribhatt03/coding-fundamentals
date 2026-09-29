@@ -244,6 +244,15 @@ students can keep it in view while writing code about it rather than
 scrolling back to find a column name. These must match the data frames each
 exercise's `setup` builds; nothing checks that automatically yet.
 
+**Catch-all answers stay last.** Options are shuffled, but an option marked
+`last: true` — "Neither", "None", "You can't tell" — stays at the end, where
+it reads naturally. Only true catch-alls: an answer that's a real prediction
+keeps shuffling even if it says "Nothing", or its position would give it
+away.
+
+**Prose understands numbered lists** as well as bullets, with indented lines
+continuing the item above.
+
 **A wrong prediction points at the code above it.** On a multiple-choice
 exercise whose prompt has runnable code, a wrong answer adds a line saying
 the code runs and the student can check it themselves. Predicting, being

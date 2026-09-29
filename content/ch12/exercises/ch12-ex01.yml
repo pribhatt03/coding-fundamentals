@@ -12,7 +12,7 @@ prompt: |
   `dplyr` package adds `filter()`, `mutate()` and others that generated code
   uses constantly.
 
-  Yesterday you ran:
+  Let's say that yesterday you ran this code:
 
   ```
   install.packages("dplyr")

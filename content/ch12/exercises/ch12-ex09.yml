@@ -44,6 +44,16 @@ response:
       on_fail: |
         Not the three discharged patients yet.
   misconceptions:
+    - id: equals-true
+      match:
+        on: source
+        pattern: "==\\s*TRUE"
+      feedback: |
+        That works — but `== TRUE` isn't needed. `discharged` is already TRUE
+        or FALSE, so asking whether it equals TRUE just hands back the same
+        TRUEs and FALSEs. `filter(patients, discharged)` says the same thing
+        in fewer words. Worth recognising: generated code often includes the
+        extra `== TRUE`, and it's harmless.
     - id: quoted
       match:
         on: error

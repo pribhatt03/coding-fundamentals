@@ -50,6 +50,7 @@ response:
         x` is the drug group — 130.125 — and placebo is `y`.
     - id: cant
       text: "You can't tell from the output"
+      last: true
       feedback: |
         You can't tell from the output *alone* — which is exactly the trap. But
         you can from the call: `x` is the first argument, and `drug` came

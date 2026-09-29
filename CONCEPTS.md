@@ -136,6 +136,7 @@ between several so each wrong answer teaches what that function does.
 | The pipe, `|>` and `%>%`, read as "and then" | ch12-ex10 | ch12-ex12 | 2 | ch15 |
 | dplyr functions never change the original | ch12-ex11 | ch12-ex12 | 2 | ch14 |
 | `select()` keeps named columns | ch12-ex12 | — | 1 | ch14 |
+| **Meeting something new: name it, try it small, check it** | ch12-ex13 | — | **1** | **ch15** |
 
 ### What module 12 brought back
 
@@ -152,6 +153,17 @@ between several so each wrong answer teaches what that function does.
 - Filtering never changes the original; returned vs stored (ch05, ch08,
   ch09) → ch12-ex11
 - `!is.na()` (ch06) → ch12-ex12
+
+**The routine for something unfamiliar is the course's most transferable
+skill, and it has to recur.** Part C gave students vocabulary — lists, loops,
+packages, pipes — but vocabulary runs out; the course can't cover every
+function they'll meet. ch12-ex13 names the routine and practises it once,
+with `arrange()`, which is deliberately left out of the Functions panel.
+Plan: one never-seen-before exercise in each Part E module (15, 16, 17), each
+using a function the course doesn't teach, and the routine as a core
+requirement of the capstone. In module 18, add the steps RStudio makes
+possible: `?function`, and asking an AI what something does — then checking
+its answer by trying it.
 
 **The tidyverse breaks two rules students have learned** — bare column names
 and what happens to `NA` in a filter. Both are named explicitly in the

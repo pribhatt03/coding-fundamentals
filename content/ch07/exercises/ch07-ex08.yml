@@ -54,6 +54,7 @@ response:
         trailing zero, but the value is the same number.
     - id: none
       text: "None — they all look like numbers"
+      last: true
       feedback: |
         They *look* like numbers, which is exactly the trap. Check the type
         after each colon: one of them isn't `num`.

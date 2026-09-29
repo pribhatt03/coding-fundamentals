@@ -49,6 +49,7 @@ response:
         formula, not the code.
     - id: cantell
       text: "You can't tell without running it"
+      last: true
       feedback: |
         You can, and you just did. Running it tells you what number comes
         out — it tells you nothing about whether that number is the MAP.

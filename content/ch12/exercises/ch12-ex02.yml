@@ -35,6 +35,7 @@ response:
         fix is `library(dplyr)`, not installing it again.
     - id: neither
       text: "Neither — both are fixed by `library()`"
+      last: true
       feedback: |
         `library()` can only open a package that's already on your computer.
         "There is no package called…" means it isn't there to open.

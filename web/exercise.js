@@ -44,6 +44,16 @@ export function md(src = "") {
     // A list: every line starts a bullet or continues the one above it. An
     // indented line is a continuation, so a long bullet can wrap.
     const lines = p.split("\n");
+    // Numbered list, same rules: "1. ", "2. " … with indented continuations.
+    if (/^\d+\. /.test(lines[0].trim()) &&
+        lines.every((l) => /^\d+\. /.test(l.trim()) || /^\s+\S/.test(l))) {
+      const items = [];
+      for (const l of lines) {
+        if (/^\d+\. /.test(l.trim())) items.push(l.trim().replace(/^\d+\. /, ""));
+        else items[items.length - 1] += " " + l.trim();
+      }
+      return `<ol>${items.map((i) => `<li>${i}</li>`).join("")}</ol>`;
+    }
     if (/^[-*] /.test(lines[0].trim()) &&
         lines.every((l) => /^[-*] /.test(l.trim()) || /^\s+\S/.test(l))) {
       const items = [];
@@ -349,8 +359,11 @@ function review(opts, chosen) {
 }
 
 function doChoice(ex, body, show, state, done) {
-  const opts = ex.response.shuffle ? [...ex.response.options].sort(() => Math.random() - 0.5)
-                                   : ex.response.options;
+  // Shuffle, but keep catch-alls like "Neither" at the end where they read
+  // naturally.
+  const shuffled = ex.response.shuffle ? [...ex.response.options].sort(() => Math.random() - 0.5)
+                                       : [...ex.response.options];
+  const opts = [...shuffled.filter((o) => !o.last), ...shuffled.filter((o) => o.last)];
   const nm = `q${++uid}`;
   body.innerHTML = opts.map((o) =>
     `<label class="opt"><input type="radio" name="${nm}" value="${o.id}">${inline(o.text)}</label>`
