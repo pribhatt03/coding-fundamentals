@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch13-ex09
+type: predict
+title: could not find function
+topic: errors
+difficulty: 1
+tags: [errors, packages]
+follows: ch13-ex08
+
+prompt: |
+  ```
+  Error in select(patients, age) : could not find function "select"
+  ```
+
+  What's the most likely fix?
+
+hint: |
+  `select()` comes from a package.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: library
+      text: "`library(dplyr)`"
+      correct: true
+      feedback: |
+        Right. dplyr is installed but not loaded in this session. The error is
+        honest here, because base R has no `select()` of its own.
+
+        Compare module 12, where forgetting `library(dplyr)` before `filter()`
+        gave a misleading `object 'sbp' not found`. Base R *does* have a
+        `filter()`, so a different one ran. Same mistake, two very different
+        messages.
+    - id: install
+      text: '`install.packages("dplyr")`'
+      feedback: |
+        If dplyr weren't installed, you'd get "there is no package called…"
+        when you tried to load it. "Could not find function" usually means it
+        just isn't loaded.
+    - id: spelling
+      text: "Check the spelling of `patients`"
+      feedback: |
+        The error names the function, `select`, not the data. R never got as
+        far as looking at `patients`.

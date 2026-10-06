@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch13-ex02
+type: predict
+title: A line R couldn't read
+topic: errors
+difficulty: 1
+tags: [errors, syntax]
+follows: ch13-ex01
+
+prompt: |
+  ```r
+  sbp <- c(118, 142 131, 156)
+  ```
+
+  ```
+  Error: unexpected numeric constant in "sbp <- c(118, 142 131"
+  ```
+
+  Did any of this line run?
+
+hint: |
+  "Unexpected" means R was reading the line and hit something it didn't
+  expect.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: none
+      text: "No — R couldn't read the line, so none of it ran"
+      correct: true
+      feedback: |
+        Right. This is a *syntax* error: the line isn't written in a way R can
+        read, so R never starts running it. `sbp` wasn't created or changed.
+
+        "Unexpected" is the giveaway. And R quotes your line up to the exact
+        point where it got confused — it stopped at `131`, so the mistake is
+        just before it: a missing comma after `142`.
+    - id: partial
+      text: "Yes — `sbp` was created with the first two values"
+      feedback: |
+        R reads a whole line before running any of it. It couldn't make sense
+        of this one, so nothing ran — `sbp` doesn't exist.
+    - id: skipped
+      text: "Yes — `sbp` was created, but 131 was skipped"
+      feedback: |
+        R never skips part of a line it can't read. A syntax error means the
+        whole line is rejected, and nothing runs.

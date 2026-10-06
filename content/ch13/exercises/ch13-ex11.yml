@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch13-ex11
+type: predict
+title: replacement has 3 rows
+topic: errors
+difficulty: 2
+tags: [errors, columns]
+follows: ch13-ex10
+
+prompt: |
+  ```
+  Error in `$<-.data.frame`(`*tmp*`, dbp, value = c(88, 76, 82)) :
+    replacement has 3 rows, data has 5
+  ```
+
+  The first line looks alarming. What does the error actually mean?
+
+hint: |
+  Skip the first line and read the second.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: length
+      text: "The new column was given three values, but there are five patients"
+      correct: true
+      feedback: |
+        Right — module 9's rule. A single value would fill every row, but
+        several values have to match the number of patients exactly.
+
+        And the first line is worth decoding once. `$<-.data.frame` is R's
+        internal name for storing into a column with `$`, and `*tmp*` is a
+        placeholder it uses along the way. When the *where* looks like that,
+        it's R's own machinery — go straight to the *what*.
+    - id: missing
+      text: "Two patients' rows have gone missing from the data"
+      feedback: |
+        All five patients are still there — "data has 5". The problem is the
+        new column: three values for five rows.
+    - id: tmp
+      text: "Something called `*tmp*` is broken"
+      feedback: |
+        `*tmp*` is a placeholder R uses internally when storing into a column.
+        It's not your problem. The message after the colon is.

@@ -1,0 +1,41 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch13-ex01
+type: debug
+title: Where, and what
+topic: errors
+difficulty: 1
+tags: [errors, reading-code]
+
+prompt: |
+  Most error messages have two halves. Click the part of this one that tells
+  you *what* went wrong.
+
+hint: |
+  One part names the code R was running. The other describes the problem.
+
+response:
+  kind: span
+  language: text
+  code: |
+    <<a|Error in>> <<b|library(dplyrr)>> : <<c|there is no package called 'dplyrr'>>
+  options:
+    - id: c
+      correct: true
+      feedback: |
+        Right. After the colon is the *what*: R couldn't find a package by that
+        name — here because it's misspelled. Before the colon is the *where*:
+        the call R was running when it stopped.
+
+        Reading them in that order — what, then where — is the quickest way
+        into any error. The *what* tells you the kind of problem; the *where*
+        tells you which line to look at.
+    - id: b
+      feedback: |
+        This is the *where*: the call R was running when it stopped. Useful for
+        finding the line, but the description of the problem comes after the
+        colon.
+    - id: a
+      feedback: |
+        Every error starts this way — it's just R announcing an error. The
+        useful parts come after it: which call, and then what went wrong.

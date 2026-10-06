@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch13-ex06
+type: predict
+title: What ran before it stopped
+topic: errors
+difficulty: 2
+tags: [errors, variables]
+follows: ch13-ex05
+
+prompt: |
+  This stops with an error on the third line:
+
+  ```r
+  weight <- 70
+  height <- "1.75"
+  bmi <- weight / (height * height)
+  ```
+
+  ```
+  Error in height * height : non-numeric argument to binary operator
+  ```
+
+  Afterwards, which of these exist?
+
+hint: |
+  R runs a script one line at a time, top to bottom. What had already
+  happened when it reached the third line?
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: two
+      text: "`weight` and `height` — but not `bmi`"
+      correct: true
+      feedback: |
+        Right. R runs line by line, and stops at the first error. Everything
+        before it has already happened — `weight` and `height` were stored.
+        The line that failed stored nothing, so `bmi` doesn't exist.
+
+        That matters when you re-run part of a script: some things will already
+        be there from last time, and some won't.
+    - id: none
+      text: "None of them — the script failed"
+      feedback: |
+        A script isn't all-or-nothing. The first two lines ran and stored their
+        values before R reached the error.
+    - id: three
+      text: "All three, with `bmi` set to `NA`"
+      feedback: |
+        An error doesn't give you an `NA` — it stops. The line that failed
+        stored nothing at all, so `bmi` doesn't exist.

@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch13-ex03
+type: fix-the-llm
+title: Code copied from a document
+topic: errors
+difficulty: 2
+tags: [errors, syntax, character]
+follows: ch13-ex02
+
+prompt: |
+  You copied this line from a slide deck:
+
+  ```
+  site <- “north”
+  ```
+
+  ```
+  Error: unexpected input in "site <- “"
+  ```
+
+  What's wrong?
+
+hint: |
+  R quotes the line up to the point where it got confused. Look very closely
+  at the last character it quotes.
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: curly
+      text: "The quotation marks are curly, not straight"
+      correct: true
+      feedback: |
+        Right. Word processors, slides, emails and PDFs turn straight quotes
+        `"` into curly ones “ ”, and R only understands the straight kind. The
+        two look almost identical, which is why this catches people so often.
+
+        It's worth knowing because copying code out of a document is exactly
+        how a lot of code reaches you. Retype the quotes and it runs.
+    - id: reserved
+      text: "`site` is a word R reserves for itself"
+      feedback: |
+        `site` is an ordinary name. R got as far as `site <- ` without trouble;
+        it stopped at the quotation mark.
+    - id: number
+      text: "`north` needs to be a number"
+      feedback: |
+        Text is fine in a variable — it just needs the right quotes around it.
+        R stopped at the quotation mark itself.

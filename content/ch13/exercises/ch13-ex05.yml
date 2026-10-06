@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch13-ex05
+type: fix-the-llm
+title: A bracket that never closes
+topic: errors
+difficulty: 2
+tags: [errors, syntax, arithmetic, critical-appraisal]
+follows: ch13-ex04
+
+prompt: |
+  This gives `Error: unexpected end of input` — R reached the end of the
+  line still waiting for a bracket to close. Fix it so it works out each
+  patient's MAP.
+
+  MAP = (SBP + 2 × DBP) / 3
+
+hint: |
+  Count the brackets that open and the brackets that close. Then think about
+  *where* the missing one goes — the division should apply to the whole top
+  part of the formula.
+
+setup: |
+  patients <- data.frame(
+    age        = c(67, 54, 71, 48, 62),
+    blood_type = c("A+", "O-", "B+", "O+", "A-"),
+    sbp        = c(142, 118, NA, 131, 156),
+    discharged = c(TRUE, FALSE, FALSE, TRUE, TRUE),
+    dbp        = c(88, 76, 82, 84, 94)
+  )
+
+response:
+  kind: r-code
+  starter: |
+    patients$map <- (patients$sbp + 2 * patients$dbp / 3
+  solution:
+    code: |
+      patients$map <- (patients$sbp + 2 * patients$dbp) / 3
+    why: |
+      The missing bracket goes after `patients$dbp`, so the division by 3
+      applies to the whole of `sbp + 2 × dbp`. R can read the line now, and
+      the formula is the one you wanted.
+  checks:
+    - expr: as.numeric(round(patients$map[-3], 2))
+      equals: [106, 90, 99.67, 114.67]
+      on_fail: |
+        The MAPs aren't right yet. Check that the division applies to the
+        whole of the top part of the formula.
+  misconceptions:
+    - id: still-open
+      match:
+        on: error
+        pattern: "unexpected end of input"
+      feedback: |
+        There's still a bracket that never closes. Count them: every `(` needs
+        a `)`.
+    - id: wrong-place
+      match:
+        on: result
+        expr: round(patients$map[1], 2)
+        equals: [200.67]
+      feedback: |
+        No error now — R can read the line — but look at the answer: 200.67 for
+        a patient at 142/88. The bracket closes in the wrong place, so only the
+        diastolic part is divided by 3. That's the same mistake from module 9.
+
+        This is worth sitting with. Fixing an error means R can run your code.
+        It doesn't mean the code does what you meant. That's module 14.

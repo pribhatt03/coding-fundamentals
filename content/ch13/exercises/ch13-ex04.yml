@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch13-ex04
+type: predict
+title: An else on its own
+topic: errors
+difficulty: 2
+tags: [errors, syntax, conditionals]
+follows: ch13-ex03
+
+prompt: |
+  ```r
+  if (map < 65) {
+    print("low")
+  }
+  else {
+    print("adequate")
+  }
+  ```
+
+  ```
+  Error: unexpected 'else' in "else"
+  ```
+
+  Why?
+
+hint: |
+  You met this in module 11. Where does the `else` sit, compared with the
+  `}` before it?
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: sameline
+      text: "`else` has to come straight after the `}`, on the same line"
+      correct: true
+      feedback: |
+        Right. When R reaches the `}` on its own line, it decides the `if` is
+        finished. So the next line seems to start with `else` out of nowhere,
+        which is a syntax error. Write `} else {` on one line and it works.
+
+        It's an R quirk, and generated code gets it wrong more often than
+        you'd think.
+    - id: empty
+      text: "The `else` block needs more than one line in it"
+      feedback: |
+        One line is fine. The trouble is where `else` sits: R had already
+        decided the `if` was finished at the `}`.
+    - id: noelse
+      text: "R doesn't allow `else` after an `if`"
+      feedback: |
+        It does — you read one in module 11. It just has to follow the `}` on
+        the same line.

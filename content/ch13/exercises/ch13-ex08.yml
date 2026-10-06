@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch13-ex08
+type: predict
+title: A warning isn't an error
+topic: errors
+difficulty: 2
+tags: [errors, warnings, na, critical-appraisal]
+follows: ch13-ex07
+
+prompt: |
+  ```r
+  labs <- c("12.4", "<5", "31.0")
+  crp  <- as.numeric(labs)
+  mean(crp, na.rm = TRUE)
+  ```
+
+  ```
+  Warning message:
+  NAs introduced by coercion
+  [1] 21.7
+  ```
+
+  Did the code finish?
+
+hint: |
+  Look for the word "Error".
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: finished
+      text: "Yes — a warning lets R carry on, and the mean is 21.7"
+      correct: true
+      feedback: |
+        Right. A warning isn't an error: R finishes, but flags that something
+        happened you might want to know about. Here, `"<5"` couldn't become a
+        number, so it turned into `NA` — and then `na.rm = TRUE` quietly left
+        it out. The mean is of 12.4 and 31.0 only.
+
+        Warnings sit between the two kinds of failure: the code ran, but R is
+        telling you something. They're easy to scroll past. Module 14 is about
+        problems that don't even warn you.
+    - id: stopped
+      text: "No — it stopped at the warning"
+      feedback: |
+        A warning never stops R. Only an error does. The `[1] 21.7` underneath
+        is the finished result.
+    - id: allthree
+      text: "Yes, and the mean includes all three values"
+      feedback: |
+        It finished, but not with all three. The warning says an `NA` was
+        introduced: `"<5"` couldn't become a number, and `na.rm = TRUE` then
+        left it out. 21.7 is the mean of 12.4 and 31.0.

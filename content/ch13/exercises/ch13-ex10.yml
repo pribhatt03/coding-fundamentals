@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch13-ex10
+type: predict
+title: missing value where TRUE/FALSE needed
+topic: errors
+difficulty: 2
+tags: [errors, conditionals, na]
+follows: ch13-ex09
+
+prompt: |
+  ```
+  Error in if (reading > 140) print("high") :
+    missing value where TRUE/FALSE needed
+  ```
+
+  What's the most likely cause?
+
+hint: |
+  The message says something that should be TRUE or FALSE was missing.
+  Which kind of value is neither?
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: na
+      text: "A missing value reached the `if`, so `reading > 140` was `NA`"
+      correct: true
+      feedback: |
+        Right — module 11's loop. `NA > 140` is `NA`, and `if` needs a definite
+        TRUE or FALSE. So when you see this message, look for missing values in
+        whatever feeds the `if`.
+
+        Its close relative is *the condition has length > 1*: that one means
+        the `if` was given a whole column instead of a single value. The fix
+        there is usually `ifelse()`.
+    - id: typo
+      text: "`TRUE` or `FALSE` is misspelled somewhere"
+      feedback: |
+        Nothing is misspelled. The message means the comparison came out as
+        `NA`, which is neither TRUE nor FALSE.
+    - id: empty
+      text: "The data frame is empty"
+      feedback: |
+        The message is about a single missing value — `reading` was `NA` on
+        one pass of the loop. The data can be full apart from that one.

@@ -21,6 +21,9 @@ prompt: |
 
   - **Name it.** The function is `arrange()`. What does the name suggest?
     And what might `desc` be short for?
+  - **Look it up.** In practice you'd search for it, or ask an AI what
+    `arrange()` does. That gives you a good guess — but it's still a guess
+    until you've seen it work.
   - **Try it.** Run the box above and look at what comes back.
   - **Check it.** Compare it with the data in the **Data** panel. What
     changed, and what didn't?
@@ -59,9 +62,18 @@ response:
         lowest first puts it last too. The name doesn't tell you that; running
         it on data you know does.
 
+        What you just did is a *sanity check*: running something on data you
+        already know, so you can see exactly what it does. You've done it
+        before — checking `!is.na(sbp)` on its own before using it in module
+        6, and looking at a new column beside its ingredients in module 9.
+        There, the question was *is this right?* Here it was *what is this?*
+        The check is the same.
+
         That's the whole routine, and it works on any function you'll ever
-        meet: name it, try it on something small where you already know the
-        answer, and check what it did against what the code needed.
+        meet: name it, look it up, try it on something small where you already
+        know the answer, and check what it did against what the code needed.
+        A search result or an AI's explanation tells you what a function
+        should do; trying it tells you what it actually does.
     - id: keeps
       text: "It keeps only the patients with the highest systolic"
       feedback: |

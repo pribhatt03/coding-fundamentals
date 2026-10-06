@@ -105,8 +105,23 @@ async function runEnvFor(w, id) {
 // how Run recognises one. Warnings also go to stderr but aren't errors.
 const hadError = (cap) => cap.output.some((o) => o.type === "stderr" && /^Error/.test(o.data));
 
-const consoleEval = (env) =>
-  `invisible(withAutoprint(parse(text = .submitted), evaluated = TRUE, local = ${env}, echo = FALSE))`;
+// Errors print the way RStudio prints them — "Error in <call> : <message>" —
+// so what students learn to read here is what they'll see there. Without
+// this, webR showed only the message, dropping the "where". Syntax errors
+// keep R's extra line with a ^ under the spot where it got stuck.
+const COURSE_RUN = `.course_run <- function(src, env) {
+  tryCatch(
+    invisible(withAutoprint(parse(text = src), evaluated = TRUE, local = env, echo = FALSE)),
+    error = function(e) {
+      cl <- conditionCall(e)
+      where <- if (is.null(cl)) "" else paste(deparse(cl, width.cutoff = 500L), collapse = " ")
+      plumbing <- where == "" || any(startsWith(where, c("eval(", "withAutoprint(", "source(", "parse(", "withVisible(")))
+      if (plumbing) message("Error: ", conditionMessage(e))
+      else message("Error in ", where, " : ", conditionMessage(e))
+    })
+}`;
+
+const consoleEval = (env) => `.course_run(.submitted, ${env})`;
 
 // R boots once per page and stays warm. Each exercise gets its own setup
 // environment, so switching between them never re-runs library() or rebuilds
@@ -119,7 +134,9 @@ export async function ensureR(ex) {
     // Otherwise R holds them until the end and they never reach the page —
     // and "it ran but warned" is exactly the kind of failure this course is
     // about.
-    ready = webR.init().then(() => webR.evalRVoid("options(warn = 1)"));
+    ready = webR.init()
+      .then(() => webR.evalRVoid("options(warn = 1)"))
+      .then(() => webR.evalRVoid(COURSE_RUN));
   }
   await ready;
 

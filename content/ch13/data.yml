@@ -1,0 +1,10 @@
+# Shown in the Data panel.
+
+- name: patients
+  columns: [age, blood_type, sbp, discharged, dbp]
+  rows:
+    - [67, "A+", 142, true, 88]
+    - [54, "O-", 118, false, 76]
+    - [71, "B+", null, false, 82]
+    - [48, "O+", 131, true, 84]
+    - [62, "A-", 156, true, 94]

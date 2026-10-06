@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch13-ex07
+type: debug
+title: Where it broke, and why
+topic: errors
+difficulty: 2
+tags: [errors, types, debugging]
+follows: ch13-ex06
+
+prompt: |
+  The error names `height * height`, on the third line. Click the line that
+  actually *caused* it.
+
+  ```
+  Error in height * height : non-numeric argument to binary operator
+  ```
+
+hint: |
+  "Non-numeric argument" means one side of the `*` isn't a number. Why isn't
+  it?
+
+response:
+  kind: span
+  language: r
+  runnable: true
+  code: |
+    <<a|weight <- 70>>
+    <<b|height <- "1.75">>
+    <<c|bmi <- weight / (height * height)>>
+  options:
+    - id: b
+      correct: true
+      feedback: |
+        Right. The quotes made `height` text, back on the second line. R only
+        noticed on the third, when it tried to multiply.
+
+        That's the general rule: an error tells you where R *noticed* the
+        problem, which isn't always where the problem *is*. When the line it
+        names looks fine, look at where its ingredients came from.
+    - id: c
+      feedback: |
+        This is where R *noticed* the problem, and it's the line the error
+        names. But the formula is fine. It was handed text instead of a number
+        — so where did that text come from?
+    - id: a
+      feedback: |
+        `weight` is a proper number. The other ingredient is the problem.

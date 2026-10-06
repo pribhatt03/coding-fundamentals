@@ -175,6 +175,13 @@ panel. From module 10 on, exercises are written against R's actual output.
 any mismatch — it caught a p-value I'd written as 0.0347 that R gives as
 0.0797.
 
+**Run prints errors the way RStudio does.** webR on its own showed only the
+message — `Error: non-numeric argument…` — dropping the *where*. Run now wraps
+code in `.course_run()`, which prints `Error in height * height : …` exactly as
+RStudio would, so what students learn to read here is what they'll see there.
+Syntax errors keep R's extra line with a `^` under the spot where it got
+stuck, which RStudio doesn't show but which helps.
+
 **Run and Check never share a workspace.** Run evaluates in its own space
 on top of the exercise's data, so anything a student creates while
 experimenting persists between Runs, like the RStudio console. Check always
