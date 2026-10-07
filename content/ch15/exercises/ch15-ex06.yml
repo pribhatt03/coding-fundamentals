@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch15-ex06
+type: predict
+title: A whole script at once
+topic: prompting
+difficulty: 2
+tags: [prompting, ai, incremental]
+follows: ch15-ex05
+
+prompt: |
+  An AI hands you a 40-line script in five steps: read the data, clean it,
+  add a column, filter it, and summarise it. What's the best way to use it?
+
+hint: |
+  If the final number is wrong, how would you find out which step went wrong?
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: stepwise
+      text: "Run it one step at a time, checking each result before the next"
+      correct: true
+      feedback: |
+        Right. If you only check the end, a wrong answer could have come from
+        any of five places — and a *plausible* wrong answer wouldn't send you
+        looking at all. Checking each step as you go catches a problem where
+        it starts.
+
+        Notice what this means: how much code you *ask for* and how often you
+        *check* are separate choices. You can take a whole script at once and
+        still run it in pieces.
+    - id: end
+      text: "Run all of it, then check the final number"
+      feedback: |
+        If the number looks wrong, you won't know which of the five steps
+        caused it. And if it looks *right* but isn't, you won't look at all.
+        Checking each step catches a problem where it starts.
+    - id: oneline
+      text: "Ask the AI to give it to you one line at a time instead"
+      feedback: |
+        That works — and in unfamiliar territory it can be worth it. But it's
+        slow, and you don't need it to check as you go: you can take the whole
+        script and still *run* it one step at a time.
+    - id: read
+      text: "Read it carefully, then run it all"
+      feedback: |
+        Reading helps, but many problems don't show on the page — a column
+        stored as text, a missing value, a boundary. Running each step and
+        looking at what it produced shows what reading can't.

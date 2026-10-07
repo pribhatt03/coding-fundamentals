@@ -640,3 +640,8 @@ body.locked { overflow: hidden; }
 }
 .parteyebrow:hover { text-decoration: underline; }
 @media (max-width: 700px) { .parteyebrow { margin-left: 0; } }
+
+/* An example answer shown after a written answer passes. Prose, not code,
+   so it's set off with a rule rather than a code box. */
+.exemplar { border-left: 3px solid var(--rule); padding: .1rem 0 .1rem 1rem; margin: .6rem 0; color: var(--ink-soft, inherit); }
+.exemplar p:last-child { margin-bottom: 0; }

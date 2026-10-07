@@ -1,0 +1,1 @@
+[{"name":"visits","columns":["id","age","sbp","dbp","on_meds"],"rows":[[1,58,128,82,false],[2,71,152,94,true],[3,65,null,88,true],[4,49,141,91,false],[5,80,135,76,true],[6,66,162,99,true]]}]

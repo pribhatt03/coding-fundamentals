@@ -1,0 +1,71 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch15-ex08
+type: write-prompt
+title: Rewrite a weak prompt
+topic: prompting
+difficulty: 3
+tags: [prompting, ai, writing]
+follows: ch15-ex07
+
+prompt: |
+  Someone asked an AI:
+
+  > Add a column for high blood pressure.
+
+  Rewrite it so the AI has nothing important left to guess. You want each
+  patient labelled "high" or "not high", using 140/90, where either number
+  being high is enough. Here's the data again:
+
+  ```
+  'data.frame':  6 obs. of  5 variables:
+   $ id     : num  1 2 3 4 5 6
+   $ age    : num  58 71 65 49 80 66
+   $ sbp    : num  128 152 NA 141 135 162
+   $ dbp    : num  82 94 88 91 76 99
+   $ on_meds: logi  FALSE TRUE TRUE FALSE TRUE TRUE
+  ```
+
+  Use **Have**, **Want** and **Check**.
+
+hint: |
+  Which decisions did the original leave to the AI? There are at least three
+  — and one patient's systolic is missing.
+
+response:
+  kind: prose
+  exemplar: |
+    I have a data frame called visits, with systolic (sbp) and diastolic (dbp)
+    blood pressure in mmHg, stored as numbers. sbp has one missing value. Add
+    a column called bp_status that says "high" if sbp is 140 or more OR dbp
+    is 90 or more, and "not high" otherwise. If sbp is missing, decide using
+    dbp alone. Then tell me how many patients are "high" — I expect three —
+    and list any assumptions you made.
+  rubric:
+    - id: columns
+      criterion: "Does the prompt name the blood pressure columns the code should use?"
+      on_fail: |
+        **Have:** name the columns — the AI can't see them. Without names, it
+        guesses.
+    - id: threshold
+      criterion: "Does the prompt give the threshold as specific numbers — 140 systolic, 90 diastolic?"
+      on_fail: |
+        **Want:** give the numbers. "High blood pressure" has more than one
+        definition, and the AI will choose one for you — 130/80 flagged every
+        patient in this data.
+    - id: either
+      criterion: "Does the prompt make clear that either number being high is enough (systolic OR diastolic)?"
+      on_fail: |
+        **Want:** say whether *either* number being high is enough, or both
+        must be. That one word changes who's included.
+    - id: missing
+      criterion: "Does the prompt say what should happen when the systolic value is missing?"
+      on_fail: |
+        **Want:** one patient's systolic is missing. Say what should happen —
+        otherwise the AI decides, and that patient may quietly get the wrong
+        label, or none.
+    - id: check
+      criterion: "Does the prompt include a way to check the result, such as an expected count of patients or a request to list assumptions?"
+      on_fail: |
+        **Check:** add a way to know it worked — the number of "high" patients
+        you expect, or a request to list the assumptions it made.

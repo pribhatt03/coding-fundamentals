@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch15-ex02
+type: fix-the-llm
+title: Decisions nobody asked for
+topic: prompting
+difficulty: 2
+tags: [prompting, ai, defaults, critical-appraisal]
+follows: ch15-ex01
+
+prompt: |
+  Given Prompt A — *"Write R code to find the hypertensive patients"* — an
+  AI wrote:
+
+  ```r
+  library(dplyr)
+  hypertensive <- visits |> filter(sbp >= 130 | dbp >= 80)
+  ```
+
+  `|` means *or*. Which of the AI's decisions are clinical ones, that should
+  have been yours? Choose all that apply.
+
+hint: |
+  Some of these change which patients end up in the result. Others only
+  change how the code looks.
+
+setup: |
+  visits <- data.frame(
+    id      = c(1, 2, 3, 4, 5, 6),
+    age     = c(58, 71, 65, 49, 80, 66),
+    sbp     = c(128, 152, NA, 141, 135, 162),
+    dbp     = c(82, 94, 88, 91, 76, 99),
+    on_meds = c(FALSE, TRUE, TRUE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: choice
+  select: many
+  shuffle: true
+  options:
+    - id: threshold
+      text: "Using 130/80 as the threshold"
+      correct: true
+      feedback: |
+        A clinical decision. The 2017 American guidelines start hypertension at
+        130/80; European guidelines use 140/90. Either can be right for your
+        study — but the AI chose without saying so.
+
+        And it matters: on this data, 130/80 flags **all six** patients. At
+        140/90, it's three. One decision nobody made doubled the count, and
+        nothing in the code or the output says a decision was made at all.
+    - id: either
+      text: "Counting a patient if *either* number is high, rather than both"
+      correct: true
+      feedback: |
+        A clinical decision too, hidden in a single character: `|` means *or*.
+        With `&`, *and*, far fewer patients would qualify.
+    - id: tidyverse
+      text: "Using dplyr's `filter()` rather than square brackets"
+      feedback: |
+        A style choice. Either way of writing it can give the same patients —
+        this changes how the code looks, not who's in the result.
+    - id: name
+      text: "Calling the result `hypertensive`"
+      feedback: |
+        Just a name. It doesn't change which patients are in the result.

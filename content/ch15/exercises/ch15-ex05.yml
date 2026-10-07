@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch15-ex05
+type: predict
+title: Something you've never seen
+topic: prompting
+difficulty: 3
+tags: [reading-code, sanity-check, defaults, critical-appraisal]
+follows: ch15-ex04
+
+prompt: |
+  You asked for an age-group column — under 65, and 65 and over. The AI
+  wrote this, using a function you haven't met:
+
+  ```r
+  visits$age_group <- cut(visits$age, breaks = c(0, 65, Inf),
+                          labels = c("under 65", "65 and over"))
+  ```
+
+  It looks right. Use the routine for anything unfamiliar: **name it** (what
+  might `cut()` do?), **look it up** if you like, then **try it on something
+  small where you know the answer**. Run this in the box above it:
+
+  ```r
+  cut(c(64, 65, 66), breaks = c(0, 65, Inf),
+      labels = c("under 65", "65 and over"))
+  ```
+
+  Which group does a 65-year-old land in?
+
+hint: |
+  Run it and read the middle value.
+
+setup: |
+  visits <- data.frame(
+    id      = c(1, 2, 3, 4, 5, 6),
+    age     = c(58, 71, 65, 49, 80, 66),
+    sbp     = c(128, 152, NA, 141, 135, 162),
+    dbp     = c(82, 94, 88, 91, 76, 99),
+    on_meds = c(FALSE, TRUE, TRUE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: under
+      text: '"under 65"'
+      correct: true
+      feedback: |
+        Right — and almost nobody would guess it. `cut()` makes groups that
+        include their *upper* boundary by default, so 65 falls into the group
+        that ends at 65. Patient 3, aged exactly 65, would be labelled "under
+        65". Adding `right = FALSE` moves the boundary the other way.
+
+        Nothing in the code, the name, or a quick read would tell you that.
+        Trying it on a value that sits exactly on the boundary does. Boundaries
+        are where code most often disagrees quietly with a clinical
+        definition, so they're always worth one test.
+    - id: over
+      text: '"65 and over"'
+      feedback: |
+        That's what the labels say, and what you'd expect. Run the line above
+        it and look at the middle value: `cut()` puts 65 in "under 65".
+    - id: na
+      text: "`NA` — it falls between the groups"
+      feedback: |
+        It does land in a group. Run the line and look at the middle value — 
+        it's not the group you'd expect.

@@ -1,0 +1,71 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch15-ex03
+type: write-prompt
+title: Write the prompt
+topic: prompting
+difficulty: 2
+tags: [prompting, ai, writing]
+follows: ch15-ex02
+
+prompt: |
+  You want the average systolic pressure for patients on medication, and for
+  patients not on medication. Here's what `str(visits)` shows:
+
+  ```
+  'data.frame':  6 obs. of  5 variables:
+   $ id     : num  1 2 3 4 5 6
+   $ age    : num  58 71 65 49 80 66
+   $ sbp    : num  128 152 NA 141 135 162
+   $ dbp    : num  82 94 88 91 76 99
+   $ on_meds: logi  FALSE TRUE TRUE FALSE TRUE TRUE
+  ```
+
+  Write the prompt you'd give an AI. Three things make a prompt work:
+
+  - **Have** — what the data looks like: names, what the values are, any
+    quirks
+  - **Want** — exactly what you need back, including any decisions only you
+    can make
+  - **Check** — how you'll know the answer is right
+
+hint: |
+  Which columns does the task need? What kind of values are in each? Is
+  anything missing that could affect an average — and what should happen to
+  it?
+
+response:
+  kind: prose
+  exemplar: |
+    I have a data frame called visits. The column sbp holds systolic blood
+    pressure in mmHg, as numbers, with one missing value. on_meds is TRUE or
+    FALSE. Write R code that gives the mean sbp for patients with on_meds
+    TRUE, and the mean for patients with on_meds FALSE. Leave the missing
+    value out, and also tell me how many values each mean is based on, so I
+    can check it against the data.
+  rubric:
+    - id: columns
+      criterion: "Does the prompt name every column the task needs? (It needs a systolic pressure column, plus a column saying whether each patient is on medication.)"
+      on_fail: |
+        **Have:** name the columns the task needs. The AI can't see your data,
+        so it will guess what they're called — and a wrong guess either fails
+        or, worse, quietly uses the wrong column.
+    - id: values
+      criterion: "Does the prompt say what kind of values those columns hold — for example, numbers in mmHg, or TRUE/FALSE?"
+      on_fail: |
+        **Have:** say what's *in* the columns — numbers in mmHg, TRUE or FALSE.
+        The AI writes different code for numbers than for text, and it can't
+        tell which you have.
+    - id: missing
+      criterion: "Does the prompt say what should happen to the missing systolic value?"
+      on_fail: |
+        **Want:** one systolic reading is missing. Say what should happen to
+        it — left out, or something else. If you don't, the AI decides, and a
+        missing value can turn an entire average into `NA` or vanish without
+        a word.
+    - id: check
+      criterion: "Does the prompt include a way to check the result — such as asking how many values each average is based on, or stating an expected result?"
+      on_fail: |
+        **Check:** give yourself a way to know it worked. Asking how many
+        values each average is based on is a good one — you can count those
+        yourself in the data.

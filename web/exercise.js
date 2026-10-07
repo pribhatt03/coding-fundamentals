@@ -541,19 +541,23 @@ async function doProse(ex, body, show, state, done) {
     state.attempts++;
     const fails = [];
     try {
-      for (const c of ex.response.rubric) {
+      // Every criterion is judged at once rather than one after another, so a
+      // five-criterion answer takes as long as a one-criterion answer.
+      const verdicts = await Promise.all(ex.response.rubric.map(async (c) => {
         const res = await fetch("/.netlify/functions/judge", {
           method: "POST", headers: { "content-type": "application/json" },
           body: JSON.stringify({ answer, criterion: c.criterion, exemplar: ex.response.exemplar }),
         });
         if (!res.ok) throw new Error(`judge returned ${res.status}`);
-        if (!(await res.json()).pass) fails.push(c);
-      }
+        return (await res.json()).pass;
+      }));
+      ex.response.rubric.forEach((c, i) => { if (!verdicts[i]) fails.push(c); });
       events.log("attempt", { ex: ex.id, hash: ex.hash, n: state.attempts,
                               ok: !fails.length, failed: fails.map((c) => c.id) });
       done(!fails.length);
       show(!fails.length, fails.length ? fails.map((c) => md(c.on_fail)).join("")
-                                       : `<p>Every criterion met.</p>${md("A good answer:\n\n> " + ex.response.exemplar)}`);
+                                       : `<p>Every criterion met. Here's one good answer, for comparison:</p>
+                                          <div class="exemplar">${md(ex.response.exemplar)}</div>`);
     } catch (e) {
       // Same fallback the live site uses when the judge can't be reached.
       show(false,

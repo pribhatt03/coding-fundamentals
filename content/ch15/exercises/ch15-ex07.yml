@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch15-ex07
+type: predict
+title: When the whole thing is fine
+topic: prompting
+difficulty: 2
+tags: [prompting, ai, incremental]
+follows: ch15-ex06
+
+prompt: |
+  Checking every step isn't always worth the time. In which of these is it
+  reasonable to take a whole script and check only the end result?
+
+hint: |
+  When would a wrong result be obvious at a glance?
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: routine
+      text: "Remaking a kind of plot you've made many times before"
+      correct: true
+      feedback: |
+        Right. You know what it should look like, so a mistake shows at a
+        glance, and little rides on it. Checking step by step pays off when
+        you *can't* tell a wrong answer from a right one by looking — new data,
+        new tools, numbers that matter.
+    - id: newdata
+      text: "The first analysis of a dataset you haven't looked at yet"
+      feedback: |
+        This is where step-by-step matters most. You don't yet know the data's
+        quirks — text in a number column, a value in the wrong unit — and each
+        step is a chance for one to slip through.
+    - id: paper
+      text: "Numbers that will go into a paper or a report"
+      feedback: |
+        The higher the stakes, the more it's worth checking each step. A
+        plausible wrong number in a paper is exactly what you're trying to
+        avoid.
+    - id: newpkg
+      text: "Code that uses a package you've never used"
+      feedback: |
+        New tools are where surprises live — like `cut()` putting 65 in the
+        wrong group. Step by step, with small tests, is the safer way here.

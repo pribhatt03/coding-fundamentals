@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch15-ex01
+type: predict
+title: Two ways to ask
+topic: prompting
+difficulty: 1
+tags: [prompting, ai]
+
+prompt: |
+  You want an AI to find the hypertensive patients in your data. Which
+  prompt will get you better code?
+
+  **Prompt A**
+
+  > Write R code to find the hypertensive patients.
+
+  **Prompt B**
+
+  > I have a data frame called `visits`. `sbp` and `dbp` are blood pressures
+  > in mmHg, stored as numbers; `sbp` has one missing value. Write R code
+  > that keeps patients whose systolic is 140 or more, or whose diastolic is
+  > 90 or more. I expect three patients.
+
+hint: |
+  The AI can't see your data, and it can't read your mind. What would it
+  have to guess from Prompt A?
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: b
+      text: "B — without it, the AI has to guess the column names, the threshold, and how to handle the missing value"
+      correct: true
+      feedback: |
+        Right. The AI can't see your data, so everything it isn't told, it
+        guesses: what the data frame and columns are called, which threshold
+        counts as hypertensive, whether *either* number being high is enough,
+        and what to do with a missing reading. Prompt B answers each of those.
+
+        It isn't that longer is better. Every sentence in B answers a question
+        the AI would otherwise answer for you, silently. And the last sentence
+        gives you a way to check the result.
+    - id: a
+      text: "A — a short prompt leaves the AI free to choose the best approach"
+      feedback: |
+        The approach isn't the problem. A leaves the AI to decide things only
+        you can decide — which threshold, what counts as hypertensive — and to
+        guess things it can't see, like your column names.
+    - id: longer
+      text: "B — longer prompts always get better code"
+      feedback: |
+        B is better, but not because it's longer. A long prompt full of
+        background wouldn't help. B works because each sentence answers a
+        question the AI would otherwise guess: names, threshold, missing
+        values, and what result to expect.
+    - id: same
+      text: "No real difference — the AI will work out what's meant"
+      feedback: |
+        It will work out *something*, and the code will run. But "hypertensive"
+        has more than one definition, and the AI will pick one without telling
+        you. The next exercise shows what that does to the result.
+      last: true

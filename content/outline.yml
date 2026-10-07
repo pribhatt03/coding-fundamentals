@@ -20,12 +20,12 @@
 
 - part: E
   title: Working with AI
-  modules: [ch15, ch16, ch17]
+  modules: [ch15, ch16, ch17, ch18]
 
 - part: F
   title: Out of the sandbox
-  modules: [ch18, ch19]
+  modules: [ch19, ch20]
 
 - part: G
   title: Close
-  modules: [ch20]
+  modules: [ch21]

@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch15-ex04
+type: predict
+title: The best follow-up
+topic: prompting
+difficulty: 2
+tags: [prompting, ai, critical-appraisal]
+follows: ch15-ex03
+
+prompt: |
+  The AI hands you code. Which follow-up is most likely to show you what
+  could be wrong with it?
+
+hint: |
+  Which question does the AI have the least incentive to answer with
+  "yes, it's fine"?
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: assumptions
+      text: '"List every decision this code makes that I didn''t specify."'
+      correct: true
+      feedback: |
+        Right. This asks for exactly what you can't easily see: the gaps the
+        AI filled — a threshold, how missing values are handled, which rows
+        are kept. Once they're listed, you can check each against what you
+        meant.
+    - id: correct
+      text: '"Is this code correct?"'
+      feedback: |
+        This invites reassurance. AI models lean towards agreeing with you,
+        and "correct" can only mean "matches what you asked" — so anything you
+        didn't specify, it can't flag as wrong. Asking for the decisions it
+        made gets you further.
+    - id: better
+      text: '"Make this code better."'
+      feedback: |
+        You'll get *different* code, but "better" isn't something you can check.
+        The new version may make new decisions you didn't ask for.
+    - id: explain
+      text: '"Explain this code line by line."'
+      feedback: |
+        Useful for learning what the code does. But it explains what's there,
+        not what's *missing* — the decisions you never made won't stand out
+        unless you ask for them directly.

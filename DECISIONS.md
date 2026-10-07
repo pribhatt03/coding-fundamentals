@@ -181,6 +181,34 @@ panel. From module 10 on, exercises are written against R's actual output.
 any mismatch — it caught a p-value I'd written as 0.0347 that R gives as
 0.0797.
 
+**Part E has four modules, and comes before RStudio.** 15 Asking well
+(specifying the task), 16 Data you can't show (data handling), 17 Long
+sessions (managing context, including compaction), 18 Trusting the result
+(validation and reproducibility). RStudio and getting data in move to 19 and
+20; the close to 21. Part E's skills don't need an IDE, and this is the part
+the course is for.
+
+**Parts D and E stand alone.** Students will be able to test out of earlier
+modules, so nothing here relies on remembering an earlier exercise. Earlier
+ideas get a short explanation where they're used.
+
+**Written answers are graded by a real AI, and nothing is stored.** The
+grader sends only the answer and the rubric — no student ID — and keeps no
+log of the text. Course analytics record only which criteria passed. Cost is
+cents per student (Haiku 4.5). Before the pilot: set a monthly spending cap,
+add a rate limit, and ask whether Mayo has an approved AI agreement this
+should run under.
+
+**The grader never follows a student's answer.** In the prompting modules
+the answer *is* a prompt ("Write R code that…"). It goes to the grader inside
+`<student_answer>` tags, with an explicit instruction that it is text to
+judge, never instructions to act on. Criteria are judged in parallel.
+
+**A grader needs testing like any other check.** After deploying a
+write-prompt exercise, paste in the exemplar (every criterion should pass),
+then the weak original prompt (every criterion should fail). A rubric that
+can't fail isn't checking anything.
+
 **Run prints errors the way RStudio does.** webR on its own showed only the
 message — `Error: non-numeric argument…` — dropping the *where*. Run now wraps
 code in `.course_run()`, which prints `Error in height * height : …` exactly as
