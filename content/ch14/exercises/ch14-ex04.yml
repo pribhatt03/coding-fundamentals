@@ -1,0 +1,67 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch14-ex04
+type: predict
+title: An average that can't be right
+topic: silent-failures
+difficulty: 2
+tags: [sanity-check, critical-appraisal]
+follows: ch14-ex03
+
+prompt: |
+  The script also reports the average creatinine, in mg/dL:
+
+  ```r
+  mean(labs$creat)
+  ```
+
+  ```
+  [1] 11.8625
+  ```
+
+  No error, no warning. Before you put that in a report, what's your first
+  move?
+
+hint: |
+  What's a typical creatinine?
+
+setup: |
+  labs <- data.frame(
+    id    = c(101, 102, 103, 104, 105, 106, 107, 108),
+    k     = c("4.1", "5.6", "hemolysed", "3.9", "5.8", "4.4", "4.0", "6.1"),
+    creat = c(0.9, 1.4, 1.1, 0, 88, 1.0, 1.2, 1.3)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: summary
+      text: "Look at the spread of the values, with `summary(labs$creat)`"
+      correct: true
+      feedback: |
+        Right. A typical creatinine is around 1 mg/dL. An average near 12
+        across a ward of patients isn't plausible — something in there is
+        wildly off. `summary()` shows the whole spread in one line, so you can
+        see what it is.
+
+        Nothing in R can tell you 11.86 is wrong. It ran perfectly. Only
+        someone who knows what a creatinine should be can see it — the same
+        lesson as MAP in module 2.
+    - id: round
+      text: "Round it to 11.9 for the report"
+      feedback: |
+        Rounding a wrong number makes a tidier wrong number. A typical
+        creatinine is around 1 mg/dL — an average near 12 should stop you.
+    - id: narm
+      text: "Add `na.rm = TRUE`"
+      feedback: |
+        There's no missing value here — the mean came back as a number, not
+        `NA`. The problem is that number: about twelve times a normal
+        creatinine.
+    - id: fine
+      text: "Nothing — there's no error or warning, so it's fine"
+      feedback: |
+        That's exactly the trap in this module. R ran without complaint and
+        still gave an answer no clinician would believe.

@@ -121,6 +121,41 @@ function name they've never been shown. Nobody can derive `c()` or `sum()`.
 Name the function in the prompt or the preceding prose, or make it a choice
 between several so each wrong answer teaches what that function does.
 
+### Introduced in module 14
+
+Built as one case — a colleague's lab report that's wrong, where R never
+complained — rather than a drill of each quiet failure. Most of the 33 items
+due here came back inside the story; the rest were sorted, below.
+
+| Concept | Intro | Returns in | n | Needs to return by |
+|---|---|---|---|---|
+| Comparing text with a number compares alphabetically | ch14-ex01 | — | **1** | **ch17** |
+| Count it a second way to check a result | ch14-ex02 | ch14-ex08 | 2 | ch17 |
+| Keep the original; put a conversion in a new column | ch14-ex03 | — | 1 | ch19 |
+| Check a result against a value you know | ch14-ex04 | ch14-ex05, ex08 | 3 | ch17 |
+| Mean far from median: a few values are pulling it | ch14-ex05 | — | 1 | ch17 |
+| A value in the wrong unit (creatinine in µmol/L) | ch14-ex05 | — | **1** | **ch17** |
+| `df$col[df$col == 0] <- NA` changes just those values | ch14-ex06 | — | 1 | ch17 |
+| A result that's suddenly zero is worth a second look | ch14-ex07 | — | 1 | ch17 |
+| **Three habits: str(), summary(), check against what you know** | ch14-ex08 | — | **1** | **ch17** |
+
+### How the 33 items due here were sorted
+
+- **Came back in the case (13):** the sanity check, `str()`, `summary()`,
+  `nrow()`, `$` returning `NULL`, a note turning a column to text, storing
+  over a column, warnings, values dropped silently, and others — each marked
+  above with where.
+- **Moved to module 17 (14):** things that aren't quiet failures so much as
+  things to read correctly in generated code — `names()`, `[[ ]]`,
+  `package::function`, `select()`, `1:length(x)`, Welch and the `x`/`y`
+  labels, `&`, the phantom row and `filter()`'s different behaviour,
+  scientific notation, printed rounding. Module 17, "knowing when it's
+  wrong", is where reading generated code comes back.
+- **Settled (6):** met enough times, or minor enough, not to need another
+  return — the loop variable surviving, `[1]` on printed lines, `attr` lines,
+  formulas running down every row, a new column inheriting missing values,
+  and `df["col", ] <-`.
+
 ### Introduced in module 13
 
 Condensed from thirteen exercises to seven, around the workflow students
@@ -131,10 +166,10 @@ seven cut are in `retired/ch13/`.
 |---|---|---|---|---|
 | An error has a *what* and a *where* | ch13-ex01 | ch13-ex13 | 2 | ch17 |
 | Syntax errors: "unexpected", and nothing runs | ch13 prose | ch13-ex05 | 2 | ch18 |
-| Fixing an error isn't fixing the code | ch13-ex05 | ch13-ex14 | 2 | **ch14** |
+| Fixing an error isn't fixing the code | ch13-ex05 | ch13-ex14, ch14-ex03 (overwrite as a 'fix') | 3 | ch17 |
 | A script stops at the first error; earlier lines ran | ch13-ex06 | — | 1 | ch18 |
-| The *where* is where R noticed, not always the cause | ch13-ex07 | ch13-ex13 | 2 | ch14 |
-| A warning isn't an error — R carries on | ch13-ex08 | ch13-ex14 | 2 | ch14 |
+| The *where* is where R noticed, not always the cause | ch13-ex07 | ch13-ex13, ch14-ex01 (the count looked fine; the type was the cause) | 3 | ch17 |
+| A warning isn't an error — R carries on | ch13-ex08 | ch13-ex14, ch14-ex02 | 3 | ch17 |
 | A fix can hide a problem: `suppressWarnings()` | ch13-ex14 | — | **1** | **ch17** |
 | Ask for help with the error and the lines that led to it — never the data | ch13-ex13 | — | **1** | **ch16** |
 | Placeholder names and filler values are fine to share | ch13-ex13 | — | 1 | ch16 |
@@ -164,14 +199,14 @@ them.
 | `install.packages()` needs quotes; `library()` doesn't | ch12-ex03 | — | 1 | ch18 |
 | "Masked" is a message, not an error | ch12-ex04 | ch12-ex05 | 2 | ch17 |
 | A forgotten `library()` can give a misleading error | ch12-ex05 | — | 1 | ch18 |
-| `package::function` | ch12-ex06 | — | 1 | ch14 |
+| `package::function` | ch12-ex06 | — | 1 | ch17 |
 | Bare column names inside dplyr functions | ch12-ex07 | ch12-ex08/09/10/11/12 | 6 | — |
-| `filter()` drops `NA` rows; `[` adds one | ch12-ex08 | — | **1** | **ch14** |
+| `filter()` drops `NA` rows; `[` adds one | ch12-ex08 | — | 1 | ch17 |
 | The pipe, `|>` and `%>%`, read as "and then" | ch12-ex10 | ch12-ex12 | 2 | ch15 |
-| dplyr functions never change the original | ch12-ex11 | ch12-ex12 | 2 | ch14 |
-| `select()` keeps named columns | ch12-ex12 | — | 1 | ch14 |
+| dplyr functions never change the original | ch12-ex11 | ch12-ex12 | 2 | ch17 |
+| `select()` keeps named columns | ch12-ex12 | — | 1 | ch17 |
 | **Meeting something new: name it, look it up, try it small, check it** | ch12-ex13 | — | **1** | **ch15** |
-| "Sanity check", named as a term | ch10 prose, ch12-ex13 | — | 2 | ch14 |
+| "Sanity check", named as a term | ch10 prose, ch12-ex13 | ch14-ex01, ex02, ex07, ex08 | 3 | ch17 |
 
 ### What module 12 brought back
 
@@ -217,18 +252,18 @@ ch12-ex01 and ex05 show their code as plain text, not runnable boxes.
 |---|---|---|---|---|
 | `for (x in values)` — the name takes each value in turn | ch11-ex01 | ch11-ex02/03/05/08/09 | 6 | — |
 | The body runs once per value | ch11-ex01 | ch11-ex02 | 2 | — |
-| Inside a loop, nothing shows unless printed | ch11-ex03 | — | **1** | **ch14** |
-| `1:length(x)` and `x[i]` — counting through positions | ch11-ex04 | — | 1 | ch14 |
+| Inside a loop, nothing shows unless printed | ch11-ex03 | — | 1 | ch17 |
+| `1:length(x)` and `x[i]` — counting through positions | ch11-ex04 | — | 1 | ch17 |
 | A loop that could be one line | ch11-ex04 | ch11-ex05 | 2 | **ch17** |
 | `if` runs one block; `else` the other | ch11-ex06 | ch11-ex07, ex08 | 3 | — |
 | `if` needs exactly one TRUE or FALSE | ch11-ex07 | ch11-ex08 | 2 | ch17 |
 | `if` stops on `NA` | ch11-ex08 | — | 1 | ch17 |
-| `[[ ]]` takes a name stored in a variable | ch11-ex09 | — | 1 | ch14 |
-| The loop variable survives the loop, holding the last value | ch11-ex01 | — | 1 | ch14 |
+| `[[ ]]` takes a name stored in a variable | ch11-ex09 | — | 1 | ch17 |
+| The loop variable survives the loop, holding the last value | ch11-ex01 | — | 1 | settled |
 | Braces can be dropped around a one-line block | ch11-ex06 | ch11-ex05, ex07, ex08 | 4 | — |
 | `else` must follow `}` on the same line | ch11-ex06 (feedback) | — | 1 | ch17 |
 | `if` is not `ifelse()` | ch11 prose | ch11-ex07 | 2 | — |
-| Each `print()` shows its own line, starting `[1]` | ch11-ex02 | — | 1 | ch14 |
+| Each `print()` shows its own line, starting `[1]` | ch11-ex02 | — | 1 | settled |
 
 **`[1]` is now explained in module 5**, keeping module 2's promise. It sits
 in "Picking out one value", since `[1]` is a position, and uses `1:30` so
@@ -262,16 +297,16 @@ module 13, where reading unfamiliar output is the theme.
 |---|---|---|---|---|
 | A list: named pieces of any size and type | ch10-ex01 | ch10-ex06, ch11-ex09 | 3 | — |
 | The printout is a report; the object is the list | ch10-ex01 | ch10-ex03 | 2 | **ch15** |
-| `names()` shows what's inside | ch10-ex02 | ch11-ex09 (feedback) | 2 | ch14 |
+| `names()` shows what's inside | ch10-ex02 | ch11-ex09 (feedback) | 2 | ch17 |
 | `$` takes a piece out of a list | ch10-ex03 | ch10-ex06 | 2 | — |
 | `[[ ]]` does the same as `$` | ch10-ex03 (why) | ch11-ex09 | 2 | — |
-| Printed numbers are rounded; the stored one isn't | ch10-ex03 | — | 1 | ch14 |
-| Tests run with defaults you didn't choose (Welch) | ch10-ex04 | — | **1** | **ch14** |
-| `x` and `y` in output are argument names | ch10-ex05 | — | **1** | **ch14** |
-| `attr(,...)` lines are labels, not values | ch10-ex06 (why) | — | 1 | ch14 |
-| Scientific notation, e.g. `5e-04` | ch10-ex07 | — | **1** | **ch14** |
+| Printed numbers are rounded; the stored one isn't | ch10-ex03 | — | 1 | ch17 |
+| Tests run with defaults you didn't choose (Welch) | ch10-ex04 | — | 1 | ch17 |
+| `x` and `y` in output are argument names | ch10-ex05 | — | 1 | ch17 |
+| `attr(,...)` lines are labels, not values | ch10-ex06 (why) | — | 1 | settled |
+| Scientific notation, e.g. `5e-04` | ch10-ex07 | — | 1 | ch17 |
 | Never report p = 0 | ch10-ex07 | — | 1 | ch17 |
-| Some functions drop missing values silently | ch10-ex08 | — | **1** | **ch14** |
+| Some functions drop missing values silently | ch10-ex08 | ch14-ex02 | 2 | ch17 |
 
 ### What module 10 brought back
 
@@ -294,15 +329,15 @@ Module 10 is a 30-minute module, so it carries less old material than the
 |---|---|---|---|---|
 | Storing into a new column name creates it | ch09-ex01 | ch09-ex03, ex08, ex11 | 4 | — |
 | One value fills every row; several must match | ch09-ex02 | — | 1 | ch17 |
-| A formula runs down every row at once | ch09-ex03 | ch09-ex08 | 2 | ch14 |
-| A new column inherits its ingredients' missing values | ch09-ex03, ch09-ex05 | — | 2 | **ch14** |
-| Check a new column beside its ingredients | ch09-ex04 | — | **1** | **ch14** |
-| Storing into an existing column replaces it | ch09-ex06 | — | **1** | **ch14** |
-| `df[, "col"] <-` adds a column; `df["col", ] <-` adds a row | ch09-ex07 | — | **1** | **ch14** |
+| A formula runs down every row at once | ch09-ex03 | ch09-ex08 | 2 | settled |
+| A new column inherits its ingredients' missing values | ch09-ex03, ch09-ex05 | — | 2 | settled |
+| Check a new column beside its ingredients | ch09-ex04 | ch14-ex01 (counting by hand) | 2 | ch17 |
+| Storing into an existing column replaces it | ch09-ex06 | ch14-ex03, ex06 | 2 | ch17 |
+| `df[, "col"] <-` adds a column; `df["col", ] <-` adds a row | ch09-ex07 | — | 1 | settled |
 | `mean()` of a logical column gives a fraction | ch09-ex09 | ch11-ex05 | 2 | — |
 | `ifelse(test, yes, no)` | ch09-ex10 | ch09-ex11, ch11-ex07 | 3 | — |
-| Changing a filtered copy doesn't change the original | ch09-ex12 | — | **1** | ch14 |
-| A note typed into a number column makes it text | ch09-ex13 | — | **1** | ch14 |
+| Changing a filtered copy doesn't change the original | ch09-ex12 | ch14-ex06 (feedback) | 2 | ch17 |
+| A note typed into a number column makes it text | ch09-ex13 | ch14-ex01 | 2 | ch17 |
 
 ### What module 9 brought back
 
@@ -371,9 +406,9 @@ retrieved — also module 13.
 | `df[, "col"]` is the same as `df$col` | ch08-ex03 | ch08-ex12, ch09-ex07 | 3 | — |
 | Several rows or columns with `c()` | ch08-ex04, ch08-ex05 | ch09-ex04 | 3 | — |
 | Filtering rows with a logical vector | ch08-ex06 | ch08-ex07/08/10/11 | 5 | — |
-| An `NA` in a filter adds a whole `NA` row | ch08-ex08 | ch08-ex10 | 2 | **ch14** |
-| `&` means and; `FALSE & NA` is `FALSE` | ch08-ex09 | ch08-ex10 | 2 | **ch14** |
-| `nrow()` | ch08-ex11 | ch09-ex09 (misconception) | 2 | ch14 |
+| An `NA` in a filter adds a whole `NA` row | ch08-ex08 | ch08-ex10 | 2 | ch17 |
+| `&` means and; `FALSE & NA` is `FALSE` | ch08-ex09 | ch08-ex10 | 2 | ch17 |
+| `nrow()` | ch08-ex11 | ch09-ex09 (misconception), ch14-ex01, ex07 | 3 | ch17 |
 | Filtering never changes the original | ch08-ex11 | ch09-ex12 | 2 | — |
 
 ### What module 8 brought back
@@ -408,10 +443,10 @@ per vector, and `data.frame()` itself.
 | Row = one patient, column = one variable | ch07-ex01, ch07-ex02 | ch07-ex11 | 3 | ch08 |
 | Columns must be the same length | ch07-ex03 | ch09-ex02 | 2 | — |
 | `$` pulls out a column as a vector | ch07-ex04 | ch07-ex05/06/09/11 | 5 | — |
-| `$` with a wrong name returns NULL silently | ch07-ex04 (misconception) | ch08-ex07 (misconception) | 2 | ch14 |
-| `str()` shows shape and types | ch07-ex07 | ch07-ex08 | 2 | **ch14** |
+| `$` with a wrong name returns NULL silently | ch07-ex04 (misconception) | ch08-ex07 (misconception), ch14-ex07 | 3 | ch17 |
+| `str()` shows shape and types | ch07-ex07 | ch07-ex08, ch14-ex01, ex08 | 3 | ch17 |
 | A spreadsheet view hides types | ch07-ex08 | ch09-ex13 | 2 | — |
-| `summary()`, and `NA's` across every column | ch07-ex10 | ch09-ex05 | 2 | ch14 |
+| `summary()`, and `NA's` across every column | ch07-ex10 | ch09-ex05, ch14-ex04, ex05, ex08 | 3 | ch17 |
 | Filtering one column by another | ch07-ex11 | ch08-ex06 | 2 | — |
 | `"<5"` is not missing — a clinical judgement | ch07-ex09 | ch13-ex08 | 2 | — |
 

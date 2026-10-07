@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch14-ex02
+type: fill-blank
+title: The same answer, a second way
+topic: silent-failures
+difficulty: 2
+tags: [sanity-check, na, functions]
+follows: ch14-ex01
+
+prompt: |
+  A good sanity check is to get the same answer by a different route. Convert
+  `k` to numbers, and count the TRUEs.
+
+  Fill in the blank so the hemolysed result doesn't spoil the count.
+
+hint: |
+  `as.numeric()` will turn "hemolysed" into `NA`. You've told `mean()` and
+  `sum()` what to do about missing values before.
+
+setup: |
+  labs <- data.frame(
+    id    = c(101, 102, 103, 104, 105, 106, 107, 108),
+    k     = c("4.1", "5.6", "hemolysed", "3.9", "5.8", "4.4", "4.0", "6.1"),
+    creat = c(0.9, 1.4, 1.1, 0, 88, 1.0, 1.2, 1.3)
+  )
+
+response:
+  kind: r-code
+  starter: |
+    sum(as.numeric(labs$k) > 5.5, ______)
+  solution:
+    code: |
+      sum(as.numeric(labs$k) > 5.5, na.rm = TRUE)
+    why: |
+      Three — the same as your count. Two different methods agreeing is what
+      lets you trust the answer.
+
+      You'll also see *NAs introduced by coercion*: that's "hemolysed" turning
+      into `NA`, and `na.rm = TRUE` then leaving it out. Here that's what you
+      want — but it's a decision, and the next exercise is about not losing
+      track of it.
+  checks:
+    - expr: as.numeric(.result)
+      equals: [3]
+      on_fail: |
+        Not 3 yet. Check that the missing value is being left out of the count.
+  misconceptions:
+    - id: still-na
+      match:
+        on: result
+        expr: is.na(.result)
+        equals: [true]
+      feedback: |
+        `NA` — the hemolysed result became a missing value, and it's spoiling
+        the whole count. Tell `sum()` to leave missing values out.
+    - id: arrow-in-call
+      match:
+        on: source
+        pattern: "na\\.rm\\s*<-"
+      feedback: |
+        Inside a call, give an argument its value with `=`, not `<-`.

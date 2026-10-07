@@ -1,0 +1,73 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch14-ex01
+type: fix-the-llm
+title: Four, or three?
+topic: silent-failures
+difficulty: 2
+tags: [sanity-check, types, character, critical-appraisal]
+
+prompt: |
+  A colleague's script counts the patients with a potassium over 5.5:
+
+  ```r
+  nrow(labs[labs$k > 5.5, ])
+  ```
+
+  It says `4`. Open the **Data** panel and count for yourself — you'll find
+  three.
+
+  Before you trust any result, look at how R sees the data. Run this:
+
+  ```r
+  str(labs)
+  ```
+
+  Why does the script count four?
+
+hint: |
+  Look at the type `str()` gives for `k`. Then find which patient the script
+  counted that you didn't.
+
+setup: |
+  labs <- data.frame(
+    id    = c(101, 102, 103, 104, 105, 106, 107, 108),
+    k     = c("4.1", "5.6", "hemolysed", "3.9", "5.8", "4.4", "4.0", "6.1"),
+    creat = c(0.9, 1.4, 1.1, 0, 88, 1.0, 1.2, 1.3)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: text
+      text: '`k` is stored as text, so R compares it alphabetically — and "hemolysed" comes out as higher than 5.5'
+      correct: true
+      feedback: |
+        Right. `str()` says `k` is `chr`: one result reads "hemolysed", so the
+        whole column became text. And when R compares text with a number, it
+        compares them as text — character by character, the way a dictionary
+        orders words. Letters sort after digits, so "hemolysed" counts as
+        higher than 5.5. Worse: a potassium of 10.2 would count as *lower*,
+        because "1" comes before "5".
+
+        Nothing warned you. In the Data panel, `5.6` looks like a number either
+        way. What caught it was counting by hand — a *sanity check* — and then
+        `str()` to see why.
+    - id: phantom
+      text: "The missing value added a phantom row, like in module 8"
+      feedback: |
+        That was a good guess for module 8, but there's no `NA` in `k`. The
+        fourth patient the script counted is 103 — the hemolysed sample.
+        Running `str(labs)` shows why.
+    - id: duplicate
+      text: "One patient is listed twice"
+      feedback: |
+        All eight patients appear once. The extra one counted is patient 103,
+        whose result is "hemolysed". Run `str(labs)` and look at `k`'s type.
+    - id: equal
+      text: "Values of exactly 5.5 are being counted"
+      feedback: |
+        Nobody has a potassium of exactly 5.5. The extra patient is 103, the
+        hemolysed sample. Look at `k`'s type in `str(labs)`.

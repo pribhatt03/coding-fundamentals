@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch14-ex05
+type: predict
+title: Reading the spread
+topic: silent-failures
+difficulty: 3
+tags: [sanity-check, functions, critical-appraisal]
+follows: ch14-ex04
+
+prompt: |
+  `summary(labs$creat)` gives:
+
+  ```
+     Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+    0.000   0.975   1.150  11.863   1.325  88.000
+  ```
+
+  Which values look wrong, and why?
+
+hint: |
+  Look at the two ends — the minimum and the maximum. And compare the mean
+  with the median.
+
+setup: |
+  labs <- data.frame(
+    id    = c(101, 102, 103, 104, 105, 106, 107, 108),
+    k     = c("4.1", "5.6", "hemolysed", "3.9", "5.8", "4.4", "4.0", "6.1"),
+    creat = c(0.9, 1.4, 1.1, 0, 88, 1.0, 1.2, 1.3)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: both
+      text: "The 0, which can't be a real creatinine, and the 88, which looks like a different unit"
+      correct: true
+      feedback: |
+        Right — two different problems. A creatinine of 0 isn't possible; it's
+        almost certainly a missing result someone typed as zero, like the
+        weight in module 6. And 88 is about what a normal creatinine looks like
+        in µmol/L. Divide by 88.4 and it's 1.0 mg/dL — one result reported in
+        the wrong unit.
+
+        Notice the median: 1.15, perfectly normal, while the mean is 11.86.
+        When the mean and median are far apart, a few values are pulling the
+        mean, and `summary()` shows you both side by side.
+    - id: only88
+      text: "Only the 88"
+      feedback: |
+        The 88 is one — it's probably in µmol/L, not mg/dL. But look at the
+        minimum too: a creatinine of 0 isn't possible.
+    - id: median
+      text: "None — the median of 1.15 is normal"
+      feedback: |
+        The median is normal, which is exactly the clue. The mean is ten times
+        higher, so something is pulling it. Look at the minimum and maximum.

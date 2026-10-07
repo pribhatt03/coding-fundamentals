@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch14-ex07
+type: fix-the-llm
+title: Nobody has high potassium
+topic: silent-failures
+difficulty: 2
+tags: [names, sanity-check, critical-appraisal]
+follows: ch14-ex06
+
+prompt: |
+  A revised version of the script has:
+
+  ```r
+  nrow(labs[labs$K > 5.5, ])
+  ```
+
+  ```
+  [1] 0
+  ```
+
+  No error, no warning. The report now says no patients have a high
+  potassium. What happened?
+
+hint: |
+  Look at the column name closely, and compare it with the **Data** panel.
+
+setup: |
+  labs <- data.frame(
+    id    = c(101, 102, 103, 104, 105, 106, 107, 108),
+    k     = c("4.1", "5.6", "hemolysed", "3.9", "5.8", "4.4", "4.0", "6.1"),
+    creat = c(0.9, 1.4, 1.1, 0, 88, 1.0, 1.2, 1.3)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: case
+      text: "The column is `k`, not `K` — so `$` gave back nothing, and nothing was kept"
+      correct: true
+      feedback: |
+        Right. `labs$K` doesn't exist, and `$` with a wrong name gives back
+        `NULL`, silently. A question asked of nothing keeps nothing, so the
+        count is zero — and it reads like a real result.
+
+        A count that's suddenly zero, or much smaller than you expected, is
+        worth a second look. The check is the same as before: count it by
+        hand.
+    - id: converted
+      text: "Once the values are numbers, none are over 5.5"
+      feedback: |
+        Three of them are, as your count showed. The difference is the capital
+        `K` — there's no column by that name.
+    - id: quotes
+      text: "The 5.5 needs quotes, because `k` is text"
+      feedback: |
+        Quotes wouldn't help — the problem comes first. There's no column
+        called `K` at all. Compare the name with the Data panel.

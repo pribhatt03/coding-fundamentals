@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch14-ex06
+type: predict
+title: Fixing one value, and nothing else
+topic: silent-failures
+difficulty: 3
+tags: [indexing, na, columns, critical-appraisal]
+follows: ch14-ex05
+
+prompt: |
+  You decide the 0 should be a missing value. Which line does that, and
+  changes nothing else?
+
+hint: |
+  Read each one inside out. Which ones change more than the single 0?
+
+setup: |
+  labs <- data.frame(
+    id    = c(101, 102, 103, 104, 105, 106, 107, 108),
+    k     = c("4.1", "5.6", "hemolysed", "3.9", "5.8", "4.4", "4.0", "6.1"),
+    creat = c(0.9, 1.4, 1.1, 0, 88, 1.0, 1.2, 1.3)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: right
+      text: "`labs$creat[labs$creat == 0] <- NA`"
+      correct: true
+      feedback: |
+        Right. Read it inside out: `labs$creat == 0` asks which values are
+        zero; the square brackets pick out just those; and `<- NA` stores a
+        missing value there. Every other value, and every other column, stays
+        as it was. You'll see this pattern often in generated code.
+    - id: filter
+      text: "`labs <- filter(labs, creat != 0)`"
+      feedback: |
+        This removes patient 104 entirely — and with them, their potassium,
+        which was perfectly good. You only wanted to mark one value as
+        missing, not lose the whole patient. And because it's stored back into
+        `labs`, the patient is gone for good.
+    - id: compare
+      text: "`labs$creat == NA`"
+      feedback: |
+        This doesn't store anything — it only asks a question. And it's the
+        question from module 6 that never works: comparing with `NA` gives `NA`
+        for every value.
+    - id: whole
+      text: "`labs$creat <- NA`"
+      feedback: |
+        That replaces the *whole column* with `NA` — one value fills every
+        row, as in module 9. Every creatinine would be gone.

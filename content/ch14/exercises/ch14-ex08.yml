@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch14-ex08
+type: predict
+title: What would have caught them?
+topic: silent-failures
+difficulty: 2
+tags: [sanity-check, critical-appraisal]
+follows: ch14-ex07
+
+prompt: |
+  One more — nothing new, just things you already know coming together.
+
+  This case had three problems: a potassium column stored as text, two
+  impossible creatinines, and a misspelled column name. None of them caused
+  an error. What would have caught all three?
+
+hint: |
+  Think about what you actually did to find each one.
+
+setup: |
+  labs <- data.frame(
+    id    = c(101, 102, 103, 104, 105, 106, 107, 108),
+    k     = c("4.1", "5.6", "hemolysed", "3.9", "5.8", "4.4", "4.0", "6.1"),
+    creat = c(0.9, 1.4, 1.1, 0, 88, 1.0, 1.2, 1.3)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: habits
+      text: "Looking at the data with `str()` and `summary()`, and checking each result against something you already know"
+      correct: true
+      feedback: |
+        Right — three habits. Look at how R sees the data (`str()`). Look at
+        the spread (`summary()`). And check each result against something you
+        know: a count by hand, a typical value, a second way of getting the
+        same answer.
+
+        None of them needs an error message, which is exactly why they matter
+        here. When R stops, it tells you. When it doesn't, these are how you
+        find out.
+    - id: ai
+      text: "Pasting the script into an AI and asking it to find the errors"
+      feedback: |
+        An AI reads your code, but these problems aren't in the code. They're
+        in the data: the word "hemolysed", the 0, the 88. Unless you show it
+        what the data looks like — which means running `str()` and
+        `summary()` first — it can't see them. It might spot the capital `K` if
+        the script uses both spellings, but not the rest.
+    - id: narm
+      text: "Adding `na.rm = TRUE` everywhere"
+      feedback: |
+        That would hide problems rather than find them. It quietly leaves out
+        missing values — it can't tell you a creatinine is in the wrong unit,
+        or that a column is text.
+    - id: rerun
+      text: "Running the script again"
+      feedback: |
+        Running it again gives the same wrong answers, just as confidently.
+        Nothing in the code changes between runs.
