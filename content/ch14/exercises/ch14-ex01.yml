@@ -8,7 +8,8 @@ difficulty: 2
 tags: [sanity-check, types, character, critical-appraisal]
 
 prompt: |
-  A colleague's script counts the patients with a potassium over 5.5:
+  You're checking a lab summary before it goes out. Normal potassium is
+  about 3.5 to 5.0 mmol/L, and the script counts the patients over 5.5:
 
   ```r
   nrow(labs[labs$k > 5.5, ])

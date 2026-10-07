@@ -9,19 +9,23 @@ tags: [columns, na, critical-appraisal]
 follows: ch14-ex02
 
 prompt: |
-  To fix `k` for good, your colleague wants to write:
+  A *hemolysed* sample is one where red blood cells broke open after the
+  blood was drawn. They release potassium, so the result reads falsely high,
+  and the test needs repeating.
+
+  To fix `k` for good, the quickest option is:
 
   ```r
   labs$k <- as.numeric(labs$k)
   ```
 
-  You suggest this instead:
+  Another is:
 
   ```r
   labs$k_num <- as.numeric(labs$k)
   ```
 
-  Why is yours safer?
+  Why is the second safer?
 
 hint: |
   After each line, what has happened to the word "hemolysed"?
@@ -45,7 +49,8 @@ response:
         Right. Storing into `labs$k` replaces it, silently, and "hemolysed"
         becomes `NA` for good. But `NA` could mean anything: never drawn, lost,
         hemolysed. Clinically those aren't the same — a hemolysed sample means
-        redraw it. Once the word is gone, nobody reading the data later can
+        the patient needs another draw, and their real potassium is still
+        unknown. Once the word is gone, nobody reading the data later can
         tell.
 
         Putting the numbers in a new column keeps both: numbers you can

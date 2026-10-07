@@ -19,11 +19,11 @@ prompt: |
   [1] 11.8625
   ```
 
-  No error, no warning. Before you put that in a report, what's your first
-  move?
+  A normal adult creatinine is roughly 0.6 to 1.3 mg/dL. There was no error
+  and no warning. Before you put that in a report, what's your first move?
 
 hint: |
-  What's a typical creatinine?
+  Compare 11.86 with the normal range.
 
 setup: |
   labs <- data.frame(

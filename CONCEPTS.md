@@ -385,6 +385,13 @@ in RStudio, show the typing help it gives, and why each matters:
 The course's own editor already does the last one. Worth pointing that out
 in module 18 as "you've been using this since module 2".
 
+**Planned for module 18: throwaway checks in the console.** The everyday form
+of a sanity check: look at the top rows, then run quick lines in the console
+— counts, a value worked out a second way — that never go in the final
+script. Named at the end of module 14; taught properly in module 18, when
+RStudio's console and script sit side by side and "run it here, keep it
+there" becomes a real distinction.
+
 **Planned: `head()` for sanity checks on large data.** Pointless on five
 rows, so it waits until data is bigger than a screen — module 19, when
 students read a real file, and again in module 13's sanity-check theme.

@@ -20,7 +20,8 @@ prompt: |
 
 hint: |
   Look at the two ends — the minimum and the maximum. And compare the mean
-  with the median.
+  with the median. One more thing that helps: creatinine is sometimes
+  reported in µmol/L instead of mg/dL, and 1 mg/dL is 88.4 µmol/L.
 
 setup: |
   labs <- data.frame(
