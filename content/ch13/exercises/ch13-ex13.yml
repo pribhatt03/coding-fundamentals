@@ -6,7 +6,7 @@ title: Asking for help with an error
 topic: errors
 difficulty: 1
 tags: [errors, prompting, critical-appraisal]
-follows: ch13-ex12
+follows: ch13-ex14
 
 prompt: |
   You're stuck on an error you don't understand. Which of these gives a
@@ -29,10 +29,17 @@ response:
         engine, the message itself — in quotes, with "R" — finds other people
         who hit the same thing.
 
+        Include the lines that feed the one R names, not just that line — as
+        the earlier exercise showed, the cause can sit a line or two above
+        where R noticed it.
+
         One firm rule: share the code and the error, never real patient data.
-        If the problem depends on what the data looks like, describe its
-        shape — the column names and types — without the values. Module 16 is
-        about exactly that.
+        If the problem depends on what the data looks like, describe its shape
+        — the column names and types — or make up a few rows with filler
+        values. And if you'd rather not reveal your variable names, to protect
+        an unpublished idea, say, swap them for placeholders like `col_a`.
+        Keep the message's wording and structure the same, and it'll still
+        work. Module 16 is about exactly this.
     - id: vague
       text: "\"My R code doesn't work\""
       feedback: |
@@ -43,9 +50,9 @@ response:
       feedback: |
         Better than nothing, but whoever's helping has to guess what went
         wrong. The message tells them straight away.
-    - id: general
-      text: "The error message with the names changed to something general"
+    - id: oneline
+      text: "Just the error message and the one line R says it's on"
       feedback: |
-        Keeping the message exact is what makes it searchable. The names in it
-        are rarely private — `sbp` and `patients` identify no one. What *is*
-        private is the data itself, and that's what to keep out.
+        Close, but the line R names is only where it *noticed* the problem. The
+        cause can sit a line or two above — like the quoted `height` earlier.
+        Include the lines that feed into the one R names.

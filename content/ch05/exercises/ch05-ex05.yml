@@ -34,7 +34,7 @@ response:
         Yes — one answer per reading. The comparison was asked of every
         value, just like the subtraction was. This is what module 3
         promised: a thousand blood pressures and one question gives you a
-        thousand TRUEs and FALSEs — and you can use that list to pick out
+        thousand TRUEs and FALSEs — and you can use those TRUEs and FALSEs to pick out
         the values you care about.
     - id: one
       text: "`TRUE` — because some of them are over 140"

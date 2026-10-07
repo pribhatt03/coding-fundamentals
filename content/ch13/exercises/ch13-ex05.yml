@@ -6,7 +6,7 @@ title: A bracket that never closes
 topic: errors
 difficulty: 2
 tags: [errors, syntax, arithmetic, critical-appraisal]
-follows: ch13-ex04
+follows: ch13-ex01
 
 prompt: |
   This gives `Error: unexpected end of input` — R reached the end of the

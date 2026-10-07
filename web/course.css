@@ -558,7 +558,10 @@ body.locked { overflow: hidden; }
 
 .partoverlay {
   position: fixed; inset: 0; z-index: 50;
-  display: grid; place-items: center;
+  /* Scrolls when the page is taller than the window. The card's auto margins
+     centre it when it fits, and fall back to zero when it doesn't, so the top
+     is never cut off and the button is always reachable. */
+  display: flex; overflow-y: auto;
   padding: 2rem 1.5rem;
   background: var(--paper);
   opacity: 0;
@@ -567,6 +570,7 @@ body.locked { overflow: hidden; }
 .partoverlay.show { opacity: 1; }
 
 .partcard {
+  margin: auto;
   max-width: 34rem;
   font-family: Literata, Georgia, serif;
   transform: translateY(10px);

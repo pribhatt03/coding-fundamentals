@@ -1,0 +1,57 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch13-ex14
+type: fix-the-llm
+title: A fix that hides the problem
+topic: errors
+difficulty: 3
+tags: [errors, warnings, na, critical-appraisal]
+follows: ch13-ex08
+
+prompt: |
+  You pasted that warning into an AI, and it suggested this:
+
+  ```r
+  crp <- suppressWarnings(as.numeric(labs))
+  ```
+
+  You run it, and the warning is gone. Is the problem fixed?
+
+hint: |
+  Run it, then look at `crp`. What happened to `"<5"`?
+
+setup: |
+  labs <- c("12.4", "<5", "31.0")
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: hidden
+      text: "No — the warning is hidden, but `\"<5\"` still becomes `NA` and gets dropped"
+      correct: true
+      feedback: |
+        Right. `suppressWarnings()` does exactly what its name says: it stops
+        the warning being shown. It doesn't change what happened. `"<5"` still
+        becomes `NA`, and the mean still quietly leaves it out — you've just
+        lost the one sign that anything was wrong.
+
+        The real fix is a decision about `"<5"` — what number, if any, it
+        should become — and that's a clinical call, not a coding one.
+
+        It's a very common kind of suggestion, and a reasonable one to make if
+        you only see the warning and not what it's about. So when a fix makes
+        a warning or an error disappear, ask what it changed. If you see
+        `suppressWarnings()` in generated code, read it as a flag.
+    - id: gone
+      text: "Yes — no warning means nothing went wrong"
+      feedback: |
+        Run it and look at `crp`: the middle value is still `NA`. The warning
+        was the only sign of that, and now it's hidden. Nothing about the data
+        changed.
+    - id: converts
+      text: "Yes — `suppressWarnings()` converts `\"<5\"` properly"
+      feedback: |
+        It doesn't convert anything. It only stops the warning being printed.
+        `"<5"` still becomes `NA` — run it and look.

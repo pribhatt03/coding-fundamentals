@@ -46,7 +46,7 @@ response:
 
         Double brackets work differently: R works out what's inside them
         first. `result[[name]]` becomes `result[["p.value"]]`, which is the
-        p-value. That's why loops over the pieces of a list — often
+        p-value. That's why loops over the pieces of a *list* — often
         `for (name in names(result))` — use `[[ ]]`.
     - id: same
       text: "They'd do exactly the same thing"

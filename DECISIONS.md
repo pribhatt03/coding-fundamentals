@@ -90,6 +90,12 @@ attempt, and attempts don't pay to rebuild it.
 `eval(parse(text = .submitted))`. Escaping R source into an R string literal
 works until someone types a backslash.
 
+**R's type names are used only in their R sense.** Never call a vector "a
+list" in passing, even before module 10: once "list" means something
+specific, the loose use becomes a mistake. Italicise *list*, *vector*,
+*character*, *logical* and *numeric* where they could be read as ordinary
+English.
+
 **Say "missing value", never "gap".** In prose, feedback, titles and the
 reference alike.
 

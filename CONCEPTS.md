@@ -123,50 +123,47 @@ between several so each wrong answer teaches what that function does.
 
 ### Introduced in module 13
 
+Condensed from thirteen exercises to seven, around the workflow students
+actually use: paste the error into an AI, then check what comes back. The
+seven cut are in `retired/ch13/`.
+
 | Concept | Intro | Returns in | n | Needs to return by |
 |---|---|---|---|---|
-| An error has a *what* and a *where* | ch13-ex01 | ch13-ex11 | 2 | ch17 |
-| Syntax errors: "unexpected", and nothing runs | ch13-ex02 | ch13-ex03, ex04, ex05 | 4 | — |
-| Curly quotes from documents break code | ch13-ex03 | — | 1 | ch18 |
-| Fixing an error isn't fixing the code | ch13-ex05 | — | **1** | **ch14** |
+| An error has a *what* and a *where* | ch13-ex01 | ch13-ex13 | 2 | ch17 |
+| Syntax errors: "unexpected", and nothing runs | ch13 prose | ch13-ex05 | 2 | ch18 |
+| Fixing an error isn't fixing the code | ch13-ex05 | ch13-ex14 | 2 | **ch14** |
 | A script stops at the first error; earlier lines ran | ch13-ex06 | — | 1 | ch18 |
-| The *where* is where R noticed, not always the cause | ch13-ex07 | — | **1** | **ch14** |
-| A warning isn't an error — R carries on | ch13-ex08 | — | **1** | **ch14** |
-| Ugly calls like `$<-.data.frame` are R's internals | ch13-ex11 | — | 1 | ch17 |
-| "undefined columns selected" means a name mismatch | ch13-ex12 | — | 1 | ch16 |
-| Ask for help with the error *and* the code — never the data | ch13-ex13 | — | **1** | **ch16** |
+| The *where* is where R noticed, not always the cause | ch13-ex07 | ch13-ex13 | 2 | ch14 |
+| A warning isn't an error — R carries on | ch13-ex08 | ch13-ex14 | 2 | ch14 |
+| A fix can hide a problem: `suppressWarnings()` | ch13-ex14 | — | **1** | **ch17** |
+| Ask for help with the error and the lines that led to it — never the data | ch13-ex13 | — | **1** | **ch16** |
+| Placeholder names and filler values are fine to share | ch13-ex13 | — | 1 | ch16 |
 
 ### What module 13 brought back
 
+- "No package called" (ch12-ex02) → ch13-ex01
 - The unclosed bracket (ch02-ex09) → ch13-ex05
 - MAP's missing-brackets mistake (ch02-ex08, ch09-ex03) → ch13-ex05, where
   fixing the syntax in the wrong place gives it back silently
 - Quotes make text (ch03-ex09/10) → ch13-ex06, ex07
-- Names are exact (ch03-ex04, ch07-ex04) → ch13-ex12
-- "No package called" versus "could not find function", and the misleading
-  `filter()` error (ch12) → ch13-ex01, ex09
-- `else` placement, `if` and `NA` (ch11) → ch13-ex04, ex10
-- One value fills every row; several must match (ch09-ex02) → ch13-ex11
-- `"<5"` becoming `NA` (ch07-ex09) → ch13-ex08
-- `$` with a wrong name returns NULL (ch07, ch09, ch10) → ch13-ex12's
-  `dollar-null` misconception, as a preview of module 14
+- `"<5"` becoming `NA`, and the clinical call it hides (ch07-ex09) →
+  ch13-ex08, ex14
+- `na.rm` dropping values quietly (ch06) → ch13-ex08
 - Describing data without sharing it (planned, ch16) → ch13-ex13
 
-**Module 14 carries the quiet failures.** Everything that fails without
-stopping — the phantom row, values dropped silently, a new column inheriting
-missing values, a note turning a column to text, `$` returning `NULL`,
-defaults nobody chose — moved from module 13 to 14, along with `str()`,
-`summary()` and `nrow()` as the tools for catching them.
+**Module 14 carries the quiet failures** — everything that fails without
+stopping, plus `str()`, `summary()` and `nrow()` as the tools for catching
+them.
 
 ### Introduced in module 12
 
 | Concept | Intro | Returns in | n | Needs to return by |
 |---|---|---|---|---|
 | Install once; `library()` every session | ch12-ex01 | ch12-ex02, ex05 | 3 | ch18 |
-| "No package called" vs "could not find function" | ch12-ex02 | ch13-ex01, ch13-ex09 | 2 | — |
+| "No package called" vs "could not find function" | ch12-ex02 | ch13-ex01 | 1 | ch18 |
 | `install.packages()` needs quotes; `library()` doesn't | ch12-ex03 | — | 1 | ch18 |
-| "Masked" is a message, not an error | ch12-ex04 | ch12-ex05, ch13-ex09 (feedback) | 3 | — |
-| A forgotten `library()` can give a misleading error | ch12-ex05 | ch13-ex09 (feedback) | 2 | — |
+| "Masked" is a message, not an error | ch12-ex04 | ch12-ex05 | 2 | ch17 |
+| A forgotten `library()` can give a misleading error | ch12-ex05 | — | 1 | ch18 |
 | `package::function` | ch12-ex06 | — | 1 | ch14 |
 | Bare column names inside dplyr functions | ch12-ex07 | ch12-ex08/09/10/11/12 | 6 | — |
 | `filter()` drops `NA` rows; `[` adds one | ch12-ex08 | — | **1** | **ch14** |
@@ -224,12 +221,12 @@ ch12-ex01 and ex05 show their code as plain text, not runnable boxes.
 | `1:length(x)` and `x[i]` — counting through positions | ch11-ex04 | — | 1 | ch14 |
 | A loop that could be one line | ch11-ex04 | ch11-ex05 | 2 | **ch17** |
 | `if` runs one block; `else` the other | ch11-ex06 | ch11-ex07, ex08 | 3 | — |
-| `if` needs exactly one TRUE or FALSE | ch11-ex07 | ch11-ex08, ch13-ex10 (feedback) | 3 | — |
-| `if` stops on `NA` | ch11-ex08 | ch13-ex10 | 2 | — |
+| `if` needs exactly one TRUE or FALSE | ch11-ex07 | ch11-ex08 | 2 | ch17 |
+| `if` stops on `NA` | ch11-ex08 | — | 1 | ch17 |
 | `[[ ]]` takes a name stored in a variable | ch11-ex09 | — | 1 | ch14 |
 | The loop variable survives the loop, holding the last value | ch11-ex01 | — | 1 | ch14 |
 | Braces can be dropped around a one-line block | ch11-ex06 | ch11-ex05, ex07, ex08 | 4 | — |
-| `else` must follow `}` on the same line | ch11-ex06 (feedback) | ch13-ex04 | 2 | — |
+| `else` must follow `}` on the same line | ch11-ex06 (feedback) | — | 1 | ch17 |
 | `if` is not `ifelse()` | ch11 prose | ch11-ex07 | 2 | — |
 | Each `print()` shows its own line, starting `[1]` | ch11-ex02 | — | 1 | ch14 |
 
@@ -296,7 +293,7 @@ Module 10 is a 30-minute module, so it carries less old material than the
 | Concept | Intro | Returns in | n | Needs to return by |
 |---|---|---|---|---|
 | Storing into a new column name creates it | ch09-ex01 | ch09-ex03, ex08, ex11 | 4 | — |
-| One value fills every row; several must match | ch09-ex02 | ch13-ex11 | 2 | — |
+| One value fills every row; several must match | ch09-ex02 | — | 1 | ch17 |
 | A formula runs down every row at once | ch09-ex03 | ch09-ex08 | 2 | ch14 |
 | A new column inherits its ingredients' missing values | ch09-ex03, ch09-ex05 | — | 2 | **ch14** |
 | Check a new column beside its ingredients | ch09-ex04 | — | **1** | **ch14** |
