@@ -41,14 +41,13 @@ response:
         and what to do with a missing reading. Prompt B answers each of those.
 
         It isn't that longer is better. Every sentence in B answers a question
-        the AI would otherwise answer for you, silently.
+        the AI would otherwise answer for you, silently. And the last request
+        makes the result easy to check.
 
         In practice, you'd rarely write B first time. You'd know about the
         missing value only after looking at the data, or after a first attempt
         turned it up. That's fine — later in this module you'll see how that
-        loop goes. And the last request
-        makes the result easy to check: R prints the count, and you compare it
-        with a count you've worked out yourself.
+        loop goes.
     - id: a
       text: "A — a short prompt leaves the AI free to choose the best approach"
       feedback: |
@@ -58,10 +57,9 @@ response:
     - id: longer
       text: "B — longer prompts always get better code"
       feedback: |
-        B is better, but not because it's longer. A long prompt full of
-        background wouldn't help. B works because each sentence answers a
-        question the AI would otherwise guess: names, threshold, missing
-        values, and what result to expect.
+        B is better, but not because it's longer. It works because each
+        sentence answers a question the AI would otherwise guess: names,
+        threshold, and what to do about the missing value.
     - id: same
       text: "No real difference — the AI will work out what's meant"
       feedback: |

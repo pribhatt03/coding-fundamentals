@@ -54,7 +54,10 @@ response:
       correct: true
       feedback: |
         A clinical decision too, hidden in a single character: `|` means *or*.
-        With `&`, *and*, far fewer patients would qualify.
+        With `&`, *and*, fewer patients would qualify.
+
+        *Either* happens to be what you wanted here. But the AI decided it
+        silently, and next time its choice won't necessarily match yours.
     - id: tidyverse
       text: "Using dplyr's `filter()` rather than square brackets"
       feedback: |

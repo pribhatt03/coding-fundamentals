@@ -40,12 +40,11 @@ hint: |
 response:
   kind: prose
   exemplar: |
-    I have a data frame called visits. The column sbp holds systolic blood
-    pressure in mmHg, as numbers, with one missing value. on_meds is TRUE or
-    FALSE. Write R code that gives the mean sbp for patients with on_meds
-    TRUE, and the mean for patients with on_meds FALSE. Leave the missing
-    value out, and have the code also print how many values each mean is
-    based on.
+    There's a column called sbp, with numbers and one missing value, and a
+    column called on_meds that is TRUE or FALSE. Write R code that gives the
+    mean sbp for patients with on_meds TRUE, and another for on_meds FALSE.
+    Leave out missing values, and have the code print how many values each
+    mean is based on.
   rubric:
     - id: columns
       criterion: "Does the prompt name every column the task needs? (It needs a systolic pressure column, plus a column saying whether each patient is on medication.)"
@@ -73,3 +72,16 @@ response:
         How many values each average is based on is a good one — R counts
         them, and you can count them in the data. (Asking the AI to *tell* you
         it worked isn't a check: it hasn't run anything on your data.)
+    - id: both-groups
+      criterion: "Does the prompt ask for an average for each medication group — patients on medication, as well as patients not on medication?"
+      on_fail: |
+        **Want:** the task needs two averages — one for patients on
+        medication, one for patients not on it. Ask for each, or the AI will
+        give you only what you asked for.
+    - id: only-needed
+      criterion: "Does the prompt stick to the columns this task uses, rather than listing every column in the data?"
+      on_fail: |
+        **Enough, and no more:** this task only uses the systolic and
+        medication columns. Listing every column does no harm here, but it's
+        a habit worth breaking — in real data, column names can give away more
+        about your work than you'd think.

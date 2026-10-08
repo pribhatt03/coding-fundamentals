@@ -30,12 +30,15 @@ response:
         that number rather than the right one — and then a match tells you
         nothing.
 
-        So the check stays yours. Work it out however suits you — pen and
-        paper, by hand from the data, or a few throwaway lines in the console —
-        ideally before you see the AI's result, so it can't nudge you, but
-        afterwards is fine as long as you work it out independently. Having
-        the code print a count is fine too, whether the AI writes that line or
-        you type it into the console yourself: R computes it. What isn't a
+        So the check stays yours — and it isn't redoing R's work. It's a quick
+        spot-check: do the counts add up to the total? Does one patient you
+        know land where they should? Is the number plausible? Work it out
+        however suits you — pen and paper, or a few throwaway lines in the
+        console — ideally before you see the AI's result, so it can't nudge
+        you.
+
+        Having the code print a count is fine, whether the AI writes that line
+        or you type it into the console yourself: R computes it. What isn't a
         check is the AI *telling* you the result is right.
     - id: helps
       text: "Yes — it helps the AI get the right answer"

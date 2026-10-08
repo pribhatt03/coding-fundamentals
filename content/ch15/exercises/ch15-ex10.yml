@@ -56,11 +56,10 @@ response:
       text: "Each patient's actual readings"
       feedback: |
         Leave them out. The AI needs the *shape* of the data, not the values;
-        the values are what you're protecting. A few made-up rows can stand in
-        — a simple example is often the clearest way to show what you mean —
-        as long as it's still representative. If the real data has a
-        missing value, the made-up rows need one too, or the code won't
-        handle it. Module 16 is about exactly this.
+        the values are what you're protecting. Describe a simple dataset shaped
+        like yours instead — placeholder names are fine — as long as it's still
+        representative. If the real data has a missing value, say so, or the
+        code won't handle it. Module 16 is about exactly this.
     - id: hospital
       text: "Which hospital the data came from"
       feedback: |

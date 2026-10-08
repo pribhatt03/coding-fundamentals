@@ -212,6 +212,18 @@ idea, as long as names are mapped back carefully. Asking the code to print a cou
 it. The AI saying it worked is not a check, and telling it the expected
 answer makes the check no longer independent.
 
+**Multi-select works.** `select: many` shows tick boxes. Ticking a wrong
+option shows its feedback; ticking only right ones but missing some says so
+without saying which. Until module 15 nothing used it, so the renderer had
+quietly drawn pick-one buttons for it.
+
+**The dev server passes grading through to the live site.** Written answers
+can be tested locally with `npm run dev`: requests to `/.netlify/functions/`
+go to the live grader. Set `LIVE_SITE` to point elsewhere.
+
+**A check is a spot-check, not a redo.** Do the counts add up to the total?
+Does one patient you know land where they should? Is the number plausible?
+
 **A grader needs testing like any other check.** After deploying a
 write-prompt exercise, paste in the exemplar (every criterion should pass),
 then the weak original prompt (every criterion should fail). A rubric that

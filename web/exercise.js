@@ -343,7 +343,9 @@ function revealHtml(ex) {
   const correct = r.options?.find((o) => o.correct);
 
   if (r.kind === "choice") {
-    return inline(correct.text) + md(correct.feedback);
+    // Several can be correct when an exercise allows more than one answer.
+    return r.options.filter((o) => o.correct)
+      .map((o) => inline(o.text) + md(o.feedback)).join("");
   }
   if (r.kind === "span") {
     // The answer text lives in parts, not in the option, so show the whole
@@ -366,9 +368,11 @@ function revealHtml(ex) {
 }
 
 function review(opts, chosen) {
+  // `chosen` is one option, or a Set of ids when several could be picked.
+  const isMine = (o) => chosen instanceof Set ? chosen.has(o.id) : o.id === chosen.id;
   return opts.map((o) => {
     const tag = o.correct ? "correct" : "incorrect";
-    const mine = o.id === chosen.id;
+    const mine = isMine(o);
     return `<div class="rev ${tag}${mine ? " you" : ""}">
       <div class="revhead">${tag}${mine ? " — your answer" : ""}</div>
       ${o.text ? (o.text.startsWith("the <code>") || o.text.startsWith("row ") ? `<p>${o.text}</p>` : inline(o.text)) : ""}${md(o.feedback)}</div>`;
@@ -382,9 +386,37 @@ function doChoice(ex, body, show, state, done) {
                                        : [...ex.response.options];
   const opts = [...shuffled.filter((o) => !o.last), ...shuffled.filter((o) => o.last)];
   const nm = `q${++uid}`;
+  const many = ex.response.select === "many";
   body.innerHTML = opts.map((o) =>
-    `<label class="opt"><input type="radio" name="${nm}" value="${o.id}">${inline(o.text)}</label>`
+    `<label class="opt"><input type="${many ? "checkbox" : "radio"}" name="${nm}" value="${o.id}">${inline(o.text)}</label>`
   ).join("") + `<div class="row"><button class="act">Check</button></div>`;
+
+  if (many) {
+    body.querySelector("button").onclick = (e) => {
+      const ids = new Set([...body.querySelectorAll("input:checked")].map((i) => i.value));
+      if (!ids.size) return;
+      state.attempts++;
+      const all = ex.response.options;
+      const wrong = all.filter((o) => ids.has(o.id) && !o.correct);
+      const missed = all.filter((o) => o.correct && !ids.has(o.id));
+      const ok = !wrong.length && !missed.length;
+      events.log("attempt", { ex: ex.id, hash: ex.hash, n: state.attempts,
+                              ok, choice: [...ids].sort().join(",") });
+      if (!ok) {
+        done(false);
+        // Feedback on what they ticked wrongly; if everything ticked is right
+        // but something's missing, say so without saying which.
+        return show(false, wrong.length
+          ? wrong.map((o) => inline(o.text) + md(o.feedback)).join("")
+          : `<p>Everything you ticked is right — but there's at least one more.</p>`);
+      }
+      body.querySelectorAll("input").forEach((i) => (i.disabled = true));
+      e.target.disabled = true;
+      done(true);
+      show(true, review(opts, ids));
+    };
+    return;
+  }
 
   body.querySelector("button").onclick = (e) => {
     const picked = body.querySelector("input:checked");
