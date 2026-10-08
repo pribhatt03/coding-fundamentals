@@ -1,0 +1,83 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch15-ex12
+type: fill-blank
+title: A step you can write yourself
+topic: prompting
+difficulty: 2
+tags: [prompting, incremental, logical, na, sanity-check]
+follows: ch15-ex05
+
+prompt: |
+  Finding the hypertensive patients breaks into small steps. The first:
+  make a column that's TRUE when a patient's systolic is 140 or more, *or*
+  their diastolic is 90 or more.
+
+  A step this small you can write yourself — no AI needed. `|` means *or*.
+  Write it, press **Run**, then look at the new column with
+  `visits$high_bp`.
+
+hint: |
+  A comparison on a whole column gives one TRUE or FALSE per patient. Make
+  one for `sbp` and one for `dbp`, and join them with `|`.
+
+setup: |
+  visits <- data.frame(
+    id      = c(1, 2, 3, 4, 5, 6),
+    age     = c(58, 71, 65, 49, 80, 66),
+    sbp     = c(128, 152, NA, 141, 135, 162),
+    dbp     = c(82, 94, 88, 91, 76, 99),
+    on_meds = c(FALSE, TRUE, TRUE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: r-code
+  starter: |
+    visits$high_bp <- ______
+  solution:
+    code: |
+      visits$high_bp <- visits$sbp >= 140 | visits$dbp >= 90
+    why: |
+      Look at the result: `FALSE TRUE NA TRUE FALSE TRUE`. Patient 3 is `NA`,
+      because their systolic is missing. One small step, one look, and the
+      missing value has shown itself — before it could hide inside a count
+      later on.
+
+      That's why small steps pay off. Each is easy to check, and many are
+      easy to write yourself. The next step — keeping the TRUE rows and
+      counting them — is one line too, and now you know to decide what
+      happens to patient 3 first.
+
+      Save the AI for the steps you can't write. Asking it for one you can
+      is usually slower, and you understand your own code better than its.
+  checks:
+    - expr: identical(visits$high_bp, c(FALSE, TRUE, NA, TRUE, FALSE, TRUE))
+      equals: [true]
+      on_fail: |
+        Not quite yet. Run your line and look at `visits$high_bp` — you should
+        see one TRUE or FALSE per patient.
+  misconceptions:
+    - id: used-and
+      match:
+        on: result
+        expr: identical(visits$high_bp, c(FALSE, TRUE, FALSE, TRUE, FALSE, TRUE))
+        equals: [true]
+      feedback: |
+        That's `&`, *and* — both numbers high. The task says *either*, which is
+        `|`. In this data the two happen to agree for every patient except
+        patient 3, which is exactly what makes the slip so easy to miss.
+    - id: not-stored
+      match:
+        on: result
+        expr: is.null(visits$high_bp)
+        equals: [true]
+      feedback: |
+        Store it as a column in the data frame: `visits$high_bp <- …`.
+    - id: labels
+      match:
+        on: result
+        expr: is.character(visits$high_bp)
+        equals: [true]
+      feedback: |
+        TRUE or FALSE is all this step needs — no labels. A comparison gives
+        you that directly.

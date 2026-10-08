@@ -41,7 +41,12 @@ response:
         and what to do with a missing reading. Prompt B answers each of those.
 
         It isn't that longer is better. Every sentence in B answers a question
-        the AI would otherwise answer for you, silently. And the last request
+        the AI would otherwise answer for you, silently.
+
+        In practice, you'd rarely write B first time. You'd know about the
+        missing value only after looking at the data, or after a first attempt
+        turned it up. That's fine — later in this module you'll see how that
+        loop goes. And the last request
         makes the result easy to check: R prints the count, and you compare it
         with a count you've worked out yourself.
     - id: a

@@ -6,7 +6,7 @@ title: A whole script at once
 topic: prompting
 difficulty: 2
 tags: [prompting, ai, incremental]
-follows: ch15-ex05
+follows: ch15-ex12
 
 prompt: |
   An AI hands you a 40-line script in five steps: read the data, clean it,

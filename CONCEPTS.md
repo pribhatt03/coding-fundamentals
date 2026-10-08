@@ -91,10 +91,17 @@ reference is an extra, never a substitute.
 | Concept | Intro | Returns in | n | Needs to return by |
 |---|---|---|---|---|
 | The AI can't see your data; it guesses what it isn't told | ch15-ex01 | ch15-ex02, ex03, ex08 | 4 | ch16 |
-| Have, want, check | ch15-ex03 | ch15-ex08 | 2 | ch17 |
+| Have and want go in the prompt; the check is yours | ch15-ex03 | ch15-ex09, ex08 | 3 | ch17 |
+| Don't give the AI your expected answer — keep the check independent | ch15-ex09 | — | **1** | **ch18** |
+| Prompting is a loop: ask, run, check, discover, say exactly what you found | ch15-ex11 | — | **1** | **ch17** |
+| `table()` leaves missing values out of its counts, silently | ch15-ex11 | — | 1 | thread: Missing values behave differently by tool |
+| Include what changes the code, nothing that doesn't | ch15-ex10 | — | **1** | **ch16** |
+| A simplified example must stay representative | ch15-ex10 (feedback) | — | 1 | **ch16** |
 | Clinical decisions belong in the prompt (130/80 vs 140/90) | ch15-ex02 | ch15-ex08 | 2 | ch18 |
-| Ask what it assumed, not "is this correct?" | ch15-ex04 | ch15-ex08 (rubric) | 2 | ch17 |
+| Ask what it assumed — a place to look, not a guarantee | ch15-ex04 | ch15-ex08 (exemplar) | 2 | ch17 |
 | Test boundaries: `cut()` puts 65 in "under 65" | ch15-ex05 | — | **1** | **ch18** |
+| Break a task into steps: each small enough to check, often small enough to write yourself | ch15-ex12 | ch15-ex06 | 2 | ch18 |
+| Save the AI for the steps you can't write | ch15-ex12 (why) | — | 1 | ch17 |
 | How much you ask for and how often you check are separate | ch15-ex06 | ch15-ex07 | 2 | ch18 |
 | When a whole script is fine | ch15-ex07 | — | 1 | ch18 |
 

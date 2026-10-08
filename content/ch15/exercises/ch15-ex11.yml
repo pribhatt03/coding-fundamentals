@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch15-ex11
+type: fix-the-llm
+title: Something you didn't know to mention
+topic: prompting
+difficulty: 3
+tags: [prompting, ai, na, sanity-check, critical-appraisal]
+follows: ch15-ex09
+
+prompt: |
+  Real prompting is rarely right first time. You asked an AI to label each
+  patient "high" or "not high" at 140/90, either number counting. It wrote:
+
+  ```r
+  visits$bp_status <- ifelse(visits$sbp >= 140 | visits$dbp >= 90,
+                             "high", "not high")
+  table(visits$bp_status)
+  ```
+
+  `table()` counts how many times each label appears. It printed:
+
+  ```
+      high not high
+         3        2
+  ```
+
+  That's five patients. There are six. Run `summary(visits)` in the box above
+  to find out why — it's something you didn't know when you wrote the prompt.
+
+  What's the best next message to the AI?
+
+hint: |
+  Look at the `NA's` line for `sbp`. Then ask: what does the AI need to know,
+  and what does it need you to decide?
+
+setup: |
+  visits <- data.frame(
+    id      = c(1, 2, 3, 4, 5, 6),
+    age     = c(58, 71, 65, 49, 80, 66),
+    sbp     = c(128, 152, NA, 141, 135, 162),
+    dbp     = c(82, 94, 88, 91, 76, 99),
+    on_meds = c(FALSE, TRUE, TRUE, FALSE, TRUE, TRUE)
+  )
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: specific
+      text: '"One sbp value is missing, so that patient got no label. When sbp is missing, decide using dbp alone."'
+      correct: true
+      feedback: |
+        Right. It says what you found and what you've decided. Patient 3's
+        systolic is missing, so the comparison came out as `NA` and they got no
+        label at all — and `table()` quietly leaves missing labels out of its
+        count. The only clue was that three plus two isn't six.
+
+        This is how prompting usually goes: ask, run, check, discover
+        something, and say exactly what you found. You couldn't have mentioned
+        the missing value up front without looking first — and looking first,
+        with `str()` or `summary()`, is often worth doing. But some things only
+        turn up once you check, and that's a normal part of the work, not a
+        failure.
+    - id: fixit
+      text: '"The count is wrong. Please fix it."'
+      feedback: |
+        The AI doesn't know what you found, so it has to guess what "wrong"
+        means — and it might change something that was fine. Say what you
+        discovered — a missing systolic — and what should happen to it.
+    - id: paste
+      text: "Paste the data into the chat so the AI can see the problem for itself"
+      feedback: |
+        That's patient data, and it shouldn't go into a prompt. You don't need
+        to share it: you've already found the problem with `summary()`. Tell the
+        AI what you found, in words.
+    - id: accept
+      text: "Accept the result — one patient won't change much"
+      feedback: |
+        That patient has no label at all, so any count or percentage that uses
+        this column is quietly based on five patients, not six. And the
+        decision about what to do with them is a clinical one — it should be
+        yours.
