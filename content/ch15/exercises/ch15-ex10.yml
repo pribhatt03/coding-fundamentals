@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch15-ex10
+type: predict
+title: What belongs in the prompt
+topic: prompting
+difficulty: 2
+tags: [prompting, ai, privacy]
+follows: ch15-ex02
+
+prompt: |
+  You're asking an AI to label each patient's blood pressure. The less you
+  share, the less can leak — about your patients, and about an idea you
+  haven't published yet. But leave out something the code depends on, and
+  the AI guesses.
+
+  Which of these belong in the prompt? Choose all that apply.
+
+hint: |
+  For each one, ask: would the code be different without it?
+
+response:
+  kind: choice
+  select: many
+  shuffle: true
+  options:
+    - id: columns
+      text: "The names of the blood pressure columns, and that they hold numbers in mmHg"
+      correct: true
+      feedback: |
+        Belongs. The code can't be written without the names, and numbers need
+        different code from text.
+
+        If your real names would give your idea away, placeholders work just as
+        well. Just remember you're now showing a stand-in: when the code comes
+        back, map each name back carefully, because a mix-up there is a silent
+        error of its own.
+    - id: missing
+      text: "That one systolic value is missing"
+      correct: true
+      feedback: |
+        Belongs. A missing value changes what the code has to do, and it's
+        exactly the kind of thing an AI won't assume.
+    - id: threshold
+      text: "The threshold you want to use"
+      correct: true
+      feedback: |
+        Belongs. It's a clinical decision, and if you leave it out, the AI
+        makes it for you.
+    - id: aim
+      text: "What your study is trying to show"
+      feedback: |
+        Leave it out. It doesn't change a line of the code — and it's the part
+        of your work someone else could take.
+    - id: values
+      text: "Each patient's actual readings"
+      feedback: |
+        Leave them out. The AI needs the *shape* of the data, not the values;
+        the values are what you're protecting. A few made-up rows can stand in
+        — a simple example is often the clearest way to show what you mean —
+        as long as it's still representative. If the real data has a
+        missing value, the made-up rows need one too, or the code won't
+        handle it. Module 16 is about exactly this.
+    - id: hospital
+      text: "Which hospital the data came from"
+      feedback: |
+        Leave it out. It changes nothing in the code, and it narrows down
+        whose data this is.

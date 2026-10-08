@@ -6,7 +6,7 @@ title: Write the prompt
 topic: prompting
 difficulty: 2
 tags: [prompting, ai, writing]
-follows: ch15-ex02
+follows: ch15-ex10
 
 prompt: |
   You want the average systolic pressure for patients on medication, and for
@@ -21,13 +21,16 @@ prompt: |
    $ on_meds: logi  FALSE TRUE TRUE FALSE TRUE TRUE
   ```
 
-  Write the prompt you'd give an AI. Three things make a prompt work:
+  Write the prompt you'd give an AI. Two things go in it:
 
   - **Have** — what the data looks like: names, what the values are, any
     quirks
   - **Want** — exactly what you need back, including any decisions only you
     can make
-  - **Check** — how you'll know the answer is right
+
+  The third part, **Check**, is yours: how you'll know the answer is right.
+  It helps to ask the code to *print* things you can check — R computes
+  those, not the AI.
 
 hint: |
   Which columns does the task need? What kind of values are in each? Is
@@ -41,8 +44,8 @@ response:
     pressure in mmHg, as numbers, with one missing value. on_meds is TRUE or
     FALSE. Write R code that gives the mean sbp for patients with on_meds
     TRUE, and the mean for patients with on_meds FALSE. Leave the missing
-    value out, and also tell me how many values each mean is based on, so I
-    can check it against the data.
+    value out, and have the code also print how many values each mean is
+    based on.
   rubric:
     - id: columns
       criterion: "Does the prompt name every column the task needs? (It needs a systolic pressure column, plus a column saying whether each patient is on medication.)"
@@ -64,8 +67,9 @@ response:
         missing value can turn an entire average into `NA` or vanish without
         a word.
     - id: check
-      criterion: "Does the prompt include a way to check the result — such as asking how many values each average is based on, or stating an expected result?"
+      criterion: "Does the prompt ask the code to print something the writer could check against the data themselves — such as how many values each average is based on?"
       on_fail: |
-        **Check:** give yourself a way to know it worked. Asking how many
-        values each average is based on is a good one — you can count those
-        yourself in the data.
+        **Check:** ask the code to print something you can verify yourself.
+        How many values each average is based on is a good one — R counts
+        them, and you can count them in the data. (Asking the AI to *tell* you
+        it worked isn't a check: it hasn't run anything on your data.)

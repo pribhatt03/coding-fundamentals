@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=../../../schema/exercise.schema.json
+schema_version: 1
+id: ch15-ex09
+type: predict
+title: Telling it the answer
+topic: prompting
+difficulty: 2
+tags: [prompting, ai, sanity-check, critical-appraisal]
+follows: ch15-ex03
+
+prompt: |
+  You've counted by hand: three patients should come out as high. Should you
+  put that in your prompt — *"I expect three patients"*?
+
+hint: |
+  A check works because it's independent of the thing it checks. Would it
+  still be?
+
+response:
+  kind: choice
+  select: one
+  shuffle: true
+  options:
+    - id: keep
+      text: "No — keep it to yourself, and compare it with what the code prints"
+      correct: true
+      feedback: |
+        Right. A check only works if it's independent of what it's checking.
+        If the AI knows the answer you expect, it may write code that reaches
+        that number rather than the right one — and then a match tells you
+        nothing.
+
+        So the check stays yours. Work it out however suits you — pen and
+        paper, by hand from the data, or a few throwaway lines in the console —
+        ideally before you see the AI's result, so it can't nudge you, but
+        afterwards is fine as long as you work it out independently. Having
+        the code print a count is fine too, whether the AI writes that line or
+        you type it into the console yourself: R computes it. What isn't a
+        check is the AI *telling* you the result is right.
+    - id: helps
+      text: "Yes — it helps the AI get the right answer"
+      feedback: |
+        It helps the AI get *your* answer, which isn't the same thing. If your
+        count is wrong, or the AI bends the code to match it, the two agree
+        and nothing looks amiss. Keep the expected answer to yourself and
+        compare afterwards.
+    - id: selfcheck
+      text: "Yes — then the AI can check its own work"
+      feedback: |
+        An AI writing code in a chat hasn't run it on your data. When it says
+        "this gives three", it's predicting, not checking — and it can be
+        confidently wrong. Even an AI tool that runs code can't see your real
+        data, so it would be checking against its own guess of what your data
+        looks like.

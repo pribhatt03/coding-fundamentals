@@ -20,7 +20,7 @@ prompt: |
   > I have a data frame called `visits`. `sbp` and `dbp` are blood pressures
   > in mmHg, stored as numbers; `sbp` has one missing value. Write R code
   > that keeps patients whose systolic is 140 or more, or whose diastolic is
-  > 90 or more. I expect three patients.
+  > 90 or more, and prints how many patients were kept.
 
 hint: |
   The AI can't see your data, and it can't read your mind. What would it
@@ -41,8 +41,9 @@ response:
         and what to do with a missing reading. Prompt B answers each of those.
 
         It isn't that longer is better. Every sentence in B answers a question
-        the AI would otherwise answer for you, silently. And the last sentence
-        gives you a way to check the result.
+        the AI would otherwise answer for you, silently. And the last request
+        makes the result easy to check: R prints the count, and you compare it
+        with a count you've worked out yourself.
     - id: a
       text: "A — a short prompt leaves the AI free to choose the best approach"
       feedback: |

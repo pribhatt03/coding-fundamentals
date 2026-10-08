@@ -26,7 +26,7 @@ prompt: |
    $ on_meds: logi  FALSE TRUE TRUE FALSE TRUE TRUE
   ```
 
-  Use **Have**, **Want** and **Check**.
+  Use **Have** and **Want** — and ask for output you can check yourself.
 
 hint: |
   Which decisions did the original leave to the AI? There are at least three
@@ -39,8 +39,8 @@ response:
     blood pressure in mmHg, stored as numbers. sbp has one missing value. Add
     a column called bp_status that says "high" if sbp is 140 or more OR dbp
     is 90 or more, and "not high" otherwise. If sbp is missing, decide using
-    dbp alone. Then tell me how many patients are "high" — I expect three —
-    and list any assumptions you made.
+    dbp alone. Have the code print how many patients are labelled "high",
+    and list any decisions you made that I didn't specify.
   rubric:
     - id: columns
       criterion: "Does the prompt name the blood pressure columns the code should use?"
@@ -65,7 +65,8 @@ response:
         otherwise the AI decides, and that patient may quietly get the wrong
         label, or none.
     - id: check
-      criterion: "Does the prompt include a way to check the result, such as an expected count of patients or a request to list assumptions?"
+      criterion: "Does the prompt ask the code to print something the writer could check themselves, such as how many patients are labelled high?"
       on_fail: |
-        **Check:** add a way to know it worked — the number of "high" patients
-        you expect, or a request to list the assumptions it made.
+        **Check:** ask the code to print something you can verify — how many
+        patients end up "high" is a good one. Then compare it with your own
+        count. Keep the number you expect to yourself.

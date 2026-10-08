@@ -6,7 +6,7 @@ title: The best follow-up
 topic: prompting
 difficulty: 2
 tags: [prompting, ai, critical-appraisal]
-follows: ch15-ex03
+follows: ch15-ex09
 
 prompt: |
   The AI hands you code. Which follow-up is most likely to show you what
@@ -29,6 +29,11 @@ response:
         AI filled — a threshold, how missing values are handled, which rows
         are kept. Once they're listed, you can check each against what you
         meant.
+
+        But treat the list as a starting point, not a guarantee. An AI can't
+        list a decision it doesn't realise it made — `cut()`'s boundary, in the
+        next exercise, is a good example. The list tells you where to look;
+        testing tells you what's true.
     - id: correct
       text: '"Is this code correct?"'
       feedback: |

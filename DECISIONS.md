@@ -204,6 +204,14 @@ the answer *is* a prompt ("Write R code that…"). It goes to the grader inside
 `<student_answer>` tags, with an explicit instruction that it is text to
 judge, never instructions to act on. Criteria are judged in parallel.
 
+**The check is the student's, not the AI's.** Have and want go in the
+prompt. The check is worked out independently — pen and paper, by hand, or
+in the console — ideally before seeing the AI's result, so it can't anchor
+you, though afterwards is fine. Placeholder names are fine for protecting an
+idea, as long as names are mapped back carefully. Asking the code to print a count is fine — R computes
+it. The AI saying it worked is not a check, and telling it the expected
+answer makes the check no longer independent.
+
 **A grader needs testing like any other check.** After deploying a
 write-prompt exercise, paste in the exemplar (every criterion should pass),
 then the weak original prompt (every criterion should fail). A rubric that
