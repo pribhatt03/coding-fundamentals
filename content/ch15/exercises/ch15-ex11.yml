@@ -25,14 +25,21 @@ prompt: |
          3        2
   ```
 
-  That's five patients. There are six. Run `summary(visits)` in the box above
-  to find out why — it's something you didn't know when you wrote the prompt.
+  That's five patients. There are six. Find out why — it's something you
+  didn't know when you wrote the prompt. Two ways, both in the box above:
+
+  - Run `summary(visits)`. Under each column, a line labelled `NA's` counts
+    the missing values.
+  - Or check the logic one piece at a time: run `visits$sbp >= 140`, then
+    `visits$dbp >= 90`, then both joined with `|`. With a big dataset, wrap
+    each in `unique()` — it shows each different answer once, so you'd see
+    `FALSE TRUE NA` instead of thousands of values.
 
   What's the best next message to the AI?
 
 hint: |
-  Look at the `NA's` line for `sbp`. Then ask: what does the AI need to know,
-  and what does it need you to decide?
+  One patient's comparison doesn't come out as TRUE or FALSE. Then ask: what
+  does the AI need to know, and what does it need you to decide?
 
 setup: |
   visits <- data.frame(

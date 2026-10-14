@@ -231,6 +231,25 @@
     2  54 118
   introduced: ch12
 
+- name: unique
+  usage: unique(x)
+  does: Shows each different value once. A fast check when you know which values should be there — a TRUE/FALSE column should give only TRUE and FALSE.
+  example: unique(c(1, 0, 0, 1, 2, 0))
+  result: "[1] 1 0 2"
+  introduced: ch15
+  note: Missing values show up as NA, so it's also a quick way to spot them.
+
+- name: table
+  usage: table(x)
+  does: Counts how many times each value appears.
+  example: table(c("high", "not high", "high"))
+  result: |2-
+
+        high not high 
+           2        1 
+  introduced: ch15
+  note: Leaves missing values out of its counts, silently — check the counts add up to the total you expect.
+
 - name: sqrt
   usage: sqrt(x)
   does: Square root.

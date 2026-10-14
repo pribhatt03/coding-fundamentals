@@ -94,6 +94,8 @@ reference is an extra, never a substitute.
 | Have and want go in the prompt; the check is yours | ch15-ex03 | ch15-ex09, ex08 | 3 | ch17 |
 | Don't give the AI your expected answer — keep the check independent | ch15-ex09 | — | **1** | **ch18** |
 | Prompting is a loop: ask, run, check, discover, say exactly what you found | ch15-ex11 | — | **1** | **ch17** |
+| The *console*: type a line, see the answer, keep nothing | ch14 prose, ch15 prose | ch15-ex06 | 3 | ch19 |
+| `unique()` shows each different value once — a fast check | ch15-ex11 | — | **1** | **ch18** |
 | `table()` leaves missing values out of its counts, silently | ch15-ex11 | — | 1 | thread: Missing values behave differently by tool |
 | Include what changes the code, nothing that doesn't | ch15-ex10 | — | **1** | **ch16** |
 | A simplified example must stay representative | ch15-ex10 (feedback) | — | 1 | **ch16** |
@@ -436,6 +438,12 @@ of a sanity check: look at the top rows, then run quick lines in the console
 script. Named at the end of module 14; taught properly in module 19, when
 RStudio's console and script sit side by side and "run it here, keep it
 there" becomes a real distinction.
+
+**Planned for module 18: `unique()` as a check.** A dedicated exercise on
+the case where you know what the values *should* be: a clinical variable
+coded 1 or 0, where `unique()` giving `1 0 2` shows a stray 2 at once. Also
+checking a comparison piece by piece, wrapped in `unique()` on big data —
+introduced in ch15-ex11.
 
 **Planned: `head()` for sanity checks on large data.** Pointless on five
 rows, so it waits until data is bigger than a screen — module 20, when

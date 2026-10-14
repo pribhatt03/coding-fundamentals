@@ -50,6 +50,12 @@ response:
 
       Save the AI for the steps you can't write. Asking it for one you can
       is usually slower, and you understand your own code better than its.
+
+      Skills fade when you don't use them, and that's normal. If you've
+      forgotten how to do a small step, it's fine to ask an AI to remind you
+      — "how do I keep the rows where a column is TRUE?" — then write it
+      yourself. Each time you do, it sticks a little better, until it's
+      second nature.
   checks:
     - expr: identical(visits$high_bp, c(FALSE, TRUE, NA, TRUE, FALSE, TRUE))
       equals: [true]

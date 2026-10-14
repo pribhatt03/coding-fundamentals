@@ -9,8 +9,14 @@ tags: [prompting, ai, sanity-check, critical-appraisal]
 follows: ch15-ex03
 
 prompt: |
-  You've counted by hand: three patients should come out as high. Should you
-  put that in your prompt — *"I expect three patients"*?
+  Before asking an AI to label each patient's blood pressure, you've thought
+  of two quick checks — neither of them redoing the work:
+
+  - Patient 2, at 152/94, must come out as "high".
+  - The labels should add up to all six patients.
+
+  Should you put the first one in your prompt — *"Patient 2 should come out
+  as high"*?
 
 hint: |
   A check works because it's independent of the thing it checks. Would it
@@ -27,7 +33,7 @@ response:
       feedback: |
         Right. A check only works if it's independent of what it's checking.
         If the AI knows the answer you expect, it may write code that reaches
-        that number rather than the right one — and then a match tells you
+        that answer rather than the right one — and then a match tells you
         nothing.
 
         So the check stays yours — and it isn't redoing R's work. It's a quick
@@ -43,10 +49,10 @@ response:
     - id: helps
       text: "Yes — it helps the AI get the right answer"
       feedback: |
-        It helps the AI get *your* answer, which isn't the same thing. If your
-        count is wrong, or the AI bends the code to match it, the two agree
-        and nothing looks amiss. Keep the expected answer to yourself and
-        compare afterwards.
+        It helps the AI get *your* answer, which isn't the same thing. If the
+        AI bends the code to match it, patient 2 comes out right and nothing
+        looks amiss — even if everyone else is wrong. Keep the checks to
+        yourself and look afterwards.
     - id: selfcheck
       text: "Yes — then the AI can check its own work"
       feedback: |

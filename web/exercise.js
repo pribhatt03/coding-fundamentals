@@ -367,6 +367,10 @@ function revealHtml(ex) {
     `<p>Check yours against these:</p><ul>${r.rubric.map((c) => `<li>${esc(c.criterion)}</li>`).join("")}</ul>`;
 }
 
+// Used sparingly, where the wrong answers teach as much as the right one.
+const READ_ALL = `<p class="readall">Worth reading every option below — here, the wrong
+  answers teach as much as the right one.</p>`;
+
 function review(opts, chosen) {
   // `chosen` is one option, or a Set of ids when several could be picked.
   const isMine = (o) => chosen instanceof Set ? chosen.has(o.id) : o.id === chosen.id;
@@ -413,7 +417,7 @@ function doChoice(ex, body, show, state, done) {
       body.querySelectorAll("input").forEach((i) => (i.disabled = true));
       e.target.disabled = true;
       done(true);
-      show(true, review(opts, ids));
+      show(true, (ex.response.read_all ? READ_ALL : "") + review(opts, ids));
     };
     return;
   }
@@ -431,7 +435,7 @@ function doChoice(ex, body, show, state, done) {
     body.querySelectorAll("input").forEach((i) => (i.disabled = true));
     e.target.disabled = true;
     done(true);
-    show(true, review(opts, chosen));
+    show(true, (ex.response.read_all ? READ_ALL : "") + review(opts, chosen));
   };
 }
 

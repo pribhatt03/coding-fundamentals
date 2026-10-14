@@ -645,3 +645,6 @@ body.locked { overflow: hidden; }
    so it's set off with a rule rather than a code box. */
 .exemplar { border-left: 3px solid var(--rule); padding: .1rem 0 .1rem 1rem; margin: .6rem 0; color: var(--ink-soft, inherit); }
 .exemplar p:last-child { margin-bottom: 0; }
+
+/* "Worth reading every option" — a quiet nudge above the review. */
+.readall { font-size: .82rem; font-style: italic; margin: 0 0 .6rem; }

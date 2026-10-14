@@ -23,6 +23,7 @@ response:
   kind: choice
   select: many
   shuffle: true
+  read_all: true
   options:
     - id: columns
       text: "The names of the blood pressure columns, and that they hold numbers in mmHg"

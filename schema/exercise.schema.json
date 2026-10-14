@@ -165,6 +165,11 @@
               "feedback"
             ]
           }
+        },
+        "read_all": {
+          "type": "boolean",
+          "default": false,
+          "description": "After a correct answer, say the other options are worth reading too. Use sparingly \u2014 only where the wrong answers teach as much as the right one."
         }
       }
     },

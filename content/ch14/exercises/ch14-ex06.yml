@@ -26,6 +26,7 @@ response:
   kind: choice
   select: one
   shuffle: true
+  read_all: true
   options:
     - id: right
       text: "`labs$creat[labs$creat == 0] <- NA`"

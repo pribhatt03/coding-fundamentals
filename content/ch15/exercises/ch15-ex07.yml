@@ -19,13 +19,15 @@ response:
   kind: choice
   select: one
   shuffle: true
+  read_all: true
   options:
     - id: routine
-      text: "Remaking a kind of plot you've made many times before"
+      text: "Adding a title or axis labels to a plot you've already made and checked"
       correct: true
       feedback: |
-        Right. You know what it should look like, so a mistake shows at a
-        glance, and little rides on it. Checking step by step pays off when
+        Right. The data underneath has already been checked, and the change is
+        one you can see — a wrong title or label shows at a glance, and little
+        rides on it. Checking step by step pays off when
         you *can't* tell a wrong answer from a right one by looking — new data,
         new tools, numbers that matter.
     - id: newdata

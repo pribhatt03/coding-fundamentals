@@ -9,8 +9,15 @@ tags: [prompting, ai, incremental]
 follows: ch15-ex12
 
 prompt: |
-  An AI hands you a 40-line script in five steps: read the data, clean it,
-  add a column, filter it, and summarise it. What's the best way to use it?
+  An AI hands you a 40-line script that does five things, in order: read the
+  data, clean it, add a column, filter it, and summarise it.
+
+  You don't have to run a script all at once. You can run the first few
+  lines, look at what they made, then run the next few. In this course,
+  that means putting one step into a code box. In RStudio, you can send
+  lines from a script to the *console* one at a time — module 19 shows how.
+
+  What's the best way to use it?
 
 hint: |
   If the final number is wrong, how would you find out which step went wrong?
