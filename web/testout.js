@@ -34,6 +34,47 @@ async function main_() {
   document.title = `Test out of Part ${bank.part}`;
   document.getElementById("back").href = firstOf(part) ? `./chapter.html?ch=${firstOf(part)}` : "./index.html";
 
+  // Two side panels — the language sheet, and the data if there is any — so
+  // both stay in reach while answering. Only one is open at a time.
+  const panels = {};
+  function makePanel(id, title, sub, html) {
+    const el = document.createElement("aside");
+    el.className = "sidepanel wide";
+    el.hidden = true;
+    el.setAttribute("aria-label", title);
+    el.innerHTML = `<div class="panelhead"><header><h2>${esc(title)}</h2>
+        <button class="linky pclose" aria-label="Close">Close</button></header>
+        <p class="fncount">${esc(sub)}</p></div>
+      <div class="panelbody">${html}</div>`;
+    el.querySelector(".pclose").onclick = () => closePanel(id);
+    document.body.append(el);
+    panels[id] = el;
+  }
+  function openPanel(id) {
+    for (const k of Object.keys(panels)) if (k !== id) closePanel(k);
+    const el = panels[id]; if (!el) return;
+    el.hidden = false;
+    requestAnimationFrame(() => el.classList.add("open"));
+    document.body.classList.add("panel-open");
+    document.querySelectorAll(".tbtn").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.panel === id)));
+  }
+  function closePanel(id) {
+    const el = panels[id]; if (!el || el.hidden) return;
+    el.classList.remove("open");
+    setTimeout(() => { el.hidden = true; }, 180);
+    if (!Object.values(panels).some((p) => p !== el && !p.hidden)) document.body.classList.remove("panel-open");
+    document.querySelectorAll(".tbtn").forEach((b) => { if (b.dataset.panel === id) b.setAttribute("aria-pressed", "false"); });
+  }
+  makePanel("crib", bank.crib_title, "The R behaviours the questions rely on.", md(bank.crib));
+  if (bank.context) makePanel("data", "The data", "What the questions refer to.", md(bank.context));
+  const bar = document.getElementById("tools");
+  bar.innerHTML = `<button class="linky tbtn" data-panel="crib" aria-pressed="false">Language sheet</button>
+    ${bank.context ? `<button class="linky tbtn" data-panel="data" aria-pressed="false">The data</button>` : ""}`;
+  bar.querySelectorAll(".tbtn").forEach((b) => {
+    b.onclick = () => (panels[b.dataset.panel].hidden ? openPanel(b.dataset.panel) : closePanel(b.dataset.panel));
+  });
+  addEventListener("keydown", (e) => { if (e.key === "Escape") Object.keys(panels).forEach(closePanel); });
+
   // Where the learner is with this test, kept in their browser.
   const prior = progress.get(key);
 
@@ -46,6 +87,8 @@ async function main_() {
           ? ` <strong>You've already passed this test.</strong>` : ""}</p>
       <section class="crib">
         <h2>${esc(bank.crib_title)}</h2>
+        <p class="skipnote">Feel free to skip this for now. It's always one click away under
+          <strong>Language sheet</strong>, at the top of the page, while you answer.</p>
         ${md(bank.crib)}
       </section>
       ${bank.context ? `<section class="context"><h2>The data</h2>${md(bank.context)}</section>` : ""}
@@ -60,8 +103,10 @@ async function main_() {
     main.innerHTML = `
       <h1>Test out of Part ${esc(bank.part)}</h1>
       <p class="lead" id="count">0 of ${bank.items_total} answered</p>
-      ${bank.context ? `<section class="context"><h2>The data</h2>${md(bank.context)}</section>` : ""}
+      ${bank.context ? `<p class="sub">The data is under <strong>The data</strong>, at the top of the page.</p>` : ""}
       <div id="items"></div>`;
+    // On a wide screen the data panel sits beside the questions, so open it.
+    if (bank.context && matchMedia("(min-width: 1100px)").matches) openPanel("data");
     const list = main.querySelector("#items");
 
     bank.items.forEach((it, i) => {

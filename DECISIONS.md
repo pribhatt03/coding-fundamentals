@@ -256,6 +256,18 @@ modules assumed the learner had seen them, and some gave the answer away
 of the table — appears on the start screen and above the questions, so it
 stays in view while answering.
 
+**The sheet and the data are side panels during a test.** A bar at the top
+holds "Language sheet" and "The data", styled like the course's Data and
+Functions panels. The sheet opens with a note to skip it for now and come
+back while answering. On a wide screen the data panel opens by itself and
+sits beside the questions, so the table stays in view while scrolling; on a
+phone it waits to be tapped. Printouts in a panel are sized to fit its width.
+
+**Code inside blocks keeps its size.** The inline-code rule matched code
+inside blocks in prompts and feedback too, shrinking it a second time and
+tinting each line — in every module, not just the tests. A stronger reset
+now keeps a block's text at the block's size.
+
 **Every theme has its own link colour,** each at least 5.5:1 against the
 page. The browser default was under 2:1 on the night theme.
 

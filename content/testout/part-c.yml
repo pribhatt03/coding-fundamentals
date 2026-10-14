@@ -1,0 +1,404 @@
+# Test-out for Part C (Reading what you get back). Modules 10–12.
+#
+# Same rules as Parts A and B. Every answer was checked by running it in R,
+# with dplyr 1.1.4 for the tidyverse questions.
+
+part: C
+title: Test out of Part C
+pass_mark: 10          # out of 12. Chance of 10+ by guessing: about 1 in 26,000.
+items_total: 12
+
+crib_title: Coming from another language?
+crib: |
+  These are the R behaviours the questions rely on.
+
+  - **A list** holds named pieces of any size and type. `x$name` takes one
+    piece out, using the name exactly as written. A name that isn't there
+    quietly gives `NULL` — nothing — with no error. `x[["name"]]` does the
+    same, and inside the double brackets a variable holding a name is looked
+    up.
+  - **`t.test(x, y)`** compares two groups and returns a list. Its printout
+    labels the groups `x` and `y`, by the order you gave them, not by your
+    names. It leaves missing values out without saying so.
+  - **Scientific notation**: `5e-04` means 5 × 10⁻⁴.
+  - **`for (v in values) { ... }`** runs the code in the braces once for each
+    value. Inside a loop, results aren't shown unless something prints them.
+  - **`if (condition) { ... }`** needs exactly one TRUE or FALSE. Giving it
+    several values, or `NA`, is an error.
+  - **Packages** add functions. Install one once per computer, with
+    `install.packages("name")`; load it in every new session, with
+    `library(name)`.
+  - **dplyr**: `filter(df, condition)` keeps rows where the condition is TRUE
+    and drops rows where it's `NA`. Inside its functions, column names are
+    written on their own. `mutate()` and `filter()` return a new data frame
+    and never change the one you gave them. `select()` keeps the columns you
+    name.
+  - **`|>`**, the pipe, hands what's on its left to the function on its
+    right, as the first argument. Read it as *and then*.
+
+context: |
+  Questions 1–4 use this t-test result, stored as `result`:
+
+  ```
+  drug    <- c(128, 134, 121, 139, 125, 131, 127, 136)
+  placebo <- c(142, 138, 149, 135, 144, 151, 140, 146)
+  result  <- t.test(drug, placebo)
+  ```
+
+  ```
+          Welch Two Sample t-test
+
+  data:  drug and placebo
+  t = -4.5272, df = 13.874, p-value = 0.0004844
+  alternative hypothesis: true difference in means is not equal to 0
+  95 percent confidence interval:
+   -19.164014  -6.835986
+  sample estimates:
+  mean of x mean of y 
+    130.125   143.125 
+  ```
+
+  Questions 9–12 use this data frame, `patients`:
+
+  ```
+    age sbp discharged
+  1  67 142       TRUE
+  2  54 118      FALSE
+  3  71  NA      FALSE
+  4  48 131       TRUE
+  5  62 156       TRUE
+  ```
+
+items:
+
+  - id: testC-01
+    module: ch10
+    title: Taking out the p-value
+    prompt: |
+      Which line gives just the p-value from `result`?
+    options:
+      - id: a
+        text: "`result$p.value`"
+        correct: true
+        feedback: |
+          Right. `result` is a list, and `$` takes out one piece by its exact
+          name: `p.value`.
+      - id: b
+        text: "`result$p`"
+        feedback: |
+          A shortened name is risky. Here `p` could mean `p.value` or
+          `parameter`, so R gives `NULL` — nothing — without an error. Write
+          the full name.
+      - id: c
+        text: '`result$"p-value"`'
+        feedback: |
+          The printout says "p-value", but the piece inside the list is named
+          `p.value`, with a full stop. A name that isn't there gives `NULL`.
+      - id: d
+        text: "`result[1]`"
+        feedback: |
+          That takes the first piece of the list, which is the t statistic, not
+          the p-value. Use the piece's name.
+
+  - id: testC-02
+    module: ch10
+    title: Which group is which
+    prompt: |
+      The printout ends with `mean of x` 130.125 and `mean of y` 143.125. Which
+      group had the mean of 130.125?
+    options:
+      - id: a
+        text: "The drug group"
+        correct: true
+        feedback: |
+          Right. `x` and `y` are `t.test()`'s first two arguments, and `drug`
+          was written first. The printout uses those labels, not your names, so
+          only the order of the call tells you which is which.
+      - id: b
+        text: "The placebo group"
+        feedback: |
+          `drug` was written first, so it's `x`. `mean of x` is the drug group.
+      - id: c
+        text: "You can't tell"
+        last: true
+        feedback: |
+          Not from the printout alone — but you can from the call. `x` is the
+          first argument, and `drug` came first.
+
+  - id: testC-03
+    module: ch10
+    title: A rounded p-value
+    prompt: |
+      `round(result$p.value, 4)` prints `5e-04`. What number is that?
+    options:
+      - id: a
+        text: "0.0005"
+        correct: true
+        feedback: |
+          Right. `5e-04` is 5 × 10⁻⁴. R switches to this notation for very small
+          numbers. Rounded to three places instead, it would print `0` — and a
+          p-value is never really zero, so report it as *p* < 0.001.
+      - id: b
+        text: "5.0004"
+        feedback: |
+          The `e-04` means × 10⁻⁴, so the 5 moves four places to the right of
+          the decimal point: 0.0005.
+      - id: c
+        text: "50,000"
+        feedback: |
+          That would be `5e+04`. The minus sign makes it small: 5 × 10⁻⁴, which
+          is 0.0005.
+      - id: d
+        text: "An error code"
+        feedback: |
+          It's a number, written compactly: 5 × 10⁻⁴, or 0.0005.
+
+  - id: testC-04
+    module: ch10
+    title: A missing value in a t-test
+    prompt: |
+      One placebo reading is changed to `NA`. `mean(placebo)` now gives `NA`.
+      What does `t.test(drug, placebo)` do?
+    options:
+      - id: a
+        text: "Leaves the missing reading out and runs on the rest, without saying so"
+        correct: true
+        feedback: |
+          Right. `mean()` refuses to guess; `t.test()` drops the missing value
+          and carries on. The only clue is that the placebo mean and the
+          degrees of freedom change.
+      - id: b
+        text: "Gives NA, like mean() does"
+        feedback: |
+          A reasonable guess, but `t.test()` behaves differently: it drops the
+          missing reading and runs on what's left, without a word.
+      - id: c
+        text: "Stops with an error"
+        feedback: |
+          No error. It drops the missing reading and runs on the other seven.
+
+  - id: testC-05
+    module: ch11
+    title: A loop without print()
+    prompt: |
+      What appears when this runs?
+
+      ```r
+      for (r in c(118, 142)) {
+        r - 10
+      }
+      ```
+    options:
+      - id: a
+        text: "Nothing at all"
+        correct: true
+        feedback: |
+          Right. Inside a loop, results aren't shown unless something prints
+          them. Each subtraction happens, and each answer is thrown away.
+      - id: b
+        text: "108, then 132"
+        feedback: |
+          That's what you'd see with `print(r - 10)`. Without it, a loop shows
+          nothing.
+      - id: c
+        text: "Just 132, the last one"
+        feedback: |
+          Not even the last. Nothing inside a loop is shown unless it's printed.
+      - id: d
+        text: "108 132, on one line"
+        feedback: |
+          That's what `c(118, 142) - 10` would print, outside a loop. Inside
+          one, nothing is shown unless it's printed.
+
+  - id: testC-06
+    module: ch11
+    title: An if given two values
+    prompt: |
+      ```r
+      x <- c(118, 142)
+      if (x > 140) print("high")
+      ```
+
+      What happens?
+    options:
+      - id: a
+        text: "An error — the condition has more than one value"
+        correct: true
+        feedback: |
+          Right. `x > 140` gives two answers, and `if` needs exactly one. For an
+          answer per value, use `ifelse()`.
+      - id: b
+        text: '"high" is printed once, for 142'
+        feedback: |
+          That's the intention, but `if` isn't a loop. It takes one TRUE or
+          FALSE, and two is an error.
+      - id: c
+        text: "It checks only the first value, and prints nothing"
+        feedback: |
+          Older versions of R did that, with a warning. Since R 4.2 it's an
+          error.
+
+  - id: testC-07
+    module: ch11
+    title: An if meets a missing value
+    prompt: |
+      What happens?
+
+      ```r
+      for (v in c(118, NA, 156)) {
+        if (v > 140) print("high")
+      }
+      ```
+    options:
+      - id: a
+        text: "It stops with an error at the missing value, and never checks 156"
+        correct: true
+        feedback: |
+          Right. `NA > 140` is `NA`, and `if` needs a definite TRUE or FALSE.
+          The loop stops on the second value, so 156 — which really is high —
+          is never looked at.
+      - id: b
+        text: '"high" once, for 156'
+        feedback: |
+          `if` can't skip a missing value. The loop stops at it, before
+          reaching 156.
+      - id: c
+        text: "Nothing, and no error"
+        feedback: |
+          There is an error, at the missing value: *missing value where
+          TRUE/FALSE needed*.
+
+  - id: testC-08
+    module: ch11
+    title: A name held in a variable
+    prompt: |
+      ```r
+      name <- "p.value"
+      ```
+
+      Which line gives the p-value?
+    options:
+      - id: a
+        text: "`result[[name]]`"
+        correct: true
+        feedback: |
+          Right. Double brackets work out what's inside them first, so
+          `result[[name]]` becomes `result[["p.value"]]`.
+      - id: b
+        text: "`result$name`"
+        feedback: |
+          `$` never looks inside a variable. It takes `name` as the piece's
+          actual name, finds no piece called that, and gives `NULL`.
+      - id: c
+        text: "Either — they do the same thing"
+        feedback: |
+          They would if the name were typed out. With the name held in a
+          variable, only `[[ ]]` looks it up; `$name` gives `NULL`.
+
+  - id: testC-09
+    module: ch12
+    title: A new session
+    prompt: |
+      Yesterday you installed and loaded dplyr. Today, in a new R session,
+      `mutate()` gives `could not find function "mutate"`. What's missing?
+    options:
+      - id: a
+        text: "`library(dplyr)`"
+        correct: true
+        feedback: |
+          Right. Installing lasts; loading lasts only until R closes. Every new
+          session needs `library()` again.
+      - id: b
+        text: '`install.packages("dplyr")`'
+        feedback: |
+          It's still installed. What resets with each session is whether it's
+          loaded.
+      - id: c
+        text: "Nothing — `mutate` is misspelled"
+        feedback: |
+          It's spelled correctly. The function exists, but its package isn't
+          loaded in this session.
+
+  - id: testC-10
+    module: ch12
+    title: dplyr's filter and a missing value
+    prompt: |
+      Patient 3's systolic is missing. How many rows does this give?
+
+      ```r
+      filter(patients, sbp > 140)
+      ```
+    options:
+      - id: a
+        text: "2"
+        correct: true
+        feedback: |
+          Right. `filter()` keeps rows where the condition is TRUE and drops the
+          rest, including the one where it's `NA`. Square brackets,
+          `patients[patients$sbp > 140, ]`, would give three — adding a row of
+          `NA`s. Same question, two tools, two answers.
+      - id: b
+        text: "3"
+        feedback: |
+          That's what square brackets give, with an extra row of `NA`s.
+          `filter()` drops the missing row instead.
+      - id: c
+        text: "An error — the column has a missing value"
+        feedback: |
+          No error. `filter()` drops the row with the missing value, silently.
+
+  - id: testC-11
+    module: ch12
+    title: A column that wasn't kept
+    prompt: |
+      You run `mutate(patients, map = sbp / 2)`. Afterwards, does `patients`
+      have a `map` column?
+    options:
+      - id: a
+        text: "No — mutate() returns a new data frame, and nothing stored it"
+        correct: true
+        feedback: |
+          Right. dplyr's functions never change the data frame you give them.
+          To keep the result: `patients <- mutate(patients, ...)`.
+      - id: b
+        text: "Yes — mutate() changes patients directly"
+        feedback: |
+          It hands back a new data frame instead. Unless that's stored, it's
+          printed and gone.
+      - id: c
+        text: "Yes, until the session ends"
+        feedback: |
+          It isn't there at all. Nothing stored the new data frame.
+
+  - id: testC-12
+    module: ch12
+    title: Reading a pipeline
+    prompt: |
+      What comes out?
+
+      ```r
+      patients |>
+        filter(discharged) |>
+        select(age)
+      ```
+    options:
+      - id: a
+        text: "A one-column data frame of ages: 67, 48 and 62"
+        correct: true
+        feedback: |
+          Right. Take `patients`, *and then* keep the discharged rows, *and
+          then* keep only the `age` column.
+      - id: b
+        text: "The ages of all five patients"
+        feedback: |
+          The `filter(discharged)` step runs first, keeping only the three who
+          went home.
+      - id: c
+        text: "The three discharged patients, with every column"
+        feedback: |
+          The last step, `select(age)`, keeps only the `age` column.
+      - id: d
+        text: "54 and 71"
+        feedback: |
+          Those are the patients still in hospital. `filter(discharged)` keeps
+          the ones where `discharged` is TRUE.

@@ -8,8 +8,19 @@
 <link rel="stylesheet" href="./course.css">
 <style>
   /* Test-out page only. Built from the same variables as the course. */
-  .testout { max-width: 44rem; margin: 2.5rem auto 4rem; padding: 0 1.25rem; }
-  .testout-back { font-size: .86rem; }
+  .testout { max-width: 44rem; margin: 0 auto 4rem; padding: 0 1.25rem; }
+  /* A bar that stays at the top while scrolling, holding the panel buttons. */
+  .testout .tbar { position: sticky; top: 0; z-index: 5; display: flex; justify-content: space-between;
+    align-items: center; gap: 1rem; padding: .7rem 0; background: var(--paper);
+    border-bottom: 1px solid var(--rule); font-size: .88rem; }
+  .testout .tbar #tools { display: flex; gap: 1.1rem; }
+  .testout .tbtn[aria-pressed="true"] { font-weight: 600; }
+  .testout .skipnote { font-size: .88rem; font-style: italic; margin: 0 0 .5rem; }
+  /* Wide screens: the open panel sits beside the questions rather than over them. */
+  @media (min-width: 1100px) {
+    body.panel-open .testout { margin-left: max(1.25rem, calc((100vw - min(34rem, 100vw) - 44rem) / 2));
+      margin-right: calc(min(34rem, 100vw) + 1rem); }
+  }
   .testout h1 { font-size: 1.9rem; margin: 1rem 0 .4rem; }
   .testout .lead { font-size: 1.05rem; }
   .testout .crib { border: 1px solid var(--rule); border-radius: 6px; padding: .9rem 1.1rem; margin: 1.4rem 0; font-size: .92rem; }
@@ -37,11 +48,18 @@
   .testout .revisit { margin: .3rem 0 1rem 1.2rem; }
   .testout .act-link { font-weight: 600; }
   .testout .testout-note { font-size: 1rem; }
+  /* Code in a question reads at the same size as the answers below it. */
+  .testout .prompt pre { font-size: .92rem; }
+  /* In a side panel, R's printouts fit the panel's width without scrolling. */
+  .sidepanel .panelbody pre { font-size: .7rem; padding: .8rem .9rem; }
 </style>
 </head>
 <body class="reading">
   <main class="testout">
-    <p class="testout-back"><a id="back" href="./index.html">&larr; Back to the course</a></p>
+    <nav class="tbar">
+      <a id="back" href="./index.html">&larr; Back to the course</a>
+      <span id="tools"></span>
+    </nav>
     <div id="test"></div>
   </main>
   <script type="module" src="./theme.js"></script>
