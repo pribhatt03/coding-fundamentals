@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test out</title>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./course.css">
+<style>
+  /* Test-out page only. Built from the same variables as the course. */
+  .testout { max-width: 44rem; margin: 2.5rem auto 4rem; padding: 0 1.25rem; }
+  .testout-back { font-size: .86rem; }
+  .testout h1 { font-size: 1.9rem; margin: 1rem 0 .4rem; }
+  .testout .lead { font-size: 1.05rem; }
+  .testout .crib { border: 1px solid var(--rule); border-radius: 6px; padding: .9rem 1.1rem; margin: 1.4rem 0; font-size: .92rem; }
+  .testout .crib h2 { font-size: 1rem; margin: 0 0 .4rem; }
+  .testout .startrow { display: flex; gap: .9rem; align-items: center; flex-wrap: wrap; margin-top: 1.6rem; }
+  .testout .sub { font-size: .85rem; opacity: .75; }
+  .testout .tq { border-top: 1px solid var(--rule); padding: 1.2rem 0 1.4rem; }
+  .testout .tq h3 { font-size: 1.05rem; margin: 0 0 .4rem; }
+  .testout .tq-options { display: grid; gap: .45rem; margin: .7rem 0; }
+  .testout .tq-opt { text-align: left; font: inherit; font-size: .95rem; padding: .55rem .8rem; border: 1px solid var(--rule); border-radius: 5px; background: transparent; color: inherit; cursor: pointer; }
+  .testout .tq-opt:hover:not(:disabled) { border-color: currentColor; }
+  .testout .tq-opt:disabled { cursor: default; }
+  .testout .tq-opt.correct { border-color: #2e7d4f; box-shadow: inset 3px 0 0 #2e7d4f; }
+  .testout .tq-opt.picked:not(.correct) { border-color: #b3261e; box-shadow: inset 3px 0 0 #b3261e; }
+  .testout .tq-fb { font-size: .95rem; }
+  .testout .tq-fb .verdict { font-weight: 600; margin-bottom: .2rem; }
+  .testout .tq-fb .verdict.pass { color: #2e7d4f; }
+  .testout .tq-fb .verdict.fail { color: #b3261e; }
+  .testout .result { border: 1px solid var(--rule); border-radius: 6px; padding: 1.1rem 1.3rem; margin-top: 1.6rem; }
+  .testout .result.pass h2 { color: #2e7d4f; }
+  .testout .result.fail h2 { color: #b3261e; }
+  .testout .revisit { margin: .3rem 0 1rem 1.2rem; }
+  .testout .act-link { font-weight: 600; }
+  .testout .testout-note { font-size: 1rem; }
+</style>
+</head>
+<body class="reading">
+  <main class="testout">
+    <p class="testout-back"><a id="back" href="./index.html">&larr; Back to the course</a></p>
+    <div id="test"></div>
+  </main>
+  <script type="module" src="./theme.js"></script>
+  <script type="module" src="./testout.js"></script>
+</body>
+</html>

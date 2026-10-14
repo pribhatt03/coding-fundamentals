@@ -229,6 +229,28 @@ write-prompt exercise, paste in the exemplar (every criterion should pass),
 then the weak original prompt (every criterion should fail). A rubric that
 can't fail isn't checking anything.
 
+**Test-outs.** A part can be skipped by passing a short test. The bank lives
+in `content/testout/<part>.yml`: multiple choice, each item tagged with the
+module that teaches it, and always a "Coming from another language?" sheet,
+so anyone can take it. The build checks every item and refuses to write a
+bad test. Pass mark is 10 of 12, where a guess has about a 1-in-26,000
+chance of reaching it.
+
+**Only the first attempt counts.** Each question locks after one answer and
+feedback is shown straight away. A failed learner can retake the whole test.
+
+**The test page doesn't load R.** Shared markdown lives in `web/markdown.js`,
+which has no imports, so the test page never pulls in the R engine. The rules
+for scoring are in `web/testout-logic.js` as plain functions, tested on their
+own. Progress is kept in the browser, like the rest of the course.
+
+**Test answers are in the page's data, as exercise answers are.** A determined
+learner can read them. The remedy is a second set of questions, not hiding
+the file, which would be cosmetic.
+
+**Links are limited.** The markdown renderer links only to `testout.html` and
+`chapter.html`, so prose can't send learners to other sites by accident.
+
 **Run prints errors the way RStudio does.** webR on its own showed only the
 message — `Error: non-numeric argument…` — dropping the *where*. Run now wraps
 code in `.course_run()`, which prints `Error in height * height : …` exactly as

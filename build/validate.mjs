@@ -334,6 +334,63 @@ if (!CHECK_ONLY && !errors.length) {
   await writeFile(join("web", "reference.json"), JSON.stringify(reference));
 }
 
+/* ------------------------------------------------------------- test-outs --- */
+// A test-out is a short multiple-choice test a learner can take instead of
+// working through a part. Each lives in content/testout/<part>.yml. Every item
+// names the module that teaches it, so a missed question can point back there.
+const testouts = [];
+let testoutFiles = [];
+try { testoutFiles = (await readdir(join(CONTENT, "testout"))).filter((f) => f.endsWith(".yml")).sort(); }
+catch (e) { if (e.code !== "ENOENT") fail("testout", e.message); }
+
+for (const f of testoutFiles) {
+  const file = join("testout", f);
+  let t;
+  try { t = yaml.load(await readFile(join(CONTENT, "testout", f), "utf8")); }
+  catch (e) { fail(file, `YAML: ${e.message}`); continue; }
+  const before = errors.length;
+  const items = t?.items ?? [];
+  if (!t?.part) fail(file, "missing part letter");
+  if (!t?.title) fail(file, "missing title");
+  if (!items.length) fail(file, "no items");
+  if (t?.items_total !== items.length) fail(file, `items_total is ${t?.items_total} but there are ${items.length} items`);
+  if (!(Number.isInteger(t?.pass_mark) && t.pass_mark >= 1 && t.pass_mark <= items.length))
+    fail(file, "pass_mark must be a whole number from 1 to the number of items");
+  if (!t?.crib?.trim()) fail(file, "no crib sheet — every test shows the \"Coming from another language?\" sheet");
+  const ids = new Set();
+  for (const it of items) {
+    const where = `${file} ${it.id}`;
+    if (!it.id || ids.has(it.id)) fail(where, "missing or duplicate id");
+    ids.add(it.id);
+    if (!bundles.has(it.module)) fail(where, `module "${it.module}" has no exercises, so there is nothing to point back to`);
+    if (!it.prompt?.trim()) fail(where, "no prompt");
+    if (!it.title?.trim()) fail(where, "no title");
+    const opts = it.options ?? [];
+    if (opts.length < 2) fail(where, "needs at least two options");
+    if (opts.filter((o) => o.correct).length !== 1) fail(where, "needs exactly one correct option");
+    if (new Set(opts.map((o) => o.id)).size !== opts.length) fail(where, "duplicate option ids");
+    for (const o of opts) if (!o.text?.trim() || !o.feedback?.trim()) fail(where, `option "${o.id}" needs text and feedback`);
+  }
+  if (errors.length === before && t?.part) {
+    testouts.push({
+      part: t.part, title: t.title, pass_mark: t.pass_mark, items_total: t.items_total,
+      crib_title: t.crib_title ?? "Coming from another language?", crib: t.crib,
+      items: items.map((it) => ({
+        id: it.id, module: it.module, title: it.title, prompt: it.prompt,
+        options: it.options.map((o) => ({ id: o.id, text: o.text, feedback: o.feedback, correct: !!o.correct })),
+      })),
+    });
+  }
+}
+
+if (!CHECK_ONLY && !errors.length && testouts.length) {
+  await mkdir(join("web", "testout"), { recursive: true });
+  for (const t of testouts) {
+    await writeFile(join("web", "testout", `${t.part.toLowerCase()}.json`), JSON.stringify(t));
+  }
+  console.log(`test-outs: ${testouts.map((t) => `Part ${t.part} (${t.items.length} questions, pass at ${t.pass_mark})`).join(", ")}`);
+}
+
 for (const w of warnings) console.warn(`  warn  ${w}`);
 for (const e of errors) console.error(`  FAIL  ${e}`);
 

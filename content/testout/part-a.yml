@@ -1,0 +1,425 @@
+# Test-out for Part A (Mechanics). Modules 2–6.
+#
+# Each item is a multiple-choice prediction. Learners may come from any
+# programming background, so every item tests a behaviour that is written out
+# in the "Coming from another language?" sheet, and every answer was checked
+# by running it in R.
+#
+# Scoring: only the first attempt at each item counts. Feedback is shown after
+# every answer either way, so the test teaches as well as checks.
+
+part: A
+title: Test out of Part A
+pass_mark: 10          # out of 12. Chance of 10+ by guessing: about 1 in 26,000.
+items_total: 12
+
+crib_title: Coming from another language?
+crib: |
+  You don't need R experience for this test. These are the behaviours it
+  relies on. If another language already works this way, you can answer
+  from what you know; where R differs, this sheet tells you.
+
+  - **Counting starts at 1.** `x[1]` is the first value, `x[2]` the second.
+    (Python and JavaScript count from 0.)
+  - **Storing:** `x <- 5` stores 5 in `x`. A plain `=` does the same at the
+    top level.
+  - **Testing for equality:** `==` asks whether two things are equal. `!=`
+    asks whether they differ.
+  - **Text** goes in quotes, so `"142"` is text, not a number.
+  - **TRUE and FALSE** are capitalised, and adding them up counts the TRUEs.
+  - **Missing values** are written `NA`. Arithmetic and comparisons with `NA`
+    give `NA`, not `FALSE` or zero. Summaries such as `mean()` give `NA` too,
+    unless you add `na.rm = TRUE`, which leaves missing values out.
+  - **`round()`** rounds halves to the nearest *even* number, so
+    `round(2.5)` is 2.
+  - **Functions** take arguments in brackets. Some arguments have a default
+    value, used if you don't give one.
+  - **`c()`** joins values into a vector.
+  - **Filtering:** `x[condition]` keeps only the values where the condition
+    is TRUE.
+
+items:
+
+  - id: testA-01
+    module: ch02
+    topic: order of operations
+    title: Order of operations
+    prompt: |
+      What does this give?
+
+      ```r
+      2 + 3 * 4
+      ```
+    options:
+      - id: a
+        text: "14"
+        correct: true
+        feedback: |
+          Right. Multiplication happens before addition, as it does in
+          school arithmetic.
+      - id: b
+        text: "20"
+        feedback: |
+          That's working left to right. R follows the usual order: `3 * 4`
+          first, then the `2` is added.
+      - id: c
+        text: "24"
+        feedback: |
+          That's adding first. The `*` binds tighter than the `+`, so `3 * 4`
+          happens first.
+      - id: d
+        text: "9"
+        feedback: |
+          That treats the `*` as if it were a `+`. It multiplies `3` by `4`,
+          then adds.
+
+  - id: testA-02
+    module: ch03
+    topic: storing and replacing
+    title: Storing and replacing
+    prompt: |
+      ```r
+      sbp <- 142
+      sbp <- sbp + 10
+      ```
+
+      What is `sbp` now?
+    options:
+      - id: a
+        text: "152"
+        correct: true
+        feedback: |
+          Right. The second line reads `sbp`, adds 10, and stores the result
+          back into `sbp`. The old value is replaced.
+      - id: b
+        text: "142"
+        feedback: |
+          The second line changes `sbp`. It reads the old 142, adds 10, and
+          stores 152 in the same name.
+      - id: c
+        text: "10"
+        feedback: |
+          That's only the amount added. The result, 152, is what gets stored.
+      - id: d
+        text: "Both, 142 and 152"
+        feedback: |
+          Storing into a name that already exists replaces its value. Only one
+          value is kept.
+
+  - id: testA-03
+    module: ch03
+    topic: text is not a number
+    title: Text is not a number
+    prompt: |
+      What does this give?
+
+      ```r
+      "142" + 8
+      ```
+    options:
+      - id: a
+        text: "150"
+        feedback: |
+          The quotes make `"142"` text. R won't do arithmetic on text, even
+          text that looks like a number.
+      - id: b
+        text: '"1428"'
+        feedback: |
+          R doesn't join the two. It refuses to add text to a number.
+      - id: c
+        text: "NA"
+        feedback: |
+          `NA` is R's marker for a missing value. Nothing is missing here: the
+          problem is that `"142"` is text, so R stops with an error.
+      - id: d
+        text: "An error — a non-numeric argument"
+        correct: true
+        feedback: |
+          Right. The quotes make `"142"` text, and R won't do arithmetic on
+          text. The error names the problem.
+
+  - id: testA-04
+    module: ch03
+    topic: TRUE and FALSE
+    title: Adding up TRUEs
+    prompt: |
+      What does this give?
+
+      ```r
+      sum(c(TRUE, FALSE, TRUE))
+      ```
+    options:
+      - id: a
+        text: "2"
+        correct: true
+        feedback: |
+          Right. TRUE counts as 1 and FALSE as 0, so the total is 2. This is
+          how you count how many values meet a condition.
+      - id: b
+        text: "1"
+        feedback: |
+          Each TRUE counts as 1, and there are two of them.
+      - id: c
+        text: "3"
+        feedback: |
+          There are three values, but FALSE counts as 0, not 1.
+      - id: d
+        text: "An error — you can't add TRUE"
+        feedback: |
+          You can. R treats TRUE as 1 and FALSE as 0 when you add them.
+
+  - id: testA-05
+    module: ch03
+    topic: equality test
+    title: Testing for equality
+    prompt: |
+      Which line checks whether `sbp` is equal to 142?
+    options:
+      - id: a
+        text: "`sbp == 142`"
+        correct: true
+        feedback: |
+          Right. `==` asks whether two things are equal. It gives TRUE or FALSE
+          and doesn't change `sbp`.
+      - id: b
+        text: "`sbp = 142`"
+        feedback: |
+          At the top level, a plain `=` stores 142 in `sbp`, the same as `<-`.
+          It doesn't test anything.
+      - id: c
+        text: "`sbp <- 142`"
+        feedback: |
+          That stores 142 in `sbp`. It doesn't ask a question.
+      - id: d
+        text: "`sbp != 142`"
+        feedback: |
+          `!=` asks whether the two are *different*. That's the opposite.
+
+  - id: testA-06
+    module: ch04
+    topic: default arguments
+    title: A default you didn't ask for
+    prompt: |
+      What does this give?
+
+      ```r
+      round(2.567)
+      ```
+    options:
+      - id: a
+        text: "3"
+        correct: true
+        feedback: |
+          Right. `round()` has a default for how many decimal places, and that
+          default is 0. You didn't give it one, so R rounds to a whole number.
+      - id: b
+        text: "2.6"
+        feedback: |
+          That's one decimal place. You didn't ask for one; the default is zero
+          places.
+      - id: c
+        text: "2.5"
+        feedback: |
+          That's not a rounding of 2.567 to any number of places.
+      - id: d
+        text: "2"
+        feedback: |
+          2.567 is closer to 3 than to 2 when rounded to a whole number.
+
+  - id: testA-07
+    module: ch04
+    topic: rounding halves
+    title: Rounding a half
+    prompt: |
+      What does this give?
+
+      ```r
+      round(2.5)
+      ```
+    options:
+      - id: a
+        text: "3"
+        feedback: |
+          Many people expect this, and many languages give it. R rounds a
+          half to the nearest even whole number, so 2.5 becomes 2.
+      - id: b
+        text: "2"
+        correct: true
+        feedback: |
+          Right. R rounds halves to the nearest even number: `round(2.5)` is 2
+          and `round(3.5)` is 4. It's worth knowing when you're rounding
+          lab values.
+      - id: c
+        text: "2.5"
+        feedback: |
+          Nothing has been rounded, so the decimal stays.
+      - id: d
+        text: "An error"
+        feedback: |
+          No error. Rounding a half is allowed; it just rounds to an even
+          number.
+
+  - id: testA-08
+    module: ch05
+    topic: counting from one
+    title: Picking out one value
+    prompt: |
+      ```r
+      bp <- c(118, 142, 131, 156)
+      ```
+
+      What does `bp[2]` give?
+    options:
+      - id: a
+        text: "118"
+        feedback: |
+          That's the first value. R counts positions from 1, so `bp[2]` is
+          the second.
+      - id: b
+        text: "142"
+        correct: true
+        feedback: |
+          Right. R counts positions from 1, so `bp[2]` is the second value.
+          Python and JavaScript count from 0, so there `[2]` would be the
+          third value. That difference catches people switching languages.
+      - id: c
+        text: "131"
+        feedback: |
+          That's the third value. In R, the second value is `bp[2]`, because
+          counting starts at 1.
+      - id: d
+        text: "An error — there's no position 2"
+        feedback: |
+          There is. Position 2 exists, and it holds 142.
+
+  - id: testA-09
+    module: ch05
+    topic: filtering with a condition
+    title: Keeping the high ones
+    prompt: |
+      ```r
+      bp <- c(118, 142, 131, 156)
+      ```
+
+      What does `bp[bp > 140]` give?
+    options:
+      - id: a
+        text: "142 and 156"
+        correct: true
+        feedback: |
+          Right. `bp > 140` gives one TRUE or FALSE per value, and `bp[...]`
+          keeps the values where it's TRUE.
+      - id: b
+        text: "FALSE TRUE FALSE TRUE"
+        feedback: |
+          That's the comparison on its own. Putting it in square brackets
+          keeps the values where it's TRUE.
+      - id: c
+        text: "118, 142, 131, 156"
+        feedback: |
+          Nothing has been filtered out. Every value would have to pass the test
+          to appear here.
+      - id: d
+        text: "142"
+        feedback: |
+          156 is also above 140, so it's kept as well.
+
+  - id: testA-10
+    module: ch06
+    topic: missing values in a summary
+    title: One missing value spoils the mean
+    prompt: |
+      What does this give?
+
+      ```r
+      mean(c(118, NA, 131))
+      ```
+    options:
+      - id: a
+        text: "NA"
+        correct: true
+        feedback: |
+          Right. `mean()` won't guess at a missing value, so the whole result
+          is `NA`. You have to decide what to do about it.
+      - id: b
+        text: "124.5"
+        feedback: |
+          That's the mean of the two readings you do have. `mean()` doesn't
+          leave the missing one out unless you ask it to.
+      - id: c
+        text: "0"
+        feedback: |
+          A missing value isn't a zero. `mean()` gives `NA` when a value is
+          missing.
+      - id: d
+        text: "An error"
+        feedback: |
+          No error. `mean()` gives `NA`, which is R's way of saying the result
+          can't be known from this data.
+
+  - id: testA-11
+    module: ch06
+    topic: leaving missing values out
+    title: Leaving the missing one out
+    prompt: |
+      What does this give?
+
+      ```r
+      mean(c(118, NA, 131), na.rm = TRUE)
+      ```
+    options:
+      - id: a
+        text: "124.5"
+        correct: true
+        feedback: |
+          Right. `na.rm = TRUE` leaves the missing value out, so the mean is
+          of 118 and 131.
+      - id: b
+        text: "NA"
+        feedback: |
+          That's the result without `na.rm = TRUE`. With it, the missing value
+          is dropped.
+      - id: c
+        text: "249"
+        feedback: |
+          That's the total of the two readings, not their mean. Dividing by
+          two gives 124.5.
+      - id: d
+        text: "0"
+        feedback: |
+          Nothing has been turned into zero. The missing value is left out, and
+          the mean of the other two is returned.
+
+  - id: testA-12
+    module: ch06
+    topic: NA is not zero
+    title: A missing value is not a zero
+    prompt: |
+      What does this give?
+
+      ```r
+      NA == 0
+      ```
+    options:
+      - id: a
+        text: "NA"
+        correct: true
+        feedback: |
+          Right. R doesn't know what the missing value is, so it can't say
+          whether it equals 0. The answer is missing too. To test for a missing
+          value, use `is.na()`.
+      - id: b
+        text: "FALSE"
+        feedback: |
+          Tempting, but `NA` isn't a number that's different from zero. R
+          doesn't know its value, so it can't say it's not zero.
+      - id: c
+        text: "TRUE"
+        feedback: |
+          `NA` isn't 0, so it can't be equal to 0. R goes further and says the
+          answer is unknown.
+      - id: d
+        text: "0"
+        feedback: |
+          The comparison gives a TRUE/FALSE-style answer, which here is `NA`,
+          not a number.
