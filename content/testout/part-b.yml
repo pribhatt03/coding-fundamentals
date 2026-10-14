@@ -1,0 +1,422 @@
+# Test-out for Part B (Working with data). Modules 7–9.
+#
+# Same rules as Part A: twelve multiple-choice predictions, each tagged with
+# the module that teaches it, every answer checked by running it in R.
+# Several behaviours here differ from Python's pandas — notably what a filter
+# does with a missing value — so the sheet below spells them out.
+
+part: B
+title: Test out of Part B
+pass_mark: 10          # out of 12. Chance of 10+ by guessing: about 1 in 26,000.
+items_total: 12
+
+crib_title: Coming from another language?
+crib: |
+  These are the R behaviours the questions rely on. If you know another
+  language, check them — several differ from Python's pandas.
+
+  - **A data frame is a table**: one row per patient, one column per thing
+    measured. Each column holds one type of value.
+  - **`df$col`** gives one column, as a vector.
+  - **`df[row, column]`** picks by row first, then column, counting from 1.
+    Leave a side blank to get all of it: `df[3, ]` is the whole of row 3.
+    Columns can be named in quotes: `df[, "sbp"]`.
+  - **`df[condition, ]`** keeps the rows where the condition is TRUE. If the
+    condition is `NA` for a row, R doesn't drop it — you get a row of `NA`s.
+    (pandas drops it.)
+  - **`&`** means *and*; **`|`** means *or*.
+  - **`nrow()`** counts rows. **`class()`** says what type something is:
+    `"numeric"`, `"character"` (text) or `"logical"` (TRUE/FALSE).
+  - **`df$new <- values`** adds or replaces a column. It needs one value per
+    row — or a single value, which fills every row.
+  - **`ifelse(test, yes, no)`** gives the `yes` value where the test is TRUE,
+    and the `no` value where it's FALSE.
+  - Storing into one data frame never changes another, even one it was made
+    from.
+
+context: |
+  Most questions use this data frame, called `patients`:
+
+  ```
+    age blood_type sbp discharged
+  1  67         A+ 142       TRUE
+  2  54         O- 118      FALSE
+  3  71         B+  NA      FALSE
+  4  48         O+ 131       TRUE
+  5  62         A- 156       TRUE
+  ```
+
+items:
+
+  - id: testB-01
+    module: ch07
+    title: Averaging a column
+    prompt: |
+      What does this give?
+
+      ```r
+      mean(patients$sbp)
+      ```
+    options:
+      - id: a
+        text: "NA"
+        correct: true
+        feedback: |
+          Right. Patient 3's systolic is missing, and `mean()` won't guess, so
+          the result is `NA`. Adding `na.rm = TRUE` would leave the missing
+          value out.
+      - id: b
+        text: "136.75"
+        feedback: |
+          That's the mean of the four readings you have. `mean()` only leaves
+          the missing one out if you ask it to, with `na.rm = TRUE`.
+      - id: c
+        text: "109.4"
+        feedback: |
+          That treats the missing value as zero. R never does that: a missing
+          value isn't a zero, so the result is `NA`.
+      - id: d
+        text: "An error"
+        feedback: |
+          No error. `mean()` gives `NA`, R's way of saying the answer can't be
+          known from this data.
+
+  - id: testB-02
+    module: ch07
+    title: A column of text
+    prompt: |
+      A lab column holds `"12.4"`, `"<5"` and `"31.0"`. What does
+      `class(labs$crp)` give?
+    options:
+      - id: a
+        text: '"character"'
+        correct: true
+        feedback: |
+          Right. A column holds one type, and `"<5"` can't be a number, so the
+          whole column is text — even the entries that look like numbers.
+          Arithmetic on it will fail or go quietly wrong until it's converted.
+      - id: b
+        text: '"numeric"'
+        feedback: |
+          Two of the three look like numbers, but `"<5"` doesn't, and a column
+          holds only one type. So the whole column is text.
+      - id: c
+        text: "Two types — numeric for two values, character for one"
+        feedback: |
+          A column can hold only one type. One text entry makes the whole
+          column text.
+      - id: d
+        text: "NA"
+        feedback: |
+          Nothing is missing. All three entries are there; one of them simply
+          isn't a number, which makes the column text.
+
+  - id: testB-03
+    module: ch07
+    title: Counting from a TRUE/FALSE column
+    prompt: |
+      What does this give?
+
+      ```r
+      sum(patients$discharged)
+      ```
+    options:
+      - id: a
+        text: "3"
+        correct: true
+        feedback: |
+          Right. Each TRUE counts as 1 and each FALSE as 0, so the sum is the
+          number of patients who went home.
+      - id: b
+        text: "5"
+        feedback: |
+          That's the number of patients. FALSE counts as 0, so only the three
+          TRUEs add to the total.
+      - id: c
+        text: "2"
+        feedback: |
+          That's the number still in hospital — the FALSEs. The sum counts the
+          TRUEs.
+      - id: d
+        text: "An error — you can't add TRUE and FALSE"
+        feedback: |
+          You can. TRUE counts as 1 and FALSE as 0.
+
+  - id: testB-04
+    module: ch08
+    title: Row, then column
+    prompt: |
+      What does `patients[2, "age"]` give?
+    options:
+      - id: a
+        text: "54"
+        correct: true
+        feedback: |
+          Right. Row first, then column: row 2, the `age` column.
+      - id: b
+        text: "67"
+        feedback: |
+          That's row 1. R counts rows from 1, so row 2 is the second patient.
+      - id: c
+        text: "71"
+        feedback: |
+          That's row 3. In R, row 2 is the second row, because counting starts
+          at 1.
+      - id: d
+        text: "Every patient's age"
+        feedback: |
+          That would be `patients[, "age"]`, with the row side left blank. Here
+          the row is 2.
+
+  - id: testB-05
+    module: ch08
+    title: Leaving a side blank
+    prompt: |
+      What does `patients[3, ]` give?
+    options:
+      - id: a
+        text: "Every column for patient 3"
+        correct: true
+        feedback: |
+          Right. Row 3, and the column side is blank, which means all of the
+          columns: age, blood type, systolic and discharge, for one patient.
+      - id: b
+        text: "The third column, for every patient"
+        feedback: |
+          Rows come first. The 3 is in the row position, so it picks row 3. The
+          third column would be `patients[, 3]`.
+      - id: c
+        text: "An error — the column is missing"
+        feedback: |
+          A blank side isn't missing; it means *all*. Leaving the column side
+          blank gives every column.
+      - id: d
+        text: "Just patient 3's age"
+        feedback: |
+          You'd need to name the column for that: `patients[3, "age"]`. With
+          the column side blank, you get every column.
+
+  - id: testB-06
+    module: ch08
+    title: Keeping some rows
+    prompt: |
+      What does this give?
+
+      ```r
+      patients[patients$discharged, "age"]
+      ```
+    options:
+      - id: a
+        text: "67, 48 and 62"
+        correct: true
+        feedback: |
+          Right. `patients$discharged` is TRUE for patients 1, 4 and 5, so those
+          rows are kept, and the `age` column is taken from them.
+      - id: b
+        text: "54 and 71"
+        feedback: |
+          Those are the patients still in hospital — the FALSEs. The rows kept
+          are the ones where the condition is TRUE.
+      - id: c
+        text: "All five ages"
+        feedback: |
+          The condition goes in the row position, so only the rows where it's
+          TRUE are kept.
+      - id: d
+        text: "3"
+        feedback: |
+          That's how many patients went home. This gives their ages.
+
+  - id: testB-07
+    module: ch08
+    title: A filter and a missing value
+    prompt: |
+      Patient 3's systolic is missing. How many rows does this give?
+
+      ```r
+      nrow(patients[patients$sbp > 140, ])
+      ```
+    options:
+      - id: a
+        text: "3"
+        correct: true
+        feedback: |
+          Right — and this is the one that catches people. Two patients are over
+          140. For patient 3, `NA > 140` is `NA`, and R doesn't drop that row:
+          it adds a row of `NA`s. So you get three rows, one of them a patient
+          who doesn't exist.
+      - id: b
+        text: "2"
+        feedback: |
+          Two patients really are over 140, and pandas would give 2. But R
+          handles the missing value differently: a condition that's `NA` gives
+          a row of `NA`s, so there are three rows.
+      - id: c
+        text: "1"
+        feedback: |
+          Both 142 and 156 are over 140, so at least two rows are kept — and
+          the missing value adds a third.
+      - id: d
+        text: "An error"
+        feedback: |
+          No error. R quietly adds a row of `NA`s for the missing value, which
+          is what makes it dangerous.
+
+  - id: testB-08
+    module: ch08
+    title: Two conditions at once
+    prompt: |
+      What does this give?
+
+      ```r
+      patients[patients$age > 60 & patients$discharged, "age"]
+      ```
+    options:
+      - id: a
+        text: "67 and 62"
+        correct: true
+        feedback: |
+          Right. Both conditions must be TRUE. Three patients are over 60 —
+          67, 71 and 62 — and of those, 67 and 62 went home.
+      - id: b
+        text: "67, 71 and 62"
+        feedback: |
+          Those are everyone over 60. `&` also needs `discharged` to be TRUE,
+          and the 71-year-old hasn't gone home.
+      - id: c
+        text: "67, 48 and 62"
+        feedback: |
+          Those are everyone who went home. `&` also needs the age to be over
+          60, which rules out the 48-year-old.
+      - id: d
+        text: "67, 71, 48 and 62"
+        feedback: |
+          That's everyone who meets *either* condition — what `|` would give.
+          `&` needs both.
+
+  - id: testB-09
+    module: ch09
+    title: A column that doesn't fit
+    prompt: |
+      What happens?
+
+      ```r
+      patients$dbp <- c(88, 76, 82)
+      ```
+    options:
+      - id: a
+        text: "An error — three values for five rows"
+        correct: true
+        feedback: |
+          Right. A new column needs one value per row, or a single value to fill
+          them all. Three values for five patients would pair readings with the
+          wrong people, so R stops.
+      - id: b
+        text: "The three values fill the first three rows; the rest are NA"
+        feedback: |
+          R won't guess which patients the values belong to. It stops with an
+          error instead.
+      - id: c
+        text: "The three values repeat to fill all five rows"
+        feedback: |
+          R repeats a *single* value, but not three across five rows: that would
+          pair readings with the wrong patients. It stops with an error.
+      - id: d
+        text: "The data frame is cut down to three rows"
+        feedback: |
+          Adding a column never removes rows. R stops with an error because the
+          lengths don't match.
+
+  - id: testB-10
+    module: ch09
+    title: One value for every row
+    prompt: |
+      ```r
+      patients$checked <- TRUE
+      ```
+
+      What is in the new `checked` column?
+    options:
+      - id: a
+        text: "TRUE for every patient"
+        correct: true
+        feedback: |
+          Right. A single value fills every row.
+      - id: b
+        text: "TRUE for the first patient; NA for the rest"
+        feedback: |
+          A single value isn't placed in one row. It fills all of them.
+      - id: c
+        text: "An error — one value for five rows"
+        feedback: |
+          One value is allowed: it fills every row. The error comes when there
+          are several values that don't match the number of rows.
+      - id: d
+        text: "Nothing — `TRUE` isn't stored"
+        feedback: |
+          It's stored, in every row of the new column.
+
+  - id: testB-11
+    module: ch09
+    title: Labels from a condition
+    prompt: |
+      ```r
+      patients$group <- ifelse(patients$age >= 65, "under 65", "65 and over")
+      ```
+
+      What label does the 67-year-old get?
+    options:
+      - id: a
+        text: '"under 65"'
+        correct: true
+        feedback: |
+          Right — and it's wrong. The test is TRUE for a 67-year-old, so they
+          get the first label, `"under 65"`. The labels are in the wrong order:
+          the code runs without complaint, and every patient is mislabelled.
+      - id: b
+        text: '"65 and over"'
+        feedback: |
+          That's the label they *should* get. But `ifelse()` gives the first
+          label where the test is TRUE, and the first label written here is
+          `"under 65"`.
+      - id: c
+        text: "NA"
+        feedback: |
+          The 67-year-old's age isn't missing, so they get a label: the first
+          one, because the test is TRUE.
+      - id: d
+        text: "An error — the labels are the wrong way round"
+        feedback: |
+          R can't know the labels are the wrong way round. It gives the first
+          label where the test is TRUE, without complaint.
+
+  - id: testB-12
+    module: ch09
+    title: A change on a copy
+    prompt: |
+      ```r
+      older <- patients[patients$age > 60, ]
+      older$flag <- TRUE
+      ```
+
+      Does `patients` now have a `flag` column?
+    options:
+      - id: a
+        text: "No — only `older` was changed"
+        correct: true
+        feedback: |
+          Right. `older` is a separate data frame made from `patients`. Storing
+          into it never changes `patients`.
+      - id: b
+        text: "Yes, for the patients over 60"
+        feedback: |
+          `older` was made from `patients`, but it's separate. Changing it
+          leaves `patients` exactly as it was.
+      - id: c
+        text: "Yes, for every patient"
+        feedback: |
+          Nothing was stored into `patients`. Only `older` gained the column.
+      - id: d
+        text: "An error"
+        feedback: |
+          No error. `older` gets the new column; `patients` is untouched.

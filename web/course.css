@@ -17,6 +17,7 @@
   --term-gutter: #EAECF0;
 
   --ok:          #157347;
+  --link:        #1F5FBF;
   --wait:        #9A5B00;
   --err:         #B42318;
 
@@ -44,6 +45,7 @@
   --term-gutter: #1B2132;
 
   --ok:          #6EE7A8;
+  --link:        #8AB4F8;
   --wait:        #FFC46B;
   --err:         #FF8A8A;
 
@@ -69,6 +71,7 @@
   --term-gutter: #EDE2CE;
 
   --ok:          #2F6B3D;
+  --link:        #1F4F8F;
   --wait:        #96601A;
   --err:         #A33A25;
 
@@ -96,6 +99,7 @@
   --term-gutter: #E2E2E2;
 
   --ok:          #006E4F;   /* bluish green */
+  --link:        #0645AD;
   --wait:        #935200;   /* orange */
   --err:         #9B2C00;   /* vermillion */
 
@@ -648,3 +652,9 @@ body.locked { overflow: hidden; }
 
 /* "Worth reading every option" — a quiet nudge above the review. */
 .readall { font-size: .82rem; font-style: italic; margin: 0 0 .6rem; }
+
+/* Links: a colour of their own in every theme, each at least 5.5:1 against
+   the page (the browser default was under 2:1 on the night theme). Links in
+   the top bar and chapter navigation keep their quieter styles above. */
+a { color: var(--link); text-underline-offset: 2px; }
+a:visited { color: var(--link); }

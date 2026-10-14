@@ -248,6 +248,17 @@ own. Progress is kept in the browser, like the rest of the course.
 learner can read them. The remedy is a second set of questions, not hiding
 the file, which would be cosmetic.
 
+**Test questions are numbered, not titled.** Titles borrowed from the
+modules assumed the learner had seen them, and some gave the answer away
+("Text is not a number"). Titles stay in the YAML as labels for authors.
+
+**A test can show its data once.** A `context:` section — R's own printout
+of the table — appears on the start screen and above the questions, so it
+stays in view while answering.
+
+**Every theme has its own link colour,** each at least 5.5:1 against the
+page. The browser default was under 2:1 on the night theme.
+
 **Links are limited.** The markdown renderer links only to `testout.html` and
 `chapter.html`, so prose can't send learners to other sites by accident.
 

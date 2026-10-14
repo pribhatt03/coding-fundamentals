@@ -48,6 +48,7 @@ async function main_() {
         <h2>${esc(bank.crib_title)}</h2>
         ${md(bank.crib)}
       </section>
+      ${bank.context ? `<section class="context"><h2>The data</h2>${md(bank.context)}</section>` : ""}
       <p class="startrow"><button class="act" id="start">Start the test</button>
         <span class="sub">Feedback comes after each answer. Your answers are kept only in this browser.</span></p>`;
     main.querySelector("#start").onclick = start;
@@ -59,6 +60,7 @@ async function main_() {
     main.innerHTML = `
       <h1>Test out of Part ${esc(bank.part)}</h1>
       <p class="lead" id="count">0 of ${bank.items_total} answered</p>
+      ${bank.context ? `<section class="context"><h2>The data</h2>${md(bank.context)}</section>` : ""}
       <div id="items"></div>`;
     const list = main.querySelector("#items");
 
@@ -66,7 +68,7 @@ async function main_() {
       const box = document.createElement("article");
       box.className = "tq";
       box.innerHTML = `
-        <h3>${i + 1}. ${esc(it.title)}</h3>
+        <h3>Question ${i + 1} of ${bank.items.length}</h3>
         <div class="prompt">${md(it.prompt)}</div>
         <div class="tq-options"></div>
         <div class="tq-fb" aria-live="polite"></div>`;

@@ -375,6 +375,7 @@ for (const f of testoutFiles) {
     testouts.push({
       part: t.part, title: t.title, pass_mark: t.pass_mark, items_total: t.items_total,
       crib_title: t.crib_title ?? "Coming from another language?", crib: t.crib,
+      context: t.context ?? null,   // data shown above the questions, if any
       items: items.map((it) => ({
         id: it.id, module: it.module, title: it.title, prompt: it.prompt,
         options: it.options.map((o) => ({ id: o.id, text: o.text, feedback: o.feedback, correct: !!o.correct })),
