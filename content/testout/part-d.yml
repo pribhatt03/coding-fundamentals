@@ -1,0 +1,396 @@
+# Test-out for Part D (When it breaks). Modules 13–14.
+#
+# Same rules as the other parts. Every answer was checked by running it in R,
+# and the text-comparison question gives the same answer under both C and
+# en_US language settings.
+
+part: D
+title: Test out of Part D
+pass_mark: 10          # out of 12. Chance of 10+ by guessing: about 1 in 26,000.
+items_total: 12
+
+crib_title: Coming from another language?
+crib: |
+  These are the R behaviours the questions rely on.
+
+  - **An error message** reads `Error in <code> : <what went wrong>`. Before
+    the colon is where R was when it stopped; after it is the problem.
+  - **A syntax error** — one with the word "unexpected" — means R couldn't
+    read the line, so none of it ran.
+  - **Other errors** stop a script at that line. Everything before it has
+    already run.
+  - **A warning** isn't an error: R finishes, but flags something.
+    `suppressWarnings()` stops a warning being shown; it doesn't change what
+    happened.
+  - **A column holds one type.** One entry that isn't a number makes the whole
+    column text.
+  - **Comparing text with a number** compares them as text, character by
+    character, the way a dictionary orders words. Letters sort after digits.
+  - **`as.numeric()`** turns text into numbers; anything that isn't a number
+    becomes `NA`. **`na.rm = TRUE`** leaves `NA`s out of a sum or a mean.
+  - **`df$name`** with a column name that doesn't exist gives `NULL` —
+    nothing — with no error. Names are exact, capitals included.
+  - **`summary()`** shows the smallest value, the quartiles, the median, the
+    mean and the largest value.
+  - **`x[condition] <- value`** stores the value only where the condition is
+    TRUE.
+
+context: |
+  Questions 7–12 use this data frame, `labs`. `k` is potassium (normal about
+  3.5 to 5.0 mmol/L); `creat` is creatinine in mg/dL (normal about 0.6 to 1.3).
+  One potassium sample was hemolysed.
+
+  ```
+     id         k creat
+  1 101       4.1   0.9
+  2 102       5.6   1.4
+  3 103 hemolysed   1.1
+  4 104       3.9   0.0
+  5 105       5.8  88.0
+  6 106       4.4   1.0
+  7 107       4.0   1.2
+  8 108       6.1   1.3
+  ```
+
+  `summary(labs$creat)` gives:
+
+  ```
+     Min. 1st Qu.  Median    Mean 3rd Qu.    Max.
+    0.000   0.975   1.150  11.863   1.325  88.000
+  ```
+
+items:
+
+  - id: testD-01
+    module: ch13
+    title: Reading an error
+    prompt: |
+      ```
+      Error in height * height : non-numeric argument to binary operator
+      ```
+
+      Which part tells you what went wrong?
+    options:
+      - id: a
+        text: "non-numeric argument to binary operator"
+        correct: true
+        feedback: |
+          Right. After the colon is the *what*: one side of the `*` isn't a
+          number. Before the colon is the *where*: the code R was running.
+      - id: b
+        text: "height * height"
+        feedback: |
+          That's the *where* — the code R was running when it stopped. The
+          description of the problem comes after the colon.
+      - id: c
+        text: "Error in"
+        feedback: |
+          That's just R announcing an error. The useful parts come after it.
+
+  - id: testD-02
+    module: ch13
+    title: A line R couldn't read
+    prompt: |
+      ```r
+      sbp <- c(118, 142 131, 156)
+      ```
+
+      This gives `Error: unexpected numeric constant`. Does `sbp` exist
+      afterwards?
+    options:
+      - id: a
+        text: "No — R couldn't read the line, so none of it ran"
+        correct: true
+        feedback: |
+          Right. "Unexpected" marks a syntax error: R reads a whole line before
+          running any of it, and it couldn't read this one. (A comma is missing
+          after 142.)
+      - id: b
+        text: "Yes, holding 118 and 142"
+        feedback: |
+          R never runs part of a line it can't read. Nothing was stored.
+      - id: c
+        text: "Yes, holding all four values, with 131 and 142 joined"
+        feedback: |
+          R doesn't guess what you meant. A syntax error means the line is
+          rejected, and nothing is stored.
+
+  - id: testD-03
+    module: ch13
+    title: What ran before it stopped
+    prompt: |
+      ```r
+      weight <- 70
+      height <- "1.75"
+      bmi <- weight / (height * height)
+      ```
+
+      This stops with an error on the third line. Afterwards, which of these
+      exist?
+    options:
+      - id: a
+        text: "`weight` and `height`, but not `bmi`"
+        correct: true
+        feedback: |
+          Right. R runs line by line and stops at the first error. The first two
+          lines had already stored their values; the third stored nothing.
+      - id: b
+        text: "None of them — the script failed"
+        feedback: |
+          A script isn't all-or-nothing. The lines before the error ran and
+          stored their values.
+      - id: c
+        text: "All three, with `bmi` set to NA"
+        feedback: |
+          An error doesn't produce `NA` — it stops. The failing line stored
+          nothing, so `bmi` doesn't exist.
+
+  - id: testD-04
+    module: ch13
+    title: Where it broke, and why
+    prompt: |
+      In the script from question 3, the error names `height * height`, on the
+      third line. Which line actually caused it?
+    options:
+      - id: a
+        text: '`height <- "1.75"`'
+        correct: true
+        feedback: |
+          Right. The quotes made `height` text on the second line. R only
+          noticed on the third, when it tried to multiply. An error says where R
+          *noticed* the problem, which isn't always where it *is*.
+      - id: b
+        text: "`bmi <- weight / (height * height)`"
+        feedback: |
+          That's where R noticed, and the line the error names. But the formula
+          is fine; it was handed text. The cause is where the text came from.
+      - id: c
+        text: "`weight <- 70`"
+        feedback: |
+          `weight` is a proper number. The other ingredient is the problem.
+
+  - id: testD-05
+    module: ch13
+    title: A fix that runs
+    prompt: |
+      This gives `unexpected end of input`, because a bracket never closes:
+
+      ```r
+      map <- (sbp + 2 * dbp / 3
+      ```
+
+      An AI suggests closing it at the end: `(sbp + 2 * dbp / 3)`. For a
+      patient at 142/88, that gives 200.67. Is it fixed?
+    options:
+      - id: a
+        text: "No — it runs, but the bracket is in the wrong place"
+        correct: true
+        feedback: |
+          Right. MAP is (SBP + 2 × DBP) / 3, so the bracket belongs after
+          `dbp`: that gives 106. Closing it at the end divides only the
+          diastolic part. The error went away; the mistake didn't.
+      - id: b
+        text: "Yes — there's no error now"
+        feedback: |
+          No error means R can run it, not that it's right. A MAP of 200.67 for
+          142/88 isn't plausible. The bracket belongs after `dbp`.
+      - id: c
+        text: "Yes — any closing bracket fixes it"
+        feedback: |
+          Any closing bracket stops the error, but where it goes changes the
+          answer. Here it gives 200.67 instead of 106.
+
+  - id: testD-06
+    module: ch13
+    title: Hiding a warning
+    prompt: |
+      `as.numeric(c("12.4", "<5", "31.0"))` gives the warning *NAs introduced
+      by coercion*. An AI suggests wrapping it in `suppressWarnings()`, and the
+      warning disappears. Is the problem fixed?
+    options:
+      - id: a
+        text: 'No — "<5" still becomes NA; you just can''t see the warning'
+        correct: true
+        feedback: |
+          Right. `suppressWarnings()` hides the message and changes nothing
+          else. The real fix is deciding what `"<5"` should become — a clinical
+          call, not a coding one.
+      - id: b
+        text: "Yes — no warning means nothing went wrong"
+        feedback: |
+          The warning was the only sign that `"<5"` became `NA`. Hiding it
+          doesn't change the result: the middle value is still `NA`.
+      - id: c
+        text: 'Yes — suppressWarnings() converts "<5" properly'
+        feedback: |
+          It doesn't convert anything. It only stops the warning being printed.
+
+  - id: testD-07
+    module: ch14
+    title: Text compared with a number
+    prompt: |
+      In the `labs` data frame (under **The data**, at the top), `k` is stored
+      as text because of the hemolysed sample. How many TRUEs does this give?
+
+      ```r
+      labs$k > 5.5
+      ```
+    options:
+      - id: a
+        text: "4 — including the hemolysed sample"
+        correct: true
+        feedback: |
+          Right. Comparing text with a number compares them as text, so letters
+          sort after digits, and "hemolysed" counts as higher than 5.5. Three
+          real results plus one that isn't a number at all. Nothing warns you.
+      - id: b
+        text: "3 — 5.6, 5.8 and 6.1"
+        feedback: |
+          That's the right clinical answer, but not what R gives. With `k`
+          stored as text, "hemolysed" also counts as higher than 5.5.
+      - id: c
+        text: "An error — you can't compare text with a number"
+        feedback: |
+          R doesn't stop. It compares them as text, silently, which is what makes
+          this dangerous.
+      - id: d
+        text: "8 — every value is text, so every one is TRUE"
+        feedback: |
+          Text is still compared character by character: "4.1" sorts before
+          "5.5", so it's FALSE. Only four come out TRUE.
+
+  - id: testD-08
+    module: ch14
+    title: Counting a second way
+    prompt: |
+      To check the count, you convert to numbers first:
+
+      ```r
+      sum(as.numeric(labs$k) > 5.5, na.rm = TRUE)
+      ```
+
+      What does it give?
+    options:
+      - id: a
+        text: "3"
+        correct: true
+        feedback: |
+          Right. "hemolysed" becomes `NA`, `na.rm = TRUE` leaves it out, and the
+          three real high results remain. Getting a different answer by a
+          second route is exactly how you catch the first one.
+      - id: b
+        text: "4"
+        feedback: |
+          That's the text comparison. Converted to numbers, "hemolysed" becomes
+          `NA` and is left out, so the count is 3.
+      - id: c
+        text: "NA"
+        feedback: |
+          `na.rm = TRUE` leaves the missing value out of the sum, so the result
+          is a number: 3.
+
+  - id: testD-09
+    module: ch14
+    title: Keeping the note
+    prompt: |
+      Why is `labs$k_num <- as.numeric(labs$k)` safer than
+      `labs$k <- as.numeric(labs$k)`?
+    options:
+      - id: a
+        text: 'It keeps the original, so "hemolysed" — and the need to redraw — isn''t lost'
+        correct: true
+        feedback: |
+          Right. Overwriting `k` turns "hemolysed" into `NA` for good, and `NA`
+          could mean never drawn, lost or hemolysed. Keeping the original
+          preserves *why* a value is missing.
+      - id: b
+        text: "They're the same — both give the same numbers"
+        feedback: |
+          The numbers are the same, but overwriting also throws away the word
+          "hemolysed", which tells you the sample needs repeating.
+      - id: c
+        text: "The second is safer — fewer columns is tidier"
+        feedback: |
+          Tidier, but it loses information: "hemolysed" becomes `NA` for good.
+
+  - id: testD-10
+    module: ch14
+    title: Reading the spread
+    prompt: |
+      Look at `summary(labs$creat)` under **The data**. A normal adult
+      creatinine is roughly 0.6 to 1.3 mg/dL, and 1 mg/dL is 88.4 µmol/L.
+      Which values look wrong?
+    options:
+      - id: a
+        text: "The 0, which isn't possible, and the 88, which looks like µmol/L"
+        correct: true
+        feedback: |
+          Right. A creatinine of 0 is almost certainly a missing result typed as
+          zero, and 88 µmol/L is about 1.0 mg/dL — one result in the wrong unit.
+          Notice the median, 1.15, is normal while the mean is 11.86: a few
+          values are pulling the mean.
+      - id: b
+        text: "Only the 88"
+        feedback: |
+          The 88 is one. But the minimum is 0, and a creatinine can't be zero.
+      - id: c
+        text: "None — the median of 1.15 is normal"
+        feedback: |
+          The median is normal, which is the clue: the mean is ten times
+          higher, so something is pulling it. Look at the minimum and maximum.
+
+  - id: testD-11
+    module: ch14
+    title: Fixing one value, and nothing else
+    prompt: |
+      You want the creatinine of 0 to become a missing value. Which line does
+      that and changes nothing else?
+    options:
+      - id: a
+        text: "`labs$creat[labs$creat == 0] <- NA`"
+        correct: true
+        feedback: |
+          Right. `labs$creat == 0` finds the zero, the square brackets pick it
+          out, and only that value becomes `NA`.
+      - id: b
+        text: "`labs$creat <- NA`"
+        feedback: |
+          That replaces the whole column — a single value fills every row.
+          Every creatinine would be gone.
+      - id: c
+        text: "`labs$creat == NA`"
+        feedback: |
+          That only asks a question, and stores nothing. Comparing with `NA`
+          gives `NA` for every value, too.
+      - id: d
+        text: "`labs <- labs[labs$creat != 0, ]`"
+        feedback: |
+          That removes the whole patient, and their potassium with them. You
+          only wanted to mark one value as missing.
+
+  - id: testD-12
+    module: ch14
+    title: A count that's suddenly zero
+    prompt: |
+      ```r
+      nrow(labs[labs$K > 5.5, ])
+      ```
+
+      This gives `0`, with no error and no warning. Why?
+    options:
+      - id: a
+        text: "The column is `k`, not `K`, so `labs$K` is nothing"
+        correct: true
+        feedback: |
+          Right. A wrong name gives `NULL`, silently, and asking a question of
+          nothing keeps nothing. A count of zero reads like a real result —
+          which is why a sudden zero is worth a second look.
+      - id: b
+        text: "None of the potassiums are above 5.5"
+        feedback: |
+          Three are. The capital `K` is the difference: there's no column by
+          that name.
+      - id: c
+        text: "The 5.5 needs quotes, because `k` is text"
+        feedback: |
+          Quotes wouldn't help. There's no column called `K` at all.

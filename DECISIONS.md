@@ -256,6 +256,10 @@ modules assumed the learner had seen them, and some gave the answer away
 of the table — appears on the start screen and above the questions, so it
 stays in view while answering.
 
+**A question that needs the data says where it is.** "In the `labs` data
+frame (under The data, at the top)". It's easy to miss otherwise, as testing
+Part C showed.
+
 **The sheet and the data are side panels during a test.** A bar at the top
 holds "Language sheet" and "The data", styled like the course's Data and
 Functions panels. The sheet opens with a note to skip it for now and come
