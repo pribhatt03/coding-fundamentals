@@ -5,6 +5,9 @@
 import * as progress from "./progress.js";
 import { md, esc, inline } from "./markdown.js";
 import * as L from "./testout-logic.js";
+import { register as registerOffline } from "./offline.js";
+
+registerOffline();     // keep the offline copy's service worker running here too
 
 const main = document.getElementById("test");
 const params = new URLSearchParams(location.search);

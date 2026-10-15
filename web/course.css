@@ -663,3 +663,12 @@ body.locked { overflow: hidden; }
    the top bar and chapter navigation keep their quieter styles above. */
 a { color: var(--link); text-underline-offset: 2px; }
 a:visited { color: var(--link); }
+
+/* Save for offline panel. */
+.offbody h3 { font-size: .92rem; margin: 1.3rem 0 .3rem; }
+.offrow { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; margin: 1rem 0; }
+.offsize { font-size: .82rem; color: var(--ink-soft); }
+.offbar { height: 6px; border-radius: 3px; background: var(--paper-sunk); overflow: hidden; }
+.offfill { height: 100%; width: 0; background: var(--ok); transition: width .2s ease; }
+.offmsg { font-size: .85rem; margin: .4rem 0 0; }
+.offwarn { font-size: .85rem; border-left: 3px solid var(--ok); padding-left: .6rem; }

@@ -1,3 +1,9 @@
 /*
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Embedder-Policy: require-corp
+
+/sw.js
+  Cache-Control: no-cache
+
+/vendor/webr/webr.mjs
+  Content-Type: text/javascript

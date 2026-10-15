@@ -2,7 +2,9 @@
 // (one exercise at a time) and chapter.html (inline in the prose), so both
 // always behave identically.
 
-import { WebR } from "https://webr.r-wasm.org/latest/webr.mjs";
+// R comes from our own copy (build/vendor.mjs), so the course can run offline.
+import { WebR } from "./vendor/webr/webr.mjs";
+const WEBR_BASE = new URL("./vendor/webr/", import.meta.url).href;
 import * as progress from "./progress.js";
 import * as events from "./events.js";
 import * as reference from "./reference.js";
@@ -66,10 +68,21 @@ const consoleEval = (env) => `.course_run(.submitted, ${env})`;
 // R boots once per page and stays warm. Each exercise gets its own setup
 // environment, so switching between them never re-runs library() or rebuilds
 // data that is already there.
+/**
+ * Start R for an exercise, reporting any failure through `report` instead of
+ * throwing. Starting R can fail — most often a package that couldn't be
+ * installed, for instance offline — and every caller used to call ensureR()
+ * outside its error handling, so the failure vanished and the box did nothing.
+ */
+async function startR(ex, report) {
+  try { return await ensureR(ex); }
+  catch (e) { onStatus(""); report(String(e.message ?? e)); return null; }
+}
+
 export async function ensureR(ex) {
   if (!webR) {
     onStatus("starting R…");
-    webR = new WebR();
+    webR = new WebR({ baseUrl: WEBR_BASE });
     // warn = 1 prints warnings immediately to stderr, where Run can show them.
     // Otherwise R holds them until the end and they never reach the page —
     // and "it ran but warned" is exactly the kind of failure this course is
@@ -83,7 +96,15 @@ export async function ensureR(ex) {
   for (const p of ex.packages ?? []) {
     if (!installed.has(p)) {
       onStatus(`installing ${p}…`);
-      await webR.installPackages([p]);
+      try { await webR.installPackages([p], { quiet: true }); } catch { /* checked just below */ }
+      const ok = await (await webR.evalR(`requireNamespace("${p}", quietly = TRUE)`)).toBoolean();
+      if (!ok) {
+        onStatus("");
+        throw new Error(navigator.onLine
+          ? `R couldn't install the ${p} package. Reload the page and try again.`
+          : `This module uses the ${p} package, which isn't saved on this device. Connect to ` +
+            `the internet once, or use Save for offline while you're online.`);
+      }
       installed.add(p);
     }
   }
@@ -172,7 +193,8 @@ export function makeScratch(pre, chapter, owner = null) {
 
   async function run() {
     stat.textContent = "running…";
-    const w = await ensureR(ex);
+    const w = await startR(ex, (m) => { out.textContent = m; out.classList.add("err"); stat.textContent = ""; });
+    if (!w) return;
     const shelter = await new w.Shelter();
     try {
       await w.objs.globalEnv.bind(".submitted", getCode());
@@ -398,7 +420,8 @@ function doSpan(ex, body, show, state, done) {
     const code = ex.response.parts.map((p) => p.v).join("");
     body.querySelector(".run").onclick = async () => {
       stat.textContent = "running…";
-      const w = await ensureR(ex);
+      const w = await startR(ex, (m) => { out.textContent = m; out.classList.add("err"); stat.textContent = ""; });
+      if (!w) return;
       const shelter = await new w.Shelter();
       try {
         await w.objs.globalEnv.bind(".submitted", code);
@@ -542,6 +565,15 @@ async function doProse(ex, body, show, state, done) {
          <ul>${ex.response.rubric.map((c) => `<li>${esc(c.criterion)}</li>`).join("")}</ul>
          <p>A good answer:</p>${md("```\n" + ex.response.exemplar + "\n```")}`,
         `${e.message ?? e} — the judge only runs on the deployed site`);
+      // Offline, nothing can grade this. Let the learner check it against the
+      // list and carry on, so progress doesn't stall at every written answer.
+      if (!body.querySelector(".selfok")) {
+        const ok = document.createElement("button");
+        ok.className = "linky selfok";
+        ok.textContent = "I've checked my answer";
+        ok.onclick = () => { done(true); ok.disabled = true; ok.textContent = "Marked as checked"; };
+        body.querySelector(".row").append(ok);
+      }
     }
     stat.textContent = ""; btn.disabled = false;
   };
@@ -571,7 +603,8 @@ async function doCode(ex, body, show, state, done) {
 
   async function run() {
     stat.textContent = "running…";
-    const w = await ensureR(ex);
+    const w = await startR(ex, (m) => { out.textContent = m; out.classList.add("err"); stat.textContent = ""; });
+    if (!w) return;
     const shelter = await new w.Shelter();
     try {
       await w.objs.globalEnv.bind(".submitted", getCode());
@@ -589,7 +622,8 @@ async function doCode(ex, body, show, state, done) {
     stat.textContent = "checking…";
     state.attempts++;
     const code = getCode();
-    const w = await ensureR(ex);
+    const w = await startR(ex, (m) => { state.attempts--; stat.textContent = ""; show(false, `<p>${esc(m)}</p>`); });
+    if (!w) return;
     const r = ex.response;
     const shelter = await new w.Shelter();
     try {

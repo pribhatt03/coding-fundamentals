@@ -229,6 +229,33 @@ write-prompt exercise, paste in the exemplar (every criterion should pass),
 then the weak original prompt (every criterion should fail). A rubric that
 can't fail isn't checking anything.
 
+**The course can be saved for offline use.** "Save for offline", on every
+module page, stores the whole course — R included, about 46 MB — in the
+browser; a service worker serves it when there's no connection.
+- Everything is hosted with the site: webR's GitHub release (pinned to
+  0.6.0, checked against a fixed SHA-256), CodeMirror and the fonts from
+  pinned npm packages. `build/vendor.mjs` puts them in `web/vendor/`, which is
+  generated and ignored by git; Netlify rebuilds it on every deploy.
+- npm's webR is built for Node and won't run in a browser; the GitHub release
+  is the build webR's CDN serves.
+- `build/offline.mjs` lists every file in `offline-manifest.json` and writes
+  `sw.js` from `build/sw.template.js`. The version is a fingerprint of every
+  file, so any change prompts learners to save again.
+- R loads some library files lazily, with HEAD and byte-range requests. The
+  service worker answers both from the saved copy, or R stalls offline.
+- dplyr is saved by installing it once during Save; the service worker keeps
+  whatever webR downloads from repo.r-wasm.org. Untested from the build
+  sandbox, which can't reach that site — check it on the live site.
+- The grader never works offline. Written answers fall back to the criteria
+  and an example, with "I've checked my answer" so progress doesn't stall.
+- Safari clears a site's saved data after about a week unused, unless it's on
+  the Home Screen or Dock. The panel says so.
+
+**Starting R reports its failures.** Every code box, Run and Check used to
+call `ensureR()` outside its error handling, so a failed package install made
+the box silently do nothing — online as well as off. They now go through
+`startR()`, which shows the message in the exercise.
+
 **Test-outs.** A part can be skipped by passing a short test. The bank lives
 in `content/testout/<part>.yml`: multiple choice, each item tagged with the
 module that teaches it, and always a "Coming from another language?" sheet,

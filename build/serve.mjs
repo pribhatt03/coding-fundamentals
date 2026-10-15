@@ -3,8 +3,10 @@ import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
 
-const TYPES = { ".html": "text/html", ".js": "text/javascript", ".json": "application/json",
-                ".css": "text/css", ".wasm": "application/wasm" };
+const TYPES = { ".html": "text/html", ".js": "text/javascript", ".mjs": "text/javascript",
+                ".json": "application/json", ".css": "text/css", ".wasm": "application/wasm",
+                ".woff2": "font/woff2", ".woff": "font/woff", ".svg": "image/svg+xml",
+                ".png": "image/png", ".md": "text/markdown" };
 
 // The written-answer grader only exists on Netlify, where the API key lives.
 // Locally, pass grading requests through to the live site, so written

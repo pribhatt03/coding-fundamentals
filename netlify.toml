@@ -12,3 +12,16 @@
   [headers.values]
     Cross-Origin-Opener-Policy = "same-origin"
     Cross-Origin-Embedder-Policy = "require-corp"
+
+# The service worker must always be fetched fresh, so course updates reach
+# learners who've saved the course for offline use.
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+# webR's entry point has a .mjs ending; make sure it's served as JavaScript.
+[[headers]]
+  for = "/vendor/webr/webr.mjs"
+  [headers.values]
+    Content-Type = "text/javascript"

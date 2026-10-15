@@ -1,6 +1,7 @@
 // Chapter preview: your prose with the exercises rendered where the markers are.
 // This is how you check the rhythm of reading and doing while you write.
 
+import * as offline from "./offline.js";
 import { md, renderExercise, setStatusHandler, makeScratch } from "./exercise.js";
 import * as progress from "./progress.js";
 import * as events from "./events.js";
@@ -71,6 +72,7 @@ function updateBar() {
 
 theme.mount($("#themeslot"));
 reference.mount($("#fnslot"));
+offline.mount($("#offlineslot"));
 data.mount($("#dataslot"));
 
 // Development tools stay out of the learner's way. Add ?dev to the address to
