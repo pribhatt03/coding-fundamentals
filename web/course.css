@@ -665,6 +665,7 @@ a { color: var(--link); text-underline-offset: 2px; }
 a:visited { color: var(--link); }
 
 /* Save for offline panel. */
+.offbody { padding-top: 1rem; }   /* breathing room below the header's rule */
 .offbody h3 { font-size: .92rem; margin: 1.3rem 0 .3rem; }
 .offrow { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; margin: 1rem 0; }
 .offsize { font-size: .82rem; color: var(--ink-soft); }
